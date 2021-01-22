@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,30 +14,35 @@ namespace pruaccount.api.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<ValidateAntiForgeryTokenMiddleware> _logger;
 
-        public ValidateAntiForgeryTokenMiddleware(ILogger<ValidateAntiForgeryTokenMiddleware> logger)
+        public ValidateAntiForgeryTokenMiddleware(RequestDelegate next, ILogger<ValidateAntiForgeryTokenMiddleware> logger)
         {
+            _next = next;
             _logger = logger;
         }
 
-        public ValidateAntiForgeryTokenMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-
-        public Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IAntiforgery antiforgery)
         {
             // Call the next delegate/middleware in the pipeline
             string path = context.Request.Path.Value;
 
-            if (HttpMethods.IsPost(context.Request.Method) || HttpMethods.IsPut(context.Request.Method) || HttpMethods.IsDelete(context.Request.Method))
+            if (HttpMethods.IsPost(context.Request.Method) && !path.StartsWith("/mainctrl"))
             {
-                if (context.Request.Cookies["XSRF-TOKEN"] == null)
+                try
                 {
-                    _logger.LogError($"context.Request.Path - {path} did not pass XSRF-TOKEN cookie");
+                    await antiforgery.ValidateRequestAsync(context);
+                    await _next(context);
+                }
+                catch (AntiforgeryValidationException ex)
+                {
+                    _logger.LogError(ex, $"ValidateAntiForgeryTokenMiddleware context.Request.Path - {path}");
                     context.Response.StatusCode = 400;
+                    return;
                 }
             }
-            return this._next(context);
+            else
+            {
+                await _next(context);
+            }
         }
     }
 }
