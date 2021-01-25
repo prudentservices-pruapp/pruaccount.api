@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using pruaccount.api.HttpClients.AuthValidationClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,16 @@ namespace pruaccount.api.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
+
+        private readonly IValidateUserTokenClient _validateUserTokenClient;
+        private readonly ILogger<TestController> _logger;
+
+        public TestController(IValidateUserTokenClient validateUserTokenClient, ILogger<TestController> logger)
+        {
+            _validateUserTokenClient = validateUserTokenClient;
+            _logger = logger;
+        }
+
         [HttpPost("TestAccess")]
         public IActionResult TestAccess()
         {

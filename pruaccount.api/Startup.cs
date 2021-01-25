@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using pruaccount.api.AppSettings;
 using pruaccount.api.Extensions;
+using pruaccount.api.HttpClients.AuthValidationClient;
 using pruaccount.api.Middleware;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,9 @@ namespace pruaccount.api
             services.Configure<DBInfoConfigSetting>(Configuration.GetSection("DBInfo"));
             services.Configure<TokenConfigSetting>(Configuration.GetSection("Token"));
 
+
+            services.AddHttpClient<IValidateUserTokenClient, ValidateUserTokenClient>();
+
             services.AddControllersWithViews();
         }
 
@@ -77,6 +81,8 @@ namespace pruaccount.api
 
             app.UseAntiforgeryToken();
             app.ValidateAntiforgeryTokens();
+
+            app.UseAccessToken();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -18,5 +18,10 @@ namespace pruaccount.api.Extensions
         {
             return app.UseMiddleware<AntiforgeryTokenMiddleware>();
         }
+
+        public static IApplicationBuilder UseAccessToken(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<AccessTokenMiddleware>();
+        }
     }
 }
