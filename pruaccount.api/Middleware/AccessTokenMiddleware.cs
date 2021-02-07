@@ -28,41 +28,56 @@ namespace pruaccount.api.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            string path = context.Request.Path.Value;
-
-            if (path.StartsWith("/api/test", StringComparison.OrdinalIgnoreCase) || path.StartsWith("/mainctrl", StringComparison.OrdinalIgnoreCase))
+            if (!HttpMethods.IsOptions(context.Request.Method))
             {
-                var authHeader = (string)context.Request.Headers["Authorization"];
-
-                string tokenString = string.Empty;
-                string reqTokenHeader = authHeader?.ToString().Substring("Bearer ".Length).Trim();
-
-                string authCookie = context.Request.Cookies[_tokenConfigSetting.AuthCookie] ?? string.Empty;
-
-                if (authCookie == reqTokenHeader && !string.IsNullOrEmpty(authCookie) && !string.IsNullOrEmpty(reqTokenHeader))
+                string path = string.Empty;
+                try
                 {
-                    // Call Httpendpoint for checking the access & token
-                    var response = _validateUserTokenClient.ValidateUserToken(new ValidateUserTokenClientRequest()
-                    {
-                        AuthCookie = authCookie
-                    });
+                    path = context.Request.Path.Value;
 
-                    if (response.Error != null)
+                    if (path.StartsWith("/api/test", StringComparison.OrdinalIgnoreCase) || path.StartsWith("/mainctrl", StringComparison.OrdinalIgnoreCase))
                     {
-                        _logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error - {response.Error.Details}");
-                        context.Response.StatusCode = 401;
-                        return;
-                    }
-                    else if (!string.IsNullOrEmpty(response.AuthToken) && (!response.AuthToken.Equals(authCookie)))
-                    {
-                        context.Response.Headers.Add("Set-Authorization", response.AuthToken);
-                        context.Response.Cookies.Append(_tokenConfigSetting.AuthCookie, response.AuthToken, new CookieOptions() { HttpOnly = true, Secure = true, Domain = _tokenConfigSetting.CookieDomain, SameSite = SameSiteMode.Strict });
+                        var authHeader = (string)context.Request.Headers["Authorization"];
+
+                        string tokenString = string.Empty;
+                        string reqTokenHeader = authHeader?.ToString().Substring("Bearer ".Length).Trim();
+
+                        string authCookie = context.Request.Cookies[_tokenConfigSetting.AuthCookie] ?? string.Empty;
+
+                        if (authCookie == reqTokenHeader && !string.IsNullOrEmpty(authCookie) && !string.IsNullOrEmpty(reqTokenHeader))
+                        //if (!string.IsNullOrEmpty(authCookie))
+                        {
+                            // Call Httpendpoint for checking the access & token
+                            var response = _validateUserTokenClient.ValidateUserToken(new ValidateUserTokenClientRequest()
+                            {
+                                AuthCookie = authCookie
+                            });
+
+                            if (response.Error != null)
+                            {
+                                _logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error - {response.Error.Details}");
+                                context.Response.StatusCode = 401;
+                                return;
+                            }
+                            else if (!string.IsNullOrEmpty(response.AuthToken) && (!response.AuthToken.Equals(authCookie)))
+                            {
+                                context.Response.Headers.Add("Set-Authorization", response.AuthToken);
+                                context.Response.Cookies.Append(_tokenConfigSetting.AuthCookie, response.AuthToken, new CookieOptions() { HttpOnly = true, Secure = true, Domain = _tokenConfigSetting.CookieDomain, SameSite = SameSiteMode.Strict });
+                                context.Response.Cookies.Append(_tokenConfigSetting.AuthUserCookie, response.AuthToken, new CookieOptions() { HttpOnly = false, Secure = true, Domain = _tokenConfigSetting.CookieDomain, SameSite = SameSiteMode.Strict });
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error");
+                            context.Response.StatusCode = 401;
+                            return;
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    _logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error");
-                    context.Response.StatusCode = 401;
+                    _logger.LogError(ex, $"AccessTokenMiddleware context.Request.Path - {path},  internal server error");
+                    context.Response.StatusCode = 500;
                     return;
                 }
             }

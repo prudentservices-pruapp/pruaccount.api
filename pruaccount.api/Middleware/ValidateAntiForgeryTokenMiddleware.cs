@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using pruaccount.api.AppSettings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +14,13 @@ namespace pruaccount.api.Middleware
     {
         //The RequestDelegate represents the next middleware in the pipeline.
         private readonly RequestDelegate _next;
+        private readonly TokenConfigSetting _tokenConfigSetting;
         private readonly ILogger<ValidateAntiForgeryTokenMiddleware> _logger;
 
-        public ValidateAntiForgeryTokenMiddleware(RequestDelegate next, ILogger<ValidateAntiForgeryTokenMiddleware> logger)
+        public ValidateAntiForgeryTokenMiddleware(RequestDelegate next, IOptions<TokenConfigSetting> tokenConfigSetting, ILogger<ValidateAntiForgeryTokenMiddleware> logger)
         {
             _next = next;
+            _tokenConfigSetting = tokenConfigSetting.Value;
             _logger = logger;
         }
 
@@ -29,8 +33,21 @@ namespace pruaccount.api.Middleware
             {
                 try
                 {
-                    await antiforgery.ValidateRequestAsync(context);
-                    await _next(context);
+                    var antiForgeryHeader = (string)context.Request.Headers[_tokenConfigSetting.AntiforgeryTokenCookieHeader];
+                    var antiForgeryCookie = (string)context.Request.Cookies[_tokenConfigSetting.AntiforgeryTokenCookie];
+
+                    if (!string.IsNullOrEmpty(antiForgeryHeader) && !string.IsNullOrEmpty(antiForgeryCookie) && antiForgeryHeader == antiForgeryCookie)
+                    {
+
+                        await _next(context);
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = 400;
+                        return;
+                    }
+
+                    //await antiforgery.ValidateRequestAsync(context);
                 }
                 catch (AntiforgeryValidationException ex)
                 {
@@ -38,6 +55,7 @@ namespace pruaccount.api.Middleware
                     context.Response.StatusCode = 400;
                     return;
                 }
+                
             }
             else
             {

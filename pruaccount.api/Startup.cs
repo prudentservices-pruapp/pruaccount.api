@@ -77,13 +77,6 @@ namespace pruaccount.api
                 app.UseHsts();
             }
 
-            app.UseResponseCompression();
-
-            app.UseAntiforgeryToken();
-            app.ValidateAntiforgeryTokens();
-
-            app.UseAccessToken();
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -111,6 +104,15 @@ namespace pruaccount.api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //Section for Custom - https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.0#order 
+            
+            app.UseAccessToken();
+
+            app.UseAntiforgeryToken();
+            app.ValidateAntiforgeryTokens();
+
+            app.UseResponseCompression();
 
             app.UseEndpoints(endpoints =>
             {

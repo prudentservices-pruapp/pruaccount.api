@@ -13,6 +13,7 @@ namespace pruaccount.api.AppSettings
         public string AntiforgeryAuthTokenCookieHeader { get; set; }
         public string CookieDomain { get; set; }
         public string AuthCookie { get; set; }
+        public string AuthUserCookie { get; set; }
         public string AuthEndpoint { get; set; }
         public string AntiforgeryAuthCookieEndpoint { get; set; }
         public string AuthTokenValidationEndpoint { get; set; }
