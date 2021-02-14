@@ -348,3 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/pruaccount.api/wwwroot/css/site.css
+/pruaccount.api/wwwroot/css/site.min.css
