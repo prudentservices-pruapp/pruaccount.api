@@ -31,11 +31,17 @@ namespace pruaccount.api.Middleware
             if (!HttpMethods.IsOptions(context.Request.Method))
             {
                 string path = string.Empty;
+
+                String[] tokenRequiredForPaths =
+                {
+                    "/api/test"
+                };
+
                 try
                 {
                     path = context.Request.Path.Value;
 
-                    if (path.StartsWith("/api/test", StringComparison.OrdinalIgnoreCase) || path.StartsWith("/mainctrl", StringComparison.OrdinalIgnoreCase))
+                    if (Array.IndexOf(tokenRequiredForPaths, path.ToLower()) > -1)
                     {
                         var authHeader = (string)context.Request.Headers["Authorization"];
 
