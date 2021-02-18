@@ -1,13 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// <copyright file="ValidateUserTokenClientRequest.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace pruaccount.api.HttpClients.AuthValidationClient
+namespace Pruaccount.Api.HttpClients.AuthValidationClient
 {
+    /// <summary>
+    /// ValidateUserTokenClientRequest.
+    /// </summary>
     public class ValidateUserTokenClientRequest
     {
+        /// <summary>
+        /// Gets or sets AntiforgeryTokenCookieHeader.
+        /// </summary>
         public string AntiforgeryTokenCookieHeader { get; set; }
+
+        /// <summary>
+        /// Gets or sets AuthCookie.
+        /// </summary>
         public string AuthCookie { get; set; }
     }
 }

@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "pruaccount.api": {
+    "Pruaccount.Api.": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

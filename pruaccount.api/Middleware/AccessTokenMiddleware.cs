@@ -1,40 +1,60 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using pruaccount.api.AppSettings;
-using pruaccount.api.HttpClients.AuthValidationClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// <copyright file="AccessTokenMiddleware.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace pruaccount.api.Middleware
+namespace Pruaccount.Api.Middleware
 {
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+    using Pruaccount.Api.AppSettings;
+    using Pruaccount.Api.HttpClients.AuthValidationClient;
+
+    /// <summary>
+    /// AccessTokenMiddleware.
+    /// </summary>
     public class AccessTokenMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly TokenConfigSetting _tokenConfigSetting;
-        private readonly ILogger<AccessTokenMiddleware> _logger;
-        private readonly IValidateUserTokenClient _validateUserTokenClient;
+        private readonly RequestDelegate next;
+        private readonly TokenConfigSetting tokenConfigSetting;
+        private readonly ILogger<AccessTokenMiddleware> logger;
+        private readonly IValidateUserTokenClient validateUserTokenClient;
 
-        public AccessTokenMiddleware(RequestDelegate next, IOptions<TokenConfigSetting> tokenConfigSetting, 
-                IValidateUserTokenClient validateUserTokenClient, ILogger<AccessTokenMiddleware> logger)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccessTokenMiddleware"/> class.
+        /// </summary>
+        /// <param name="next">RequestDelegate.</param>
+        /// <param name="tokenConfigSetting">IOptions TokenConfigSetting.</param>
+        /// <param name="validateUserTokenClient">IValidateUserTokenClient.</param>
+        /// <param name="logger">logger.</param>
+        public AccessTokenMiddleware(
+                RequestDelegate next,
+                IOptions<TokenConfigSetting> tokenConfigSetting,
+                IValidateUserTokenClient validateUserTokenClient,
+                ILogger<AccessTokenMiddleware> logger)
         {
-            _next = next;
-            _tokenConfigSetting = tokenConfigSetting.Value;
-            _logger = logger;
-            _validateUserTokenClient = validateUserTokenClient;
+            this.next = next;
+            this.tokenConfigSetting = tokenConfigSetting.Value;
+            this.logger = logger;
+            this.validateUserTokenClient = validateUserTokenClient;
         }
 
+        /// <summary>
+        /// InvokeAsync.
+        /// </summary>
+        /// <param name="context">HttpContext.</param>
+        /// <returns>Task.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             if (!HttpMethods.IsOptions(context.Request.Method))
             {
                 string path = string.Empty;
 
-                String[] tokenRequiredForPaths =
+                string[] tokenRequiredForPaths =
                 {
-                    "/api/test"
+                    "/api/test",
                 };
 
                 try
@@ -48,33 +68,33 @@ namespace pruaccount.api.Middleware
                         string tokenString = string.Empty;
                         string reqTokenHeader = authHeader?.ToString().Substring("Bearer ".Length).Trim();
 
-                        string authCookie = context.Request.Cookies[_tokenConfigSetting.AuthCookie] ?? string.Empty;
+                        string authCookie = context.Request.Cookies[this.tokenConfigSetting.AuthCookie] ?? string.Empty;
 
+                        // if (!string.IsNullOrEmpty(authCookie))
                         if (authCookie == reqTokenHeader && !string.IsNullOrEmpty(authCookie) && !string.IsNullOrEmpty(reqTokenHeader))
-                        //if (!string.IsNullOrEmpty(authCookie))
                         {
                             // Call Httpendpoint for checking the access & token
-                            var response = _validateUserTokenClient.ValidateUserToken(new ValidateUserTokenClientRequest()
+                            var response = this.validateUserTokenClient.ValidateUserToken(new ValidateUserTokenClientRequest()
                             {
-                                AuthCookie = authCookie
+                                AuthCookie = authCookie,
                             });
 
                             if (response.Error != null)
                             {
-                                _logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error - {response.Error.Details}");
+                                this.logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error - {response.Error.Details}");
                                 context.Response.StatusCode = 401;
                                 return;
                             }
                             else if (!string.IsNullOrEmpty(response.AuthToken) && (!response.AuthToken.Equals(authCookie)))
                             {
                                 context.Response.Headers.Add("Set-Authorization", response.AuthToken);
-                                context.Response.Cookies.Append(_tokenConfigSetting.AuthCookie, response.AuthToken, new CookieOptions() { HttpOnly = true, Secure = true, Domain = _tokenConfigSetting.CookieDomain, SameSite = SameSiteMode.Strict });
-                                context.Response.Cookies.Append(_tokenConfigSetting.AuthUserCookie, response.AuthToken, new CookieOptions() { HttpOnly = false, Secure = true, Domain = _tokenConfigSetting.CookieDomain, SameSite = SameSiteMode.Strict });
+                                context.Response.Cookies.Append(this.tokenConfigSetting.AuthCookie, response.AuthToken, new CookieOptions() { HttpOnly = true, Secure = true, Domain = this.tokenConfigSetting.CookieDomain, SameSite = SameSiteMode.Strict });
+                                context.Response.Cookies.Append(this.tokenConfigSetting.AuthUserCookie, response.AuthToken, new CookieOptions() { HttpOnly = false, Secure = true, Domain = this.tokenConfigSetting.CookieDomain, SameSite = SameSiteMode.Strict });
                             }
                         }
                         else
                         {
-                            _logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error");
+                            this.logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error");
                             context.Response.StatusCode = 401;
                             return;
                         }
@@ -82,13 +102,13 @@ namespace pruaccount.api.Middleware
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"AccessTokenMiddleware context.Request.Path - {path},  internal server error");
+                    this.logger.LogError(ex, $"AccessTokenMiddleware context.Request.Path - {path},  internal server error");
                     context.Response.StatusCode = 500;
                     return;
                 }
             }
 
-            await _next(context);
+            await this.next(context);
         }
     }
 }

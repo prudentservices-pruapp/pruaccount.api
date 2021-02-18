@@ -1,37 +1,52 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using pruaccount.api.AppSettings;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿// <copyright file="ValidateUserTokenClient.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
-namespace pruaccount.api.HttpClients.AuthValidationClient
+namespace Pruaccount.Api.HttpClients.AuthValidationClient
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net.Http;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+    using Newtonsoft.Json;
+    using Pruaccount.Api.AppSettings;
+
+    /// <summary>
+    /// ValidateUserTokenClient.
+    /// </summary>
     public class ValidateUserTokenClient : IValidateUserTokenClient
     {
-        private readonly ILogger<ValidateUserTokenClient> _logger;
-        private readonly HttpClient _client;
-        private readonly TokenConfigSetting _tokenConfigSetting;
+        private readonly ILogger<ValidateUserTokenClient> logger;
+        private readonly HttpClient client;
+        private readonly TokenConfigSetting tokenConfigSetting;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidateUserTokenClient"/> class.
+        /// </summary>
+        /// <param name="httpClient">HttpClient.</param>
+        /// <param name="tokenConfigSetting">IOptions TokenConfigSetting.</param>
+        /// <param name="logger">logger.</param>
         public ValidateUserTokenClient(HttpClient httpClient, IOptions<TokenConfigSetting> tokenConfigSetting, ILogger<ValidateUserTokenClient> logger)
         {
-            _client = httpClient;
-            _tokenConfigSetting = tokenConfigSetting.Value;
-            _logger = logger;
+            this.client = httpClient;
+            this.tokenConfigSetting = tokenConfigSetting.Value;
+            this.logger = logger;
         }
 
+        /// <summary>
+        /// ValidateUserToken.
+        /// </summary>
+        /// <param name="request">ValidateUserTokenClientRequest.</param>
+        /// <returns>ValidateUserTokenClientResponse.</returns>
         public ValidateUserTokenClientResponse ValidateUserToken(ValidateUserTokenClientRequest request)
         {
             ValidateUserTokenClientResponse response = new ValidateUserTokenClientResponse();
 
             response.AuthToken = request.AuthCookie;
 
-            IEnumerable<string> authRequestCookies = AuthAntiforgeryCookies();
+            IEnumerable<string> authRequestCookies = this.AuthAntiforgeryCookies();
             IEnumerable<string> authResponseCookies = null;
 
             if (authRequestCookies != null)
@@ -40,18 +55,18 @@ namespace pruaccount.api.HttpClients.AuthValidationClient
                 {
                     using (var httpClient = new HttpClient(new HttpClientHandler { UseCookies = false }))
                     {
-                        string url = _tokenConfigSetting.AuthEndpoint + _tokenConfigSetting.AuthTokenValidationEndpoint;
+                        string url = this.tokenConfigSetting.AuthEndpoint + this.tokenConfigSetting.AuthTokenValidationEndpoint;
 
                         foreach (string sCookie in authRequestCookies)
                         {
-                            //if (sCookie.StartsWith(".AspNetCore"))
-                            //{
-                                //httpClient.DefaultRequestHeaders.Add("cookie", sCookie);
-                            //}
-                            //else 
-                            if (sCookie.StartsWith(_tokenConfigSetting.AntiforgeryAuthTokenCookie))
+                            // if (sCookie.StartsWith(".AspNetCore"))
+                            // {
+                                // httpClient.DefaultRequestHeaders.Add("cookie", sCookie);
+                            // }
+                            // else
+                            if (sCookie.StartsWith(this.tokenConfigSetting.AntiforgeryAuthTokenCookie))
                             {
-                                httpClient.DefaultRequestHeaders.Add(_tokenConfigSetting.AntiforgeryAuthTokenCookieHeader, sCookie.Split("=")[1]);
+                                httpClient.DefaultRequestHeaders.Add(this.tokenConfigSetting.AntiforgeryAuthTokenCookieHeader, sCookie.Split("=")[1]);
                             }
                         }
 
@@ -63,11 +78,11 @@ namespace pruaccount.api.HttpClients.AuthValidationClient
                         {
                             foreach (string sCookie in authResponseCookies)
                             {
-                                _logger.LogInformation($"Response - Cookie - {sCookie}");
+                                this.logger.LogInformation($"Response - Cookie - {sCookie}");
 
-                                if (sCookie.StartsWith(_tokenConfigSetting.AuthCookie))
+                                if (sCookie.StartsWith(this.tokenConfigSetting.AuthCookie))
                                 {
-                                    response.AuthToken = sCookie.Split("=")[1].Replace("; domain", "");
+                                    response.AuthToken = sCookie.Split("=")[1].Replace("; domain", string.Empty);
                                 }
                             }
                         }
@@ -88,10 +103,10 @@ namespace pruaccount.api.HttpClients.AuthValidationClient
                             {
                                 Code = (int)reply.StatusCode,
                                 Details = JsonConvert.SerializeObject(response),
-                                Message = "Token Validation Error"
+                                Message = "Token Validation Error",
                             };
 
-                            _logger.LogError($"ValidateUserTokenClient-> ValidateUserToken Response - {reply.StatusCode.ToString()} {JsonConvert.SerializeObject(response)}");
+                            this.logger.LogError($"ValidateUserTokenClient-> ValidateUserToken Response - {reply.StatusCode.ToString()} {JsonConvert.SerializeObject(response)}");
                         }
                         else
                         {
@@ -101,16 +116,15 @@ namespace pruaccount.api.HttpClients.AuthValidationClient
                 }
                 catch (Exception ex)
                 {
-
                     response.AuthToken = string.Empty;
                     response.Error = new APIErrorDetails()
                     {
                         Code = -1,
                         Details = ex.Message,
-                        Message = "Token Validation Error"
+                        Message = "Token Validation Error",
                     };
 
-                    _logger.LogError($"ValidateUserTokenClient-> ValidateUserToken Exception - {ex.Message}");
+                    this.logger.LogError($"ValidateUserTokenClient-> ValidateUserToken Exception - {ex.Message}");
                 }
             }
 
@@ -123,15 +137,14 @@ namespace pruaccount.api.HttpClients.AuthValidationClient
 
             try
             {
-
-                string url = _tokenConfigSetting.AuthEndpoint + _tokenConfigSetting.AntiforgeryAuthCookieEndpoint;
-                HttpResponseMessage reply = _client.GetAsync(url).Result;
+                string url = this.tokenConfigSetting.AuthEndpoint + this.tokenConfigSetting.AntiforgeryAuthCookieEndpoint;
+                HttpResponseMessage reply = this.client.GetAsync(url).Result;
 
                 if (reply.Headers.TryGetValues("set-cookie", out responseCookies))
                 {
                     foreach (string sCookie in responseCookies)
                     {
-                        _logger.LogInformation($"Response - Cookie - {sCookie}");
+                        this.logger.LogInformation($"Response - Cookie - {sCookie}");
                     }
                 }
 
@@ -147,12 +160,12 @@ namespace pruaccount.api.HttpClients.AuthValidationClient
 
                 if (reply.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    _logger.LogError($"ValidateUserTokenClient-> AuthAntiforgeryCookies Response - {reply.StatusCode.ToString()} {JsonConvert.SerializeObject(response)}");
+                    this.logger.LogError($"ValidateUserTokenClient-> AuthAntiforgeryCookies Response - {reply.StatusCode.ToString()} {JsonConvert.SerializeObject(response)}");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"ValidateUserTokenClient-> AuthAntiforgeryCookies Exception {ex.Message}");
+                this.logger.LogError(ex, $"ValidateUserTokenClient-> AuthAntiforgeryCookies Exception {ex.Message}");
             }
 
             return responseCookies;
