@@ -10,6 +10,7 @@ namespace Pruaccount.Api.Middleware
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Pruaccount.Api.AppSettings;
+    using Pruaccount.Api.Extensions;
     using Pruaccount.Api.HttpClients.AuthValidationClient;
 
     /// <summary>
@@ -54,14 +55,15 @@ namespace Pruaccount.Api.Middleware
 
                 string[] tokenRequiredForPaths =
                 {
-                    "/api/test",
+                    "/api/test/testaccess",
+                    "/api/test/testuserdetails",
                 };
 
                 try
                 {
                     path = context.Request.Path.Value;
 
-                    if (Array.IndexOf(tokenRequiredForPaths, path.ToLower()) > -1)
+                    if (tokenRequiredForPaths.CheckIfPathNeedValidToken(path))
                     {
                         var authHeader = (string)context.Request.Headers["Authorization"];
 
