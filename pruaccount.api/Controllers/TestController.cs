@@ -5,6 +5,7 @@
 namespace Pruaccount.Api.Controllers
 {
     using System;
+    using System.Net.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Pruaccount.Api.HttpClients.AuthValidationClient;
@@ -40,6 +41,26 @@ namespace Pruaccount.Api.Controllers
             try
             {
                 return this.Ok();
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Test user details from jsonplaceholder.typicode.com.
+        /// </summary>
+        /// <param name="userId">User Id.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("TestUserDetails/{userid}")]
+        public IActionResult TestUserDetails(int userId)
+        {
+            try
+            {
+                HttpClient http = new HttpClient();
+                var data = http.GetAsync($"https://jsonplaceholder.typicode.com/users/{userId}").Result.Content.ReadAsStringAsync().Result;
+                return this.Ok(data);
             }
             catch (Exception ex)
             {
