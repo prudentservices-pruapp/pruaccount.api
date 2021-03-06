@@ -57,6 +57,8 @@ namespace Pruaccount.Api.Middleware
                 {
                     "/api/test/testaccess",
                     "/api/test/testuserdetails",
+                    "/api/test/testposts",
+                    "/api/test/testserverposts",
                 };
 
                 try
