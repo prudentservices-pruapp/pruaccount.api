@@ -94,7 +94,7 @@ namespace Pruaccount.Api
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
