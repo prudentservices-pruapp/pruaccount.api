@@ -12,6 +12,7 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
     using Microsoft.Extensions.Options;
     using Newtonsoft.Json;
     using Pruaccount.Api.AppSettings;
+    using Pruaccount.Api.Domain.Auth;
 
     /// <summary>
     /// ValidateUserTokenClient.
@@ -84,6 +85,10 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
                                 {
                                     response.AuthToken = sCookie.Split("=")[1].Replace("; domain", string.Empty);
                                 }
+                                else if (sCookie.StartsWith(this.tokenConfigSetting.AuthCookieDetails))
+                                {
+                                    response.AuthCookieDetails = JsonConvert.DeserializeObject<TokenUserDetails>(sCookie);
+                                }
                             }
                         }
 
@@ -99,6 +104,7 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
                         if (reply.StatusCode != System.Net.HttpStatusCode.OK)
                         {
                             response.AuthToken = string.Empty;
+                            response.AuthCookieDetails = null;
                             response.Error = new APIErrorDetails()
                             {
                                 Code = (int)reply.StatusCode,
@@ -117,6 +123,7 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
                 catch (Exception ex)
                 {
                     response.AuthToken = string.Empty;
+                    response.AuthCookieDetails = null;
                     response.Error = new APIErrorDetails()
                     {
                         Code = -1,

@@ -49,20 +49,35 @@ namespace Pruaccount.Api.Middleware
             {
                 try
                 {
-                    var antiForgeryHeader = (string)context.Request.Headers[this.tokenConfigSetting.AntiforgeryTokenCookieHeader];
-                    var antiForgeryCookie = (string)context.Request.Cookies[this.tokenConfigSetting.AntiforgeryTokenCookie];
-
-                    if (!string.IsNullOrEmpty(antiForgeryHeader) && !string.IsNullOrEmpty(antiForgeryCookie) && antiForgeryHeader == antiForgeryCookie)
+                    if (path.Contains("test"))
                     {
                         await this.next(context);
                     }
+                    else if (path.StartsWith("/api/AuthValidation"))
+                    {
+                        var antiForgeryHeader = (string)context.Request.Headers[this.tokenConfigSetting.AntiforgeryTokenCookieHeader];
+
+                        if (string.IsNullOrEmpty(antiForgeryHeader))
+                        {
+                            context.Response.StatusCode = 400;
+                            return;
+                        }
+                    }
                     else
                     {
-                        context.Response.StatusCode = 400;
-                        return;
-                    }
+                        var antiForgeryHeader = (string)context.Request.Headers[this.tokenConfigSetting.AntiforgeryTokenCookieHeader];
+                        var antiForgeryCookie = (string)context.Request.Cookies[this.tokenConfigSetting.AntiforgeryTokenCookie];
 
-                    // await antiforgery.ValidateRequestAsync(context);
+                        if (!string.IsNullOrEmpty(antiForgeryHeader) && !string.IsNullOrEmpty(antiForgeryCookie) && antiForgeryHeader == antiForgeryCookie)
+                        {
+                            await this.next(context);
+                        }
+                        else
+                        {
+                            context.Response.StatusCode = 400;
+                            return;
+                        }
+                    }
                 }
                 catch (AntiforgeryValidationException ex)
                 {

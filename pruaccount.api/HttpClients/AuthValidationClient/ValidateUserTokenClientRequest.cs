@@ -1,9 +1,10 @@
 ﻿// <copyright file="ValidateUserTokenClientRequest.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
 namespace Pruaccount.Api.HttpClients.AuthValidationClient
 {
+    using Pruaccount.Api.Domain.Auth;
+
     /// <summary>
     /// ValidateUserTokenClientRequest.
     /// </summary>

@@ -10,6 +10,7 @@ namespace Pruaccount.Api.Middleware
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Pruaccount.Api.AppSettings;
+    using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Extensions;
     using Pruaccount.Api.HttpClients.AuthValidationClient;
 
@@ -22,6 +23,7 @@ namespace Pruaccount.Api.Middleware
         private readonly TokenConfigSetting tokenConfigSetting;
         private readonly ILogger<AccessTokenMiddleware> logger;
         private readonly IValidateUserTokenClient validateUserTokenClient;
+        private readonly ITokenUtils tokenUtils;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccessTokenMiddleware"/> class.
@@ -29,17 +31,20 @@ namespace Pruaccount.Api.Middleware
         /// <param name="next">RequestDelegate.</param>
         /// <param name="tokenConfigSetting">IOptions TokenConfigSetting.</param>
         /// <param name="validateUserTokenClient">IValidateUserTokenClient.</param>
+        /// <param name="tokenUtils">ITokenUtils.</param>
         /// <param name="logger">logger.</param>
         public AccessTokenMiddleware(
                 RequestDelegate next,
                 IOptions<TokenConfigSetting> tokenConfigSetting,
                 IValidateUserTokenClient validateUserTokenClient,
+                ITokenUtils tokenUtils,
                 ILogger<AccessTokenMiddleware> logger)
         {
             this.next = next;
             this.tokenConfigSetting = tokenConfigSetting.Value;
-            this.logger = logger;
             this.validateUserTokenClient = validateUserTokenClient;
+            this.tokenUtils = tokenUtils;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -53,19 +58,11 @@ namespace Pruaccount.Api.Middleware
             {
                 string path = string.Empty;
 
-                string[] tokenRequiredForPaths =
-                {
-                    "/api/test/testaccess",
-                    "/api/test/testuserdetails",
-                    "/api/test/testposts",
-                    "/api/test/testserverposts",
-                };
-
                 try
                 {
                     path = context.Request.Path.Value;
 
-                    if (tokenRequiredForPaths.CheckIfPathNeedValidToken(path))
+                    if (this.tokenUtils.CheckValidTokenForRequest(path))
                     {
                         var authHeader = (string)context.Request.Headers["Authorization"];
 
@@ -82,6 +79,8 @@ namespace Pruaccount.Api.Middleware
                             {
                                 AuthCookie = authCookie,
                             });
+
+                            context.Items["CurrentTokenUserDetails"] = response.AuthCookieDetails;
 
                             if (response.Error != null)
                             {

@@ -15,8 +15,10 @@ namespace Pruaccount.Api
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Pruaccount.Api.AppSettings;
+    using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Extensions;
     using Pruaccount.Api.HttpClients.AuthValidationClient;
+    using PruAuth.Api.Domain.Auth;
 
     /// <summary>
     /// Startup.
@@ -53,6 +55,11 @@ namespace Pruaccount.Api
                 options.HeaderName = tokenConfig.AntiforgeryTokenCookieHeader;
                 options.SuppressXFrameOptionsHeader = true;
             });
+
+            // Token
+            services.AddTransient<ITokenUtils, TokenUtils>();
+            services.AddHttpClient<IValidateUserTokenClient, ValidateUserTokenClient>();
+
             services.AddHttpContextAccessor();
 
             // Configure Compression level
@@ -65,8 +72,6 @@ namespace Pruaccount.Api
 
             services.Configure<DBInfoConfigSetting>(this.Configuration.GetSection("DBInfo"));
             services.Configure<TokenConfigSetting>(this.Configuration.GetSection("Token"));
-
-            services.AddHttpClient<IValidateUserTokenClient, ValidateUserTokenClient>();
 
             services.AddControllersWithViews();
         }

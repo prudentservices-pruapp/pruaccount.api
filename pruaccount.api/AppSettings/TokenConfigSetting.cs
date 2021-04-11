@@ -45,6 +45,11 @@ namespace Pruaccount.Api.AppSettings
         public string AuthUserCookie { get; set; }
 
         /// <summary>
+        /// Gets or sets AuthCookieDetails.
+        /// </summary>
+        public string AuthCookieDetails { get; set; }
+
+        /// <summary>
         /// Gets or Sets AuthEndpoint.
         /// </summary>
         public string AuthEndpoint { get; set; }

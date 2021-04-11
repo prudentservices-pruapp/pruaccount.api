@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Pruaccount.Api.Domain.Auth;
+
 namespace Pruaccount.Api.HttpClients.AuthValidationClient
 {
     /// <summary>
@@ -13,6 +15,11 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
         /// Gets or sets AuthToken.
         /// </summary>
         public string AuthToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets AuthCookieDetails.
+        /// </summary>
+        public TokenUserDetails AuthCookieDetails { get; set; }
 
         /// <summary>
         /// Gets or sets APIErrorDetails.
