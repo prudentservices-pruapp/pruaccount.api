@@ -15,6 +15,7 @@ namespace Pruaccount.Api
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Pruaccount.Api.AppSettings;
+    using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Extensions;
     using Pruaccount.Api.HttpClients.AuthValidationClient;
@@ -72,6 +73,9 @@ namespace Pruaccount.Api
 
             services.Configure<DBInfoConfigSetting>(this.Configuration.GetSection("DBInfo"));
             services.Configure<TokenConfigSetting>(this.Configuration.GetSection("Token"));
+
+            Dapper.SqlMapper.AddTypeHandler(new DapperDateTimeUTC());
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddControllersWithViews();
         }
