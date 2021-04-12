@@ -85,7 +85,7 @@ namespace Pruaccount.Api.Middleware
                             if (response.Error != null)
                             {
                                 this.logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error - {response.Error.Details}");
-                                context.Response.StatusCode = 401;
+                                context.Response.StatusCode = response.Error.Code;
                                 return;
                             }
                             else if (!string.IsNullOrEmpty(response.AuthToken) && (!response.AuthToken.Equals(authCookie)))
@@ -98,7 +98,7 @@ namespace Pruaccount.Api.Middleware
                         else
                         {
                             this.logger.LogError($"AccessTokenMiddleware context.Request.Path - {path}, auth token validation error");
-                            context.Response.StatusCode = 401;
+                            context.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
                             return;
                         }
                     }
@@ -106,7 +106,7 @@ namespace Pruaccount.Api.Middleware
                 catch (Exception ex)
                 {
                     this.logger.LogError(ex, $"AccessTokenMiddleware context.Request.Path - {path},  internal server error");
-                    context.Response.StatusCode = 500;
+                    context.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
                     return;
                 }
             }

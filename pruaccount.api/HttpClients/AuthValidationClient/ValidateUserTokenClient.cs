@@ -126,7 +126,7 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
                     response.AuthCookieDetails = null;
                     response.Error = new APIErrorDetails()
                     {
-                        Code = -1,
+                        Code = (int) System.Net.HttpStatusCode.InternalServerError,
                         Details = ex.Message,
                         Message = "Token Validation Error",
                     };

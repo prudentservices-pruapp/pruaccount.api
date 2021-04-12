@@ -59,7 +59,7 @@ namespace Pruaccount.Api.Middleware
 
                         if (string.IsNullOrEmpty(antiForgeryHeader))
                         {
-                            context.Response.StatusCode = 400;
+                            context.Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
                             return;
                         }
                     }
@@ -74,7 +74,7 @@ namespace Pruaccount.Api.Middleware
                         }
                         else
                         {
-                            context.Response.StatusCode = 400;
+                            context.Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
                             return;
                         }
                     }
@@ -82,7 +82,7 @@ namespace Pruaccount.Api.Middleware
                 catch (AntiforgeryValidationException ex)
                 {
                     this.logger.LogError(ex, $"ValidateAntiForgeryTokenMiddleware context.Request.Path - {path}");
-                    context.Response.StatusCode = 400;
+                    context.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
                     return;
                 }
             }
