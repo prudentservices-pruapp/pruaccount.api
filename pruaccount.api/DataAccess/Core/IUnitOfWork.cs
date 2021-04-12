@@ -23,6 +23,11 @@ namespace Pruaccount.Api.DataAccess.Core
         IDbTransaction Transaction { get; }
 
         /// <summary>
+        /// Gets CBFinancialSettingRepository.
+        /// </summary>
+        ICBFinancialSettingRepository CBFinancialSettingRepository { get; }
+
+        /// <summary>
         /// Begin Transaction IsolationLevel.
         /// </summary>
         /// <param name="isolationLevel">IsolationLevel.</param>

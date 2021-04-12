@@ -26,6 +26,8 @@ namespace Pruaccount.Api.DataAccess.Core
         private IDbTransaction transaction;
         private bool disposed;
 
+        private ICBFinancialSettingRepository cbFinancialSettingRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>
@@ -78,6 +80,14 @@ namespace Pruaccount.Api.DataAccess.Core
         public IDbTransaction Transaction
         {
             get { return this.transaction; }
+        }
+
+        /// <summary>
+        /// Gets CBFinancialSettingRepository.
+        /// </summary>
+        public ICBFinancialSettingRepository CBFinancialSettingRepository
+        {
+            get { return this.cbFinancialSettingRepository ??= new CBFinancialSettingRepository(this); }
         }
 
         /// <summary>
