@@ -1,20 +1,15 @@
-﻿// <copyright file="CBFinancialSetting.cs" company="PlaceholderCompany">
+﻿// <copyright file="FinancialSettingModel.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-namespace Pruaccount.Api.Entities
+namespace Pruaccount.Api.Models
 {
     using System;
 
     /// <summary>
-    /// CBFinancialSetting.
+    /// FinancialSettingModel.
     /// </summary>
-    public class CBFinancialSetting
+    public class FinancialSettingModel
     {
-        /// <summary>
-        /// Gets or sets ClientId.
-        /// </summary>
-        public int CBFinancialSettingId { get; set; }
-
         /// <summary>
         /// Gets or sets UniqueId.
         /// </summary>

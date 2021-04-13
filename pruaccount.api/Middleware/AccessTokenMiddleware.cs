@@ -72,7 +72,7 @@ namespace Pruaccount.Api.Middleware
                         string authCookie = context.Request.Cookies[this.tokenConfigSetting.AuthCookie] ?? string.Empty;
 
                         // if (!string.IsNullOrEmpty(authCookie))
-                        if (authCookie == reqTokenHeader && !string.IsNullOrEmpty(authCookie) && !string.IsNullOrEmpty(reqTokenHeader))
+                        if (!string.IsNullOrEmpty(authCookie) && !string.IsNullOrEmpty(reqTokenHeader))
                         {
                             // Call Httpendpoint for checking the access & token
                             var response = this.validateUserTokenClient.ValidateUserToken(new ValidateUserTokenClientRequest()

@@ -110,16 +110,53 @@ namespace Pruaccount.Api.DataAccess
         {
             var para = new DynamicParameters();
             para.Add("@UniqueId", cbFinancialSetting.UniqueId);
-            para.Add("@AccountantBusinessDetailsUniqueId", cbFinancialSetting.ClientBusinessDetailsUniqueId);
-            para.Add("@YearStartDate", cbFinancialSetting.YearStartDate);
-            para.Add("@YearEndDate", cbFinancialSetting.YearEndDate);
-            para.Add("@YearEndLockdownDate", cbFinancialSetting.YearEndLockdownDate);
-            para.Add("@YearEndTaxDate", cbFinancialSetting.YearEndTaxDate);
-            para.Add("@RetentionPeriod", cbFinancialSetting.RetentionPeriod);
-            para.Add("@VatScheme", cbFinancialSetting.VatScheme);
-            para.Add("@VatSubmissionRequency", cbFinancialSetting.VatSubmissionRequency);
-            para.Add("@VatNumber", cbFinancialSetting.VatNumber);
-            para.Add("@VatFlatRate", cbFinancialSetting.VatFlatRate);
+            para.Add("@ClientBusinessDetailsUniqueId", cbFinancialSetting.ClientBusinessDetailsUniqueId);
+
+            if (cbFinancialSetting.YearStartDate != default(DateTime))
+            {
+                para.Add("@YearStartDate", cbFinancialSetting.YearStartDate);
+            }
+
+            if (cbFinancialSetting.YearEndDate != default(DateTime))
+            {
+                para.Add("@YearEndDate", cbFinancialSetting.YearEndDate);
+            }
+
+            if (cbFinancialSetting.YearEndLockdownDate != default(DateTime))
+            {
+                para.Add("@YearEndDate", cbFinancialSetting.YearEndLockdownDate);
+            }
+
+            if (!string.IsNullOrEmpty(cbFinancialSetting.YearEndTaxMonth))
+            {
+                para.Add("@YearEndTaxMonth", cbFinancialSetting.YearEndTaxMonth);
+            }
+
+            if (cbFinancialSetting.RetentionPeriod != default(int))
+            {
+                para.Add("@RetentionPeriod", cbFinancialSetting.RetentionPeriod);
+            }
+
+            if (!string.IsNullOrEmpty(cbFinancialSetting.VatScheme))
+            {
+                para.Add("@VatScheme", cbFinancialSetting.VatScheme);
+            }
+
+            if (!string.IsNullOrEmpty(cbFinancialSetting.VatSubmissionRequency))
+            {
+                para.Add("@VatSubmissionRequency", cbFinancialSetting.VatSubmissionRequency);
+            }
+
+            if (!string.IsNullOrEmpty(cbFinancialSetting.VatNumber))
+            {
+                para.Add("@VatNumber", cbFinancialSetting.VatNumber);
+            }
+
+            if (cbFinancialSetting.VatFlatRate != default(int))
+            {
+                para.Add("@VatFlatRate", cbFinancialSetting.VatFlatRate);
+            }
+
             para.Add("@HMRCUserId", cbFinancialSetting.HMRCUserId);
 
             int saveStatus = 0;
@@ -133,7 +170,7 @@ namespace Pruaccount.Api.DataAccess
                     throw new Exception($"Could not save client financial setting for {cbFinancialSetting.ClientBusinessDetailsUniqueId}");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

@@ -7,6 +7,7 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -79,17 +80,21 @@ namespace Pruaccount.Api.HttpClients.AuthValidationClient
                         {
                             foreach (string sCookie in authResponseCookies)
                             {
-                                this.logger.LogInformation($"Response - Cookie - {sCookie}");
+                                //this.logger.LogInformation($"Response - Cookie - {sCookie}");
 
                                 if (sCookie.StartsWith(this.tokenConfigSetting.AuthCookie))
                                 {
                                     response.AuthToken = sCookie.Split("=")[1].Replace("; domain", string.Empty);
                                 }
-                                else if (sCookie.StartsWith(this.tokenConfigSetting.AuthCookieDetails))
-                                {
-                                    response.AuthCookieDetails = JsonConvert.DeserializeObject<TokenUserDetails>(sCookie);
-                                }
                             }
+                        }
+
+                        if (reply.Headers.Contains(this.tokenConfigSetting.AuthCookieDetails))
+                        {
+                            IEnumerable<string> headerValues = reply.Headers.GetValues(this.tokenConfigSetting.AuthCookieDetails);
+                            var tokenDetails = headerValues.FirstOrDefault() ?? "{}";
+
+                            response.AuthCookieDetails = JsonConvert.DeserializeObject<TokenUserDetails>(tokenDetails);
                         }
 
                         var stream = reply.Content.ReadAsStreamAsync().Result;
