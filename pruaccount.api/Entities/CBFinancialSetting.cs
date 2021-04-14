@@ -74,5 +74,31 @@ namespace Pruaccount.Api.Entities
         /// Gets or sets HMRCUserId.
         /// </summary>
         public string HMRCUserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets CreatedDateUTC.
+        /// </summary>
+        public DateTime CreatedDateUTC { get; set; }
+
+        /// <summary>
+        /// Gets or sets UpdatedDateUTC.
+        /// </summary>
+        public DateTime? UpdatedDateUTC { get; set; }
+
+        /// <summary>
+        /// Gets or sets TotalRows.
+        /// </summary>
+        public int TotalRows { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether gets IsNew.
+        /// </summary>
+        public bool IsNew
+        {
+            get
+            {
+                return this.CBFinancialSettingId == default(int);
+            }
+        }
     }
 }

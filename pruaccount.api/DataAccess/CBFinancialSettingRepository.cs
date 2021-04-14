@@ -72,7 +72,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@ClientBusinessDetailsUniqueId", fid);
             }
 
-            return this.Connection.Query<CBFinancialSetting>("[Select_CBFinancialSetting]", para, this.Transaction, commandType: CommandType.StoredProcedure);
+            return this.Connection.Query<CBFinancialSetting>("[CBFinancialSetting_Select]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@UniqueId", pid);
             }
 
-            return this.Connection.Query<CBFinancialSetting>("[Select_CBFinancialSetting]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return this.Connection.Query<CBFinancialSetting>("[CBFinancialSetting_Select]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Pruaccount.Api.DataAccess
 
             try
             {
-                saveStatus = this.Connection.Execute("[Save_CBFinancialSetting]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+                saveStatus = this.Connection.Execute("[CBFinancialSetting_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
 
                 if (saveStatus != -1)
                 {
