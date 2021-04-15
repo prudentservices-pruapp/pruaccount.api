@@ -47,6 +47,9 @@ namespace PruAuth.Api.Domain.Auth
             {
                 "/api/financialsetting/savesettings",
                 "/api/financialsetting/settings",
+                "/api/ledgeraccount/list",
+                "/api/ledgeraccount/saveledgeraccount",
+                "/api/ledgeraccount/search",
                 "/api/test/testaccess",
                 "/api/test/testuserdetails",
                 "/api/test/testposts",

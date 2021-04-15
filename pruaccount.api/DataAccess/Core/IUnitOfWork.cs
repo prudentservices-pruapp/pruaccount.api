@@ -28,6 +28,11 @@ namespace Pruaccount.Api.DataAccess.Core
         ICBFinancialSettingRepository CBFinancialSettingRepository { get; }
 
         /// <summary>
+        /// Gets LedgerAccountRepository.
+        /// </summary>
+        ILedgerAccountRepository LedgerAccountRepository { get; }
+
+        /// <summary>
         /// Begin Transaction IsolationLevel.
         /// </summary>
         /// <param name="isolationLevel">IsolationLevel.</param>

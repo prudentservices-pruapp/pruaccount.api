@@ -27,6 +27,7 @@ namespace Pruaccount.Api.DataAccess.Core
         private bool disposed;
 
         private ICBFinancialSettingRepository cbFinancialSettingRepository;
+        private ILedgerAccountRepository ledgerAccountRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -88,6 +89,14 @@ namespace Pruaccount.Api.DataAccess.Core
         public ICBFinancialSettingRepository CBFinancialSettingRepository
         {
             get { return this.cbFinancialSettingRepository ??= new CBFinancialSettingRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets LedgerAccountRepository.
+        /// </summary>
+        public ILedgerAccountRepository LedgerAccountRepository
+        {
+            get { return this.ledgerAccountRepository ??= new LedgerAccountRepository(this); }
         }
 
         /// <summary>
