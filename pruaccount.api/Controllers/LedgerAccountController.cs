@@ -82,9 +82,9 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
-        /// LedgerAccountSearch.
+        /// LedgerAccountSearch. ?userId=${userId}&searchTerm=${searchTerm}&sort=${sortby}&orderBy=${order}&pageNumber=${currentPage}&rowsPerPage=${pageSize}
         /// </summary>
-        /// <param name="dname">dname.</param>
+        /// <param name="searchTerm">dname.</param>
         /// <param name="categoryGroupId">categoryGroupId.</param>
         /// <param name="sort">sort.</param>
         /// <param name="orderBy">orderBy.</param>
@@ -92,7 +92,7 @@ namespace Pruaccount.Api.Controllers
         /// <param name="rowsPerPage">rowsPerPage.</param>
         /// <returns>IActionResult.</returns>
         [HttpGet("search")]
-        public IActionResult LedgerAccountSearch(string dname, int categoryGroupId, string sort, string orderBy, int pageNumber, int rowsPerPage)
+        public IActionResult LedgerAccountSearch(string searchTerm, int categoryGroupId, string sort, string orderBy, int pageNumber, int rowsPerPage)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null)
                 {
-                    var ledgerAccountList = this.uw.LedgerAccountRepository.FindLedgerAccounts(dname, categoryGroupId, sort, orderBy, pageNumber, rowsPerPage);
+                    var ledgerAccountList = this.uw.LedgerAccountRepository.FindLedgerAccounts(searchTerm, categoryGroupId, sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = ledgerAccountList.FirstOrDefault();
 
