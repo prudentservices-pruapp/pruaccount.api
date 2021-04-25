@@ -42,7 +42,7 @@ namespace Pruaccount.Api.DataAccess.Core
         IEnumerable<T> FindByFID(Guid fid);
 
         /// <summary>
-        /// FindAll.
+        /// ListAll.
         /// </summary>
         /// <param name="sort">Sort.</param>
         /// <param name="orderby">OrderBy.</param>
