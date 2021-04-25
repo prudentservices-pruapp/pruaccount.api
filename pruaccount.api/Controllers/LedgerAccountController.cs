@@ -41,6 +41,63 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
+        /// LedgerAccountDetail.
+        /// </summary>
+        /// <param name="pid">LedgerAccountId</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("detail/{pid}")]
+        public IActionResult LedgerAccountDetail(int pid)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+
+                if (currentTokenUserDetails != null)
+                {
+                    var ledgerAccount = this.uw.LedgerAccountRepository.FindByPID(pid);
+
+                    if (ledgerAccount != null)
+                    {
+                        LedgerAccountModel model = new LedgerAccountModel()
+                        {
+                            LedgerAccountId = ledgerAccount.LedgerAccountId,
+                            Group = ledgerAccount.Group,
+                            Category = ledgerAccount.Category,
+                            CategoryGroupId = ledgerAccount.CategoryGroupId,
+                            DName = ledgerAccount.DName,
+                            LName = ledgerAccount.LName,
+                            DVatRate = ledgerAccount.DVatRate,
+                            NominalCode = ledgerAccount.NominalCode,
+                            VatRate = ledgerAccount.VatRate,
+                            VatRateId = ledgerAccount.VatRateId,
+                            IncludeInChart = ledgerAccount.IncludeInChart,
+                            M_Bank = ledgerAccount.M_Bank,
+                            M_Journals = ledgerAccount.M_Journals,
+                            M_Other_Payment = ledgerAccount.M_Other_Payment,
+                            M_Other_Receipt = ledgerAccount.M_Other_Receipt,
+                            M_Purchase = ledgerAccount.M_Purchase,
+                            M_Reports = ledgerAccount.M_Reports,
+                            M_Sales = ledgerAccount.M_Sales,
+                        };
+
+                        return this.Ok(ledgerAccount);
+                    }
+
+                    return this.NotFound("Could not get any ledgerAccount details.");
+                }
+                else
+                {
+                    return this.NotFound("Could not get any token details.");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "LedgerAccountController->LedgerAccountList Exception");
+                return this.BadRequest("Internal Server Error");
+            }
+        }
+
+        /// <summary>
         /// LedgerAccountList.
         /// </summary>
         /// <param name="sort">sort.</param>
@@ -129,7 +186,7 @@ namespace Pruaccount.Api.Controllers
         /// </summary>
         /// <param name="ledgeraccountModel">LedgerAccountModel.</param>
         /// <returns>IActionResult.</returns>
-        [HttpPost("saveledgeraccount")]
+        [HttpPost("save")]
         public IActionResult SaveLedgerAccount([FromBody] LedgerAccountModel ledgeraccountModel)
         {
             try
