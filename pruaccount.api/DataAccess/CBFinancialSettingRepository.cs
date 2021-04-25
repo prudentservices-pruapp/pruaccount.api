@@ -27,33 +27,14 @@ namespace Pruaccount.Api.DataAccess
         }
 
         /// <summary>
-        /// Add.
-        /// </summary>
-        /// <param name="item">CBFinancialSetting.</param>
-        /// <returns>NotImplementedException.</returns>
-        public CBFinancialSetting Add(CBFinancialSetting item)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// FindAll.
-        /// </summary>
-        /// <returns>NotImplementedException.</returns>
-        public IEnumerable<CBFinancialSetting> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// FindAll.
+        /// ListAll.
         /// </summary>
         /// <param name="sort">sort.</param>
         /// <param name="orderby">orderby.</param>
         /// <param name="pagenumber">pagenumber.</param>
         /// <param name="rowsperpage">rowsperpage.</param>
         /// <returns>IEnumerable CBFinancialSetting.</returns>
-        public IEnumerable<CBFinancialSetting> FindAll(string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<CBFinancialSetting> ListAll(string sort, string orderby, int pagenumber, int rowsperpage)
         {
             throw new NotImplementedException();
         }
@@ -176,16 +157,6 @@ namespace Pruaccount.Api.DataAccess
             }
 
             return cbFinancialSetting;
-        }
-
-        /// <summary>
-        /// Update.
-        /// </summary>
-        /// <param name="item">CBFinancialSetting.</param>
-        /// <returns>NotImplementedException.</returns>
-        public CBFinancialSetting Update(CBFinancialSetting item)
-        {
-            throw new NotImplementedException();
         }
     }
 }

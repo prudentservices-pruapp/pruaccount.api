@@ -114,7 +114,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null)
                 {
-                    var ledgerAccountList = this.uw.LedgerAccountRepository.FindAll(sort, orderBy, pageNumber, rowsPerPage);
+                    var ledgerAccountList = this.uw.LedgerAccountRepository.ListAll(sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = ledgerAccountList.FirstOrDefault();
 
@@ -157,7 +157,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null)
                 {
-                    var ledgerAccountList = this.uw.LedgerAccountRepository.FindLedgerAccounts(searchTerm, categoryGroupId, sort, orderBy, pageNumber, rowsPerPage);
+                    var ledgerAccountList = this.uw.LedgerAccountRepository.SearchLedgerAccounts(searchTerm, categoryGroupId, sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = ledgerAccountList.FirstOrDefault();
 

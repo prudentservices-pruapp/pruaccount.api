@@ -27,33 +27,14 @@ namespace Pruaccount.Api.DataAccess
         }
 
         /// <summary>
-        /// Add.
-        /// </summary>
-        /// <param name="item">LedgerAccount.</param>
-        /// <returns>NotImplementedException.</returns>
-        public LedgerAccount Add(LedgerAccount item)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// FindAll.
-        /// </summary>
-        /// <returns>NotImplementedException.</returns>
-        public IEnumerable<LedgerAccount> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// FindAll.
+        /// ListAll.
         /// </summary>
         /// <param name="sort">sort</param>
         /// <param name="orderby">orderby</param>
         /// <param name="pagenumber">pagenumber</param>
         /// <param name="rowsperpage">rowsperpage</param>
         /// <returns>IEnumerable LedgerAccount.</returns>
-        public IEnumerable<LedgerAccount> FindAll(string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<LedgerAccount> ListAll(string sort, string orderby, int pagenumber, int rowsperpage)
         {
             var para = new DynamicParameters();
 
@@ -77,7 +58,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@rowsPerPage", rowsperpage);
             }
 
-            return this.Connection.Query<LedgerAccount>("[LeadgerAccounts_Select]", para, this.Transaction, commandType: CommandType.StoredProcedure);
+            return this.Connection.Query<LedgerAccount>("[LedgerAccount_List]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
 
         /// <summary>
@@ -114,11 +95,11 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@LedgerAccountId", ledgerAccountId);
             }
 
-            return this.Connection.Query<LedgerAccount>("[LeadgerAccount_Select]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return this.Connection.Query<LedgerAccount>("[LedgerAccount_Detail]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         /// <summary>
-        /// FindLedgerAccounts.
+        /// SearchLedgerAccounts.
         /// </summary>
         /// <param name="dname">Display Name.</param>
         /// <param name="categoryGroupId">CategoryGroupId.</param>
@@ -127,7 +108,7 @@ namespace Pruaccount.Api.DataAccess
         /// <param name="pagenumber">pageNumber.</param>
         /// <param name="rowsperpage">rowsPerPage.</param>
         /// <returns>IEnumerable LedgerAccount.</returns>
-        public IEnumerable<LedgerAccount> FindLedgerAccounts(string dname, int categoryGroupId, string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<LedgerAccount> SearchLedgerAccounts(string dname, int categoryGroupId, string sort, string orderby, int pagenumber, int rowsperpage)
         {
             var para = new DynamicParameters();
 
@@ -161,7 +142,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@rowsPerPage", rowsperpage);
             }
 
-            return this.Connection.Query<LedgerAccount>("[LeadgerAccounts_Search]", para, this.Transaction, commandType: CommandType.StoredProcedure);
+            return this.Connection.Query<LedgerAccount>("[LedgerAccount_Search]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
 
         /// <summary>
@@ -200,7 +181,7 @@ namespace Pruaccount.Api.DataAccess
 
             try
             {
-                saveStatus = this.Connection.Execute("[LeadgerAccount_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+                saveStatus = this.Connection.Execute("[LedgerAccount_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
 
                 if (saveStatus != -1)
                 {
@@ -213,16 +194,6 @@ namespace Pruaccount.Api.DataAccess
             }
 
             return ledgerAccount;
-        }
-
-        /// <summary>
-        /// Update.
-        /// </summary>
-        /// <param name="item">LedgerAccount.</param>
-        /// <returns>NotImplementedException.</returns>
-        public LedgerAccount Update(LedgerAccount item)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Pruaccount.Api.DataAccess
         LedgerAccount FindByPID(int ledgerAccountId);
 
         /// <summary>
-        /// FindLedgerAccounts.
+        /// SearchLedgerAccounts.
         /// </summary>
         /// <param name="dname">Display Name.</param>
         /// <param name="categoryGroupId">CategoryGroupId.</param>
@@ -30,6 +30,6 @@ namespace Pruaccount.Api.DataAccess
         /// <param name="pagenumber">pageNumber.</param>
         /// <param name="rowsperpage">rowsPerPage.</param>
         /// <returns>IEnumerable LedgerAccount.</returns>
-        IEnumerable<LedgerAccount> FindLedgerAccounts(string dname, int categoryGroupId, string sort, string orderby, int pagenumber, int rowsperpage);
+        IEnumerable<LedgerAccount> SearchLedgerAccounts(string dname, int categoryGroupId, string sort, string orderby, int pagenumber, int rowsperpage);
     }
 }
