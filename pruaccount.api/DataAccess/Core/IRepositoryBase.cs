@@ -35,6 +35,16 @@ namespace Pruaccount.Api.DataAccess.Core
         T FindByPID(Guid pid);
 
         /// <summary>
+        /// FindByCID.
+        /// </summary>
+        /// <param name="pid">UniqueId.</param>
+        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. CustomerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
+        /// <returns>Returns T.</returns>
+        T FindByCID(Guid pid, Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId);
+
+        /// <summary>
         /// FindByFID.
         /// </summary>
         /// <param name="fid">Foreign key.</param>

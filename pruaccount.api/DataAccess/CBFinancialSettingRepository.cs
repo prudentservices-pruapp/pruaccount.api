@@ -158,5 +158,18 @@ namespace Pruaccount.Api.DataAccess
 
             return cbFinancialSetting;
         }
+
+        /// <summary>
+        /// FindByCID.
+        /// </summary>
+        /// <param name="pid">UniqueId.</param>
+        /// <param name="businessDetailsUniqueId">businessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. CustomerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
+        /// <returns>NotImplementedException.</returns>
+        public CBFinancialSetting FindByCID(Guid pid, Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
