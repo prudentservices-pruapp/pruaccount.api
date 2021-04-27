@@ -54,11 +54,13 @@ namespace Pruaccount.Api.DataAccess.Core
         /// <summary>
         /// ListAll.
         /// </summary>
+        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
         /// <param name="sort">Sort.</param>
         /// <param name="orderby">OrderBy.</param>
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
         /// <returns>IEnumerable T.</returns>
-        IEnumerable<T> ListAll(string sort, string orderby, int pagenumber, int rowsperpage);
+        IEnumerable<T> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, string sort, string orderby, int pagenumber, int rowsperpage);
     }
 }

@@ -29,12 +29,14 @@ namespace Pruaccount.Api.DataAccess
         /// <summary>
         /// ListAll.
         /// </summary>
-        /// <param name="sort">sort</param>
-        /// <param name="orderby">orderby</param>
-        /// <param name="pagenumber">pagenumber</param>
-        /// <param name="rowsperpage">rowsperpage</param>
+        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="sort">sort.</param>
+        /// <param name="orderby">orderby.</param>
+        /// <param name="pagenumber">pagenumber.</param>
+        /// <param name="rowsperpage">rowsperpage.</param>
         /// <returns>IEnumerable LedgerAccount.</returns>
-        public IEnumerable<LedgerAccount> ListAll(string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<LedgerAccount> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, string sort, string orderby, int pagenumber, int rowsperpage)
         {
             var para = new DynamicParameters();
 

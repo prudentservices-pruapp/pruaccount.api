@@ -27,19 +27,6 @@ namespace Pruaccount.Api.DataAccess
         }
 
         /// <summary>
-        /// ListAll.
-        /// </summary>
-        /// <param name="sort">sort.</param>
-        /// <param name="orderby">orderby.</param>
-        /// <param name="pagenumber">pagenumber.</param>
-        /// <param name="rowsperpage">rowsperpage.</param>
-        /// <returns>IEnumerable CBFinancialSetting.</returns>
-        public IEnumerable<CBFinancialSetting> ListAll(string sort, string orderby, int pagenumber, int rowsperpage)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// FindByFID.
         /// </summary>
         /// <param name="fid">ClientBusinessDetailsUniqueId.</param>
@@ -168,6 +155,21 @@ namespace Pruaccount.Api.DataAccess
         /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
         /// <returns>NotImplementedException.</returns>
         public CBFinancialSetting FindByCID(Guid pid, Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// ListAll.
+        /// </summary>
+        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="sort">Sort.</param>
+        /// <param name="orderby">OrderBy.</param>
+        /// <param name="pagenumber">PageNumber.</param>
+        /// <param name="rowsperpage">RowsPerPage.</param>
+        /// <returns>NotImplementedException.</returns>
+        public IEnumerable<CBFinancialSetting> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, string sort, string orderby, int pagenumber, int rowsperpage)
         {
             throw new NotImplementedException();
         }
