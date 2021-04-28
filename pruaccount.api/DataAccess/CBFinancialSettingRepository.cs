@@ -10,6 +10,7 @@ namespace Pruaccount.Api.DataAccess
     using System.Linq;
     using Dapper;
     using Pruaccount.Api.DataAccess.Core;
+    using Pruaccount.Api.DataAccess.Interfaces;
     using Pruaccount.Api.Entities;
 
     /// <summary>

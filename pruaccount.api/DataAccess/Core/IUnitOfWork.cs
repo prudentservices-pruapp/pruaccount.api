@@ -6,6 +6,7 @@ namespace Pruaccount.Api.DataAccess.Core
 {
     using System;
     using System.Data;
+    using Pruaccount.Api.DataAccess.Interfaces;
 
     /// <summary>
     /// IUnitOfWork.
@@ -26,6 +27,11 @@ namespace Pruaccount.Api.DataAccess.Core
         /// Gets CBFinancialSettingRepository.
         /// </summary>
         ICBFinancialSettingRepository CBFinancialSettingRepository { get; }
+
+        /// <summary>
+        /// Gets CustomerBusinessAddressRepository.
+        /// </summary>
+        ICustomerBusinessAddressRepository CustomerBusinessAddressRepository { get; }
 
         /// <summary>
         /// Gets LedgerAccountRepository.

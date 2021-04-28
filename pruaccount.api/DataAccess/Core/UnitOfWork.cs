@@ -11,6 +11,7 @@ namespace Pruaccount.Api.DataAccess.Core
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Pruaccount.Api.AppSettings;
+    using Pruaccount.Api.DataAccess.Interfaces;
     using Pruaccount.Api.Domain.Auth;
 
     /// <summary>
@@ -27,6 +28,7 @@ namespace Pruaccount.Api.DataAccess.Core
         private bool disposed;
 
         private ICBFinancialSettingRepository cbFinancialSettingRepository;
+        private ICustomerBusinessAddressRepository customerBusinessAddressRepository;
         private ILedgerAccountRepository ledgerAccountRepository;
 
         /// <summary>
@@ -89,6 +91,14 @@ namespace Pruaccount.Api.DataAccess.Core
         public ICBFinancialSettingRepository CBFinancialSettingRepository
         {
             get { return this.cbFinancialSettingRepository ??= new CBFinancialSettingRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets CustomerBusinessAddressRepository.
+        /// </summary>
+        public ICustomerBusinessAddressRepository CustomerBusinessAddressRepository
+        {
+            get { return this.customerBusinessAddressRepository ?? new CustomerBusinessAddressRepository(this);  }
         }
 
         /// <summary>

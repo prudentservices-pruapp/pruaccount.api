@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Pruaccount.Api.DataAccess
+namespace Pruaccount.Api.DataAccess.Interfaces
 {
     using System.Collections.Generic;
     using Pruaccount.Api.DataAccess.Core;
