@@ -173,5 +173,21 @@ namespace Pruaccount.Api.DataAccess
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Search.
+        /// </summary>
+        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="searchTerm">searchTerm.</param>
+        /// <param name="sort">Sort.</param>
+        /// <param name="orderby">OrderBy.</param>
+        /// <param name="pagenumber">PageNumber.</param>
+        /// <param name="rowsperpage">RowsPerPage.</param>
+        /// <returns>IEnumerable T.</returns>
+        public IEnumerable<CBFinancialSetting> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
