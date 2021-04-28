@@ -54,7 +54,7 @@ namespace Pruaccount.Api.DataAccess
         /// <param name="orderby">OrderBy.</param>
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
-        /// <returns>IEnumerable T.</returns>
+        /// <returns>IEnumerable CustomerBusinessAddress.</returns>
         public IEnumerable<CustomerBusinessAddress> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId = default, string sort = "Unknown", string orderby = "asc", int pagenumber = 1, int rowsperpage = 10)
         {
             var para = new DynamicParameters();

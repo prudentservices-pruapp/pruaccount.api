@@ -4,7 +4,6 @@
 
 namespace Pruaccount.Api.DataAccess.Interfaces
 {
-    using System.Collections.Generic;
     using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Entities;
 

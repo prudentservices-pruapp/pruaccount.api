@@ -12,9 +12,9 @@ namespace Pruaccount.Api.Entities
     public class CustomerBusinessMisc
     {
         /// <summary>
-        /// Gets or sets CustomerBusinessAddressId.
+        /// Gets or sets CustomerBusinessMiscId.
         /// </summary>
-        public int CustomerBusinessPaymentDetailsId { get; set; }
+        public int CustomerBusinessMiscId { get; set; }
 
         /// <summary>
         /// Gets or sets UniqueId.
