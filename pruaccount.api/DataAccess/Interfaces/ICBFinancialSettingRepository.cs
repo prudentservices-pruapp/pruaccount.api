@@ -4,6 +4,8 @@
 
 namespace Pruaccount.Api.DataAccess.Interfaces
 {
+    using System;
+    using System.Collections.Generic;
     using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Entities;
 
@@ -12,5 +14,11 @@ namespace Pruaccount.Api.DataAccess.Interfaces
     /// </summary>
     public interface ICBFinancialSettingRepository : IRepositoryBase<CBFinancialSetting>
     {
+        /// <summary>
+        /// FindByFID.
+        /// </summary>
+        /// <param name="fid">ClientBusinessDetailsUniqueId.</param>
+        /// <returns>IEnumerable CBFinancialSetting.</returns>
+        IEnumerable<CBFinancialSetting> FindByFID(Guid fid);
     }
 }

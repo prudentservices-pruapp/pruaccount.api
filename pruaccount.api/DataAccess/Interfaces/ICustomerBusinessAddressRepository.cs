@@ -8,6 +8,9 @@ namespace Pruaccount.Api.DataAccess.Interfaces
     using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Entities;
 
+    /// <summary>
+    /// ICustomerBusinessAddressRepository.
+    /// </summary>
     public interface ICustomerBusinessAddressRepository : IRepositoryBase<CustomerBusinessAddress>
     {
     }

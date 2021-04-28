@@ -28,46 +28,170 @@ namespace Pruaccount.Api.DataAccess
         }
 
         /// <summary>
-        /// FindByCID.
+        /// FindByPID.
         /// </summary>
-        /// <param name="pid">pid.</param>
-        /// <param name="businessDetailsUniqueId">businessDetailsUniqueId.</param>
-        /// <param name="masterUniqueId">masterUniqueId.</param>
-        /// <param name="parentUniqueId">parentUniqueId.</param>
+        /// <param name="pid">Primary key.</param>
         /// <returns>CustomerBusinessAddress.</returns>
-        public CustomerBusinessAddress FindByCID(Guid pid, Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<CustomerBusinessAddress> FindByFID(Guid fid)
-        {
-            throw new NotImplementedException();
-        }
-
         public CustomerBusinessAddress FindByPID(Guid pid)
         {
-            throw new NotImplementedException();
+            var para = new DynamicParameters();
+
+            if (pid != default(Guid))
+            {
+                para.Add("@UniqueId", pid);
+            }
+
+            return this.Connection.Query<CustomerBusinessAddress>("[CustomerBusinessAddress_Detail]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public IEnumerable<CustomerBusinessAddress> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, string sort, string orderby, int pagenumber, int rowsperpage)
+        /// <summary>
+        /// ListAll.
+        /// </summary>
+        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId not needed.</param>
+        /// <param name="sort">Sort.</param>
+        /// <param name="orderby">OrderBy.</param>
+        /// <param name="pagenumber">PageNumber.</param>
+        /// <param name="rowsperpage">RowsPerPage.</param>
+        /// <returns>IEnumerable T.</returns>
+        public IEnumerable<CustomerBusinessAddress> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId = default, string sort = "Unknown", string orderby = "asc", int pagenumber = 1, int rowsperpage = 10)
         {
-            throw new NotImplementedException();
+            var para = new DynamicParameters();
+
+            if (businessDetailsUniqueId != default(Guid))
+            {
+                para.Add("@ClientBusinessDetailsUniqueId", businessDetailsUniqueId);
+            }
+
+            if (masterUniqueId != default(Guid))
+            {
+                para.Add("@CustomerBusinessDetailsUniqueId", masterUniqueId);
+            }
+
+            if (!string.IsNullOrEmpty(sort))
+            {
+                para.Add("@sort", sort);
+            }
+
+            if (!string.IsNullOrEmpty(orderby))
+            {
+                para.Add("@orderby", orderby);
+            }
+
+            if (pagenumber != default(int))
+            {
+                para.Add("@pagenumber", pagenumber);
+            }
+
+            if (rowsperpage != default(int))
+            {
+                para.Add("@rowsperpage", rowsperpage);
+            }
+
+            return this.Connection.Query<CustomerBusinessAddress>("[CustomerBusinessAddress_List]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
 
+        /// <summary>
+        /// Remove.
+        /// </summary>
+        /// <param name="pid">pid.</param>
         public void Remove(Guid pid)
         {
             throw new NotImplementedException();
         }
 
-        public CustomerBusinessAddress Save(CustomerBusinessAddress item)
+        /// <summary>
+        /// Save.
+        /// </summary>
+        /// <param name="customerBusinessAddress">customerBusinessAddress.</param>
+        /// <returns>CustomerBusinessAddress.</returns>
+        public CustomerBusinessAddress Save(CustomerBusinessAddress customerBusinessAddress)
         {
-            throw new NotImplementedException();
+            var para = new DynamicParameters();
+            para.Add("@CustomerBusinessAddressId", customerBusinessAddress.CustomerBusinessAddressId);
+            para.Add("@UniqueId", customerBusinessAddress.UniqueId);
+            para.Add("@ClientBusinessDetailsUniqueId", customerBusinessAddress.ClientBusinessDetailsUniqueId);
+            para.Add("@CustomerBusinessDetailsUniqueId", customerBusinessAddress.CustomerBusinessDetailsUniqueId);
+            para.Add("@AddressType", customerBusinessAddress.AddressType);
+            para.Add("@Line1", customerBusinessAddress.Line1);
+            para.Add("@Line2", customerBusinessAddress.Line2);
+            para.Add("@City", customerBusinessAddress.City);
+            para.Add("@County", customerBusinessAddress.County);
+            para.Add("@PostCode", customerBusinessAddress.PostCode);
+            para.Add("@Country", customerBusinessAddress.Country);
+
+            int saveStatus = 0;
+
+            try
+            {
+                saveStatus = this.Connection.Execute("[CustomerBusinessAddress_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+
+                if (saveStatus != -1)
+                {
+                    throw new Exception($"Could not save customerBusinessAddress details for {customerBusinessAddress.AddressType} - {customerBusinessAddress.Line1}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return customerBusinessAddress;
         }
 
-        public IEnumerable<CustomerBusinessAddress> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
+        /// <summary>
+        /// Search.
+        /// </summary>
+        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
+        /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId not needed.</param>
+        /// <param name="searchTerm">searchTerm.</param>
+        /// <param name="sort">Sort.</param>
+        /// <param name="orderby">OrderBy.</param>
+        /// <param name="pagenumber">PageNumber.</param>
+        /// <param name="rowsperpage">RowsPerPage.</param>
+        /// <returns>IEnumerable CustomerBusinessAddress.</returns>
+        public IEnumerable<CustomerBusinessAddress> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
         {
-            throw new NotImplementedException();
+            var para = new DynamicParameters();
+
+            if (businessDetailsUniqueId != default(Guid))
+            {
+                para.Add("@ClientBusinessDetailsUniqueId", businessDetailsUniqueId);
+            }
+
+            if (masterUniqueId != default(Guid))
+            {
+                para.Add("@CustomerBusinessDetailsUniqueId", masterUniqueId);
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                para.Add("@searchTerm", searchTerm);
+            }
+
+            if (!string.IsNullOrEmpty(sort))
+            {
+                para.Add("@sort", sort);
+            }
+
+            if (!string.IsNullOrEmpty(orderby))
+            {
+                para.Add("@orderby", orderby);
+            }
+
+            if (pagenumber != default(int))
+            {
+                para.Add("@pagenumber", pagenumber);
+            }
+
+            if (rowsperpage != default(int))
+            {
+                para.Add("@rowsperpage", rowsperpage);
+            }
+
+            return this.Connection.Query<CustomerBusinessAddress>("[CustomerBusinessAddress_Search]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
     }
 }

@@ -114,7 +114,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null)
                 {
-                    var ledgerAccountList = this.uw.LedgerAccountRepository.ListAll(default, default, sort, orderBy, pageNumber, rowsPerPage);
+                    var ledgerAccountList = this.uw.LedgerAccountRepository.ListAll(default, default, default, sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = ledgerAccountList.FirstOrDefault();
 

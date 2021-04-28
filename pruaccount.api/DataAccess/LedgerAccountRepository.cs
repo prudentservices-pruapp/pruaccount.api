@@ -32,12 +32,13 @@ namespace Pruaccount.Api.DataAccess
         /// </summary>
         /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
         /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
         /// <param name="sort">sort.</param>
         /// <param name="orderby">orderby.</param>
         /// <param name="pagenumber">pagenumber.</param>
         /// <param name="rowsperpage">rowsperpage.</param>
         /// <returns>IEnumerable LedgerAccount.</returns>
-        public IEnumerable<LedgerAccount> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<LedgerAccount> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId, string sort, string orderby, int pagenumber, int rowsperpage)
         {
             var para = new DynamicParameters();
 
@@ -62,16 +63,6 @@ namespace Pruaccount.Api.DataAccess
             }
 
             return this.Connection.Query<LedgerAccount>("[LedgerAccount_List]", para, this.Transaction, commandType: CommandType.StoredProcedure);
-        }
-
-        /// <summary>
-        /// FindByFID.
-        /// </summary>
-        /// <param name="fid">Foreign key.</param>
-        /// <returns>NotImplementedException.</returns>
-        public IEnumerable<LedgerAccount> FindByFID(Guid fid)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -200,30 +191,18 @@ namespace Pruaccount.Api.DataAccess
         }
 
         /// <summary>
-        /// FindByCID.
-        /// </summary>
-        /// <param name="pid">UniqueId.</param>
-        /// <param name="businessDetailsUniqueId">businessDetailsUniqueId.</param>
-        /// <param name="masterUniqueId">masterUniqueId e.g. CustomerBusinessDetailsUniqueId.</param>
-        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
-        /// <returns>NotImplementedException.</returns>
-        public LedgerAccount FindByCID(Guid pid, Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Search.
         /// </summary>
         /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
         /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
         /// <param name="searchTerm">searchTerm.</param>
         /// <param name="sort">Sort.</param>
         /// <param name="orderby">OrderBy.</param>
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
         /// <returns>NotImplementedException.</returns>
-        public IEnumerable<LedgerAccount> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<LedgerAccount> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
         {
             throw new NotImplementedException();
         }

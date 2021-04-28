@@ -148,29 +148,17 @@ namespace Pruaccount.Api.DataAccess
         }
 
         /// <summary>
-        /// FindByCID.
-        /// </summary>
-        /// <param name="pid">UniqueId.</param>
-        /// <param name="businessDetailsUniqueId">businessDetailsUniqueId.</param>
-        /// <param name="masterUniqueId">masterUniqueId e.g. CustomerBusinessDetailsUniqueId.</param>
-        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
-        /// <returns>NotImplementedException.</returns>
-        public CBFinancialSetting FindByCID(Guid pid, Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// ListAll.
         /// </summary>
         /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
         /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
         /// <param name="sort">Sort.</param>
         /// <param name="orderby">OrderBy.</param>
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
         /// <returns>NotImplementedException.</returns>
-        public IEnumerable<CBFinancialSetting> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<CBFinancialSetting> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId = default, string sort = "Unknown", string orderby = "asc", int pagenumber = 1, int rowsperpage = 10)
         {
             throw new NotImplementedException();
         }
@@ -180,13 +168,14 @@ namespace Pruaccount.Api.DataAccess
         /// </summary>
         /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
         /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
         /// <param name="searchTerm">searchTerm.</param>
         /// <param name="sort">Sort.</param>
         /// <param name="orderby">OrderBy.</param>
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
-        /// <returns>IEnumerable T.</returns>
-        public IEnumerable<CBFinancialSetting> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
+        /// <returns>NotImplementedException.</returns>
+        public IEnumerable<CBFinancialSetting> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
         {
             throw new NotImplementedException();
         }

@@ -35,45 +35,30 @@ namespace Pruaccount.Api.DataAccess.Core
         T FindByPID(Guid pid);
 
         /// <summary>
-        /// FindByCID.
-        /// </summary>
-        /// <param name="pid">UniqueId.</param>
-        /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
-        /// <param name="masterUniqueId">masterUniqueId e.g. CustomerBusinessDetailsUniqueId.</param>
-        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
-        /// <returns>Returns T.</returns>
-        T FindByCID(Guid pid, Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId);
-
-        /// <summary>
-        /// FindByFID.
-        /// </summary>
-        /// <param name="fid">Foreign key.</param>
-        /// <returns>IEnumerable T.</returns>
-        IEnumerable<T> FindByFID(Guid fid);
-
-        /// <summary>
         /// ListAll.
         /// </summary>
         /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
         /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
         /// <param name="sort">Sort.</param>
         /// <param name="orderby">OrderBy.</param>
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
         /// <returns>IEnumerable T.</returns>
-        IEnumerable<T> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, string sort, string orderby, int pagenumber, int rowsperpage);
+        IEnumerable<T> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId = default, string sort = "Unknown", string orderby = "asc", int pagenumber = 1, int rowsperpage = 10);
 
         /// <summary>
         /// Search.
         /// </summary>
         /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
         /// <param name="masterUniqueId">masterUniqueId e.g. customerBusinessDetailsUniqueId.</param>
+        /// <param name="parentUniqueId">parentUniqueId e.g. InvoiceUniqueId.</param>
         /// <param name="searchTerm">searchTerm.</param>
         /// <param name="sort">Sort.</param>
         /// <param name="orderby">OrderBy.</param>
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
         /// <returns>IEnumerable T.</returns>
-        IEnumerable<T> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage);
+        IEnumerable<T> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage);
     }
 }
