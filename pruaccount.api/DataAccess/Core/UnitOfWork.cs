@@ -29,6 +29,9 @@ namespace Pruaccount.Api.DataAccess.Core
 
         private ICBFinancialSettingRepository cbFinancialSettingRepository;
         private ICustomerBusinessAddressRepository customerBusinessAddressRepository;
+        private ICustomerBusinessDetailsRepository customerBusinessDetailsRepository;
+        private ICustomerBusinessPaymentDetailsRepository customerBusinessPaymentDetailsRepository;
+        private ICustomerBusinessMiscRepository customerBusinessMiscRepository;
         private ILedgerAccountRepository ledgerAccountRepository;
 
         /// <summary>
@@ -99,6 +102,30 @@ namespace Pruaccount.Api.DataAccess.Core
         public ICustomerBusinessAddressRepository CustomerBusinessAddressRepository
         {
             get { return this.customerBusinessAddressRepository ?? new CustomerBusinessAddressRepository(this);  }
+        }
+
+        /// <summary>
+        /// Gets CustomerBusinessDetailsRepository.
+        /// </summary>
+        public ICustomerBusinessDetailsRepository CustomerBusinessDetailsRepository
+        {
+            get { return this.customerBusinessDetailsRepository ?? new CustomerBusinessDetailsRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets CustomerBusinessPaymentDetailsRepository.
+        /// </summary>
+        public ICustomerBusinessPaymentDetailsRepository CustomerBusinessPaymentDetailsRepository
+        {
+            get { return this.customerBusinessPaymentDetailsRepository ?? new CustomerBusinessPaymentDetailsRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets CustomerBusinessMiscRepository.
+        /// </summary>
+        public ICustomerBusinessMiscRepository CustomerBusinessMiscRepository
+        {
+            get { return this.customerBusinessMiscRepository ?? new CustomerBusinessMiscRepository(this); }
         }
 
         /// <summary>

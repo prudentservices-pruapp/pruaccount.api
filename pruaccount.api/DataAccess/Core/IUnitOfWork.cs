@@ -34,6 +34,21 @@ namespace Pruaccount.Api.DataAccess.Core
         ICustomerBusinessAddressRepository CustomerBusinessAddressRepository { get; }
 
         /// <summary>
+        /// Gets CustomerBusinessDetailsRepository.
+        /// </summary>
+        ICustomerBusinessDetailsRepository CustomerBusinessDetailsRepository { get; }
+
+        /// <summary>
+        /// Gets CustomerBusinessPaymentDetailsRepository.
+        /// </summary>
+        ICustomerBusinessPaymentDetailsRepository CustomerBusinessPaymentDetailsRepository { get; }
+
+        /// <summary>
+        /// Gets CustomerBusinessMiscRepository.
+        /// </summary>
+        ICustomerBusinessMiscRepository CustomerBusinessMiscRepository { get; }
+
+        /// <summary>
         /// Gets LedgerAccountRepository.
         /// </summary>
         ILedgerAccountRepository LedgerAccountRepository { get; }
