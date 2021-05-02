@@ -45,6 +45,10 @@ namespace PruAuth.Api.Domain.Auth
 
             string[] tokenRequiredForPaths =
             {
+                "/api/customerbusinessdetail/detail",
+                "/api/customerbusinessdetail/list",
+                "/api/customerbusinessdetail/save",
+                "/api/customerbusinessdetail/search",
                 "/api/financialsetting/savesettings",
                 "/api/financialsetting/settings",
                 "/api/ledgeraccount/detail",
