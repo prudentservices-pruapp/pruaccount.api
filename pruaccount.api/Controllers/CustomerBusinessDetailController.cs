@@ -155,13 +155,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "CustomerController->CustomerDetail Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
 
@@ -196,13 +196,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "CustomerController->CustomerBusinessDetailList Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
 
@@ -238,13 +238,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "CustomerController->CustomerBusinessDetailSearch Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
 
@@ -349,13 +349,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "FinancialSettingController->SaveLedgerAccount Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
             finally
             {

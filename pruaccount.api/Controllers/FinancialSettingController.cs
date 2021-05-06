@@ -12,6 +12,7 @@ namespace Pruaccount.Api.Controllers
     using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Entities;
+    using Pruaccount.Api.Enums;
     using Pruaccount.Api.Models;
 
     /// <summary>
@@ -79,13 +80,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "FinancialSettingController->FinancialSettings Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
 
@@ -133,13 +134,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "FinancialSettingController->SaveFinancialSettings Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
             finally
             {
