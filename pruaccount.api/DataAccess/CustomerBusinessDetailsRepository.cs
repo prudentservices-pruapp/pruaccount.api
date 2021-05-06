@@ -377,7 +377,7 @@ namespace Pruaccount.Api.DataAccess
 
             try
             {
-                saveStatus = this.Connection.Execute("[Insert_AccountantDetails]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+                saveStatus = this.Connection.Execute("[CustomerBusinessDetails_SaveNewCustomer]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
 
                 if (saveStatus != -1)
                 {

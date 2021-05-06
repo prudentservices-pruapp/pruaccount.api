@@ -20,6 +20,16 @@ namespace Pruaccount.Api.Models
         public int LedgerAccountId { get; set; }
 
         /// <summary>
+        /// Gets or sets ClientBusinessDetailsUniqueId.
+        /// </summary>
+        public Guid ClientBusinessDetailsUniqueId { get; set; }
+
+        /// <summary>
+        /// Gets or sets ParentLedgerAccountId.
+        /// </summary>
+        public int ParentLedgerAccountId { get; set; }
+
+        /// <summary>
         /// Gets or sets LName.
         /// </summary>
         public string LName { get; set; }

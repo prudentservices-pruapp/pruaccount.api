@@ -4,17 +4,16 @@
 
 namespace Pruaccount.Api.Controllers
 {
+    using System;
+    using System.Linq;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Entities;
+    using Pruaccount.Api.Enums;
     using Pruaccount.Api.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// LedgerAccountController.
@@ -43,7 +42,7 @@ namespace Pruaccount.Api.Controllers
         /// <summary>
         /// LedgerAccountDetail.
         /// </summary>
-        /// <param name="pid">LedgerAccountId</param>
+        /// <param name="pid">LedgerAccountId.</param>
         /// <returns>IActionResult.</returns>
         [HttpGet("detail/{pid}")]
         public IActionResult LedgerAccountDetail(int pid)
@@ -52,15 +51,17 @@ namespace Pruaccount.Api.Controllers
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
 
-                if (currentTokenUserDetails != null)
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    var ledgerAccount = this.uw.LedgerAccountRepository.FindByPID(pid);
+                    var ledgerAccount = this.uw.LedgerAccountRepository.FindByPID(currentTokenUserDetails.CBUniqueId, pid);
 
                     if (ledgerAccount != null)
                     {
                         LedgerAccountModel model = new LedgerAccountModel()
                         {
                             LedgerAccountId = ledgerAccount.LedgerAccountId,
+                            ClientBusinessDetailsUniqueId = ledgerAccount.ClientBusinessDetailsUniqueId,
+                            ParentLedgerAccountId = ledgerAccount.ParentLedgerAccountId,
                             Group = ledgerAccount.Group,
                             Category = ledgerAccount.Category,
                             CategoryGroupId = ledgerAccount.CategoryGroupId,
@@ -87,13 +88,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "LedgerAccountController->LedgerAccountList Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
 
@@ -112,9 +113,11 @@ namespace Pruaccount.Api.Controllers
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
 
-                if (currentTokenUserDetails != null)
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    var ledgerAccountList = this.uw.LedgerAccountRepository.ListAll(default, default, default, sort, orderBy, pageNumber, rowsPerPage);
+                    this.LedgerAccountSetup(currentTokenUserDetails.CBUniqueId);
+
+                    var ledgerAccountList = this.uw.LedgerAccountRepository.ListAll(currentTokenUserDetails.CBUniqueId, default, default, sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = ledgerAccountList.FirstOrDefault();
 
@@ -128,18 +131,18 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "LedgerAccountController->LedgerAccountList Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
 
         /// <summary>
-        /// LedgerAccountSearch. ?userId=${userId}&searchTerm=${searchTerm}&sort=${sortby}&orderBy=${order}&pageNumber=${currentPage}&rowsPerPage=${pageSize}
+        /// LedgerAccountSearch. ?userId=${userId}&searchTerm=${searchTerm}&sort=${sortby}&orderBy=${order}&pageNumber=${currentPage}&rowsPerPage=${pageSize}.
         /// </summary>
         /// <param name="searchTerm">dname.</param>
         /// <param name="categoryGroupId">categoryGroupId.</param>
@@ -155,9 +158,11 @@ namespace Pruaccount.Api.Controllers
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
 
-                if (currentTokenUserDetails != null)
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    var ledgerAccountList = this.uw.LedgerAccountRepository.SearchLedgerAccounts(searchTerm, categoryGroupId, sort, orderBy, pageNumber, rowsPerPage);
+                    this.LedgerAccountSetup(currentTokenUserDetails.CBUniqueId);
+
+                    var ledgerAccountList = this.uw.LedgerAccountRepository.SearchLedgerAccounts(currentTokenUserDetails.CBUniqueId, searchTerm, categoryGroupId, sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = ledgerAccountList.FirstOrDefault();
 
@@ -171,13 +176,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "LedgerAccountController->LedgerAccountSearch Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
 
@@ -193,21 +198,22 @@ namespace Pruaccount.Api.Controllers
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
 
-                if (currentTokenUserDetails != null)
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
                     if (string.IsNullOrEmpty(ledgeraccountModel.LName) || string.IsNullOrEmpty(ledgeraccountModel.DName) || ledgeraccountModel.NominalCode == default(int)
-                        || ledgeraccountModel.CategoryGroupId == default(int) || ledgeraccountModel.VatRateId == default(int))
+                        || ledgeraccountModel.CategoryGroupId == default(int))
                     {
-                        return this.BadRequest("Mandatory fields not entered.");
+                        return this.BadRequest(BadRequestMessagesTypeEnum.MandatoryFieldsErrorsMessage);
                     }
 
                     if (ledgeraccountModel.LedgerAccountId != default(int))
                     {
-                        LedgerAccount ledgerAccount = this.uw.LedgerAccountRepository.FindByPID(ledgeraccountModel.LedgerAccountId);
+                        LedgerAccount ledgerAccount = this.uw.LedgerAccountRepository.FindByPID(currentTokenUserDetails.CBUniqueId, ledgeraccountModel.LedgerAccountId);
 
                         // To be removed when frontend shows input fields to updates these values.
                         if (ledgerAccount != null)
                         {
+                            ledgeraccountModel.ParentLedgerAccountId = ledgerAccount.ParentLedgerAccountId;
                             ledgeraccountModel.IncludeInChart = ledgerAccount.IncludeInChart;
                             ledgeraccountModel.M_Bank = ledgerAccount.M_Bank;
                             ledgeraccountModel.M_Sales = ledgerAccount.M_Sales;
@@ -217,12 +223,13 @@ namespace Pruaccount.Api.Controllers
                             ledgeraccountModel.M_Journals = ledgerAccount.M_Journals;
                             ledgeraccountModel.M_Reports = ledgerAccount.M_Reports;
                         }
-
                     }
 
                     LedgerAccount ledgerAccountRequest = new LedgerAccount()
                     {
                         LedgerAccountId = ledgeraccountModel.LedgerAccountId,
+                        ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId,
+                        ParentLedgerAccountId = ledgeraccountModel.ParentLedgerAccountId,
                         LName = ledgeraccountModel.LName,
                         DName = ledgeraccountModel.DName,
                         NominalCode = ledgeraccountModel.NominalCode,
@@ -244,13 +251,13 @@ namespace Pruaccount.Api.Controllers
                 }
                 else
                 {
-                    return this.NotFound("Could not get any token details.");
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
                 }
             }
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "FinancialSettingController->SaveLedgerAccount Exception");
-                return this.BadRequest("Internal Server Error");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
             finally
             {
@@ -258,6 +265,25 @@ namespace Pruaccount.Api.Controllers
             }
 
             return this.Ok();
+        }
+
+        /// <summary>
+        /// LedgerAccountSetup.
+        /// </summary>
+        /// <param name="businessDetailsUniqueId">businessDetailsUniqueId.</param>
+        private void LedgerAccountSetup(Guid businessDetailsUniqueId)
+        {
+            if (businessDetailsUniqueId != default)
+            {
+                try
+                {
+                    this.uw.LedgerAccountRepository.Setup(businessDetailsUniqueId);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogError(ex, "LedgerAccountController->LedgerAccountSetup Exception");
+                }
+            }
         }
     }
 }
