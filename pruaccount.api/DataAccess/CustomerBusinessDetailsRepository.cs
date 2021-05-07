@@ -172,7 +172,7 @@ namespace Pruaccount.Api.DataAccess
 
             try
             {
-                saveStatus = this.Connection.Execute("[CustomerBusinessAddress_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+                saveStatus = this.Connection.Execute("[CustomerBusinessDetails_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
 
                 if (saveStatus != -1)
                 {
@@ -209,33 +209,6 @@ namespace Pruaccount.Api.DataAccess
             catch (Exception ex)
             {
                 exceptionMessage += $"Could not save customer business main address exception - {ex.Message}" + Environment.NewLine;
-            }
-
-            try
-            {
-                para = new DynamicParameters();
-                para.Add("@CustomerBusinessAddressId", customerDeliveryBusinessAddress.CustomerBusinessAddressId);
-                para.Add("@UniqueId", customerDeliveryBusinessAddress.UniqueId);
-                para.Add("@ClientBusinessDetailsUniqueId", customerDeliveryBusinessAddress.ClientBusinessDetailsUniqueId);
-                para.Add("@CustomerBusinessDetailsUniqueId", customerDeliveryBusinessAddress.CustomerBusinessDetailsUniqueId);
-                para.Add("@AddressType", customerDeliveryBusinessAddress.AddressType);
-                para.Add("@Line1", customerDeliveryBusinessAddress.Line1);
-                para.Add("@Line2", customerDeliveryBusinessAddress.Line2);
-                para.Add("@City", customerDeliveryBusinessAddress.City);
-                para.Add("@County", customerDeliveryBusinessAddress.County);
-                para.Add("@PostCode", customerDeliveryBusinessAddress.PostCode);
-                para.Add("@Country", customerDeliveryBusinessAddress.Country);
-
-                saveStatus = this.Connection.Execute("[CustomerBusinessAddress_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
-
-                if (saveStatus != -1)
-                {
-                    exceptionMessage += $"Could not save customer business delivery address {customerDeliveryBusinessAddress.Line1}" + Environment.NewLine;
-                }
-            }
-            catch (Exception ex)
-            {
-                exceptionMessage += $"Could not save customer business delivery address exception - {ex.Message}" + Environment.NewLine;
             }
 
             try
