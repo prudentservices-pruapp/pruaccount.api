@@ -33,6 +33,10 @@ namespace Pruaccount.Api.DataAccess.Core
         private ICustomerBusinessPaymentDetailsRepository customerBusinessPaymentDetailsRepository;
         private ICustomerBusinessMiscRepository customerBusinessMiscRepository;
         private ILedgerAccountRepository ledgerAccountRepository;
+        private ISupplierBusinessAddressRepository supplierBusinessAddressRepository;
+        private ISupplierBusinessDetailsRepository supplierBusinessDetailsRepository;
+        private ISupplierBusinessPaymentDetailsRepository supplierBusinessPaymentDetailsRepository;
+        private ISupplierBusinessMiscRepository supplierBusinessMiscRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -126,6 +130,38 @@ namespace Pruaccount.Api.DataAccess.Core
         public ICustomerBusinessMiscRepository CustomerBusinessMiscRepository
         {
             get { return this.customerBusinessMiscRepository ?? new CustomerBusinessMiscRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets SupplierBusinessAddressRepository.
+        /// </summary>
+        public ISupplierBusinessAddressRepository SupplierBusinessAddressRepository
+        {
+            get { return this.supplierBusinessAddressRepository ?? new SupplierBusinessAddressRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets SupplierBusinessDetailsRepository.
+        /// </summary>
+        public ISupplierBusinessDetailsRepository SupplierBusinessDetailsRepository
+        {
+            get { return this.supplierBusinessDetailsRepository ?? new SupplierBusinessDetailsRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets SupplierBusinessPaymentDetailsRepository.
+        /// </summary>
+        public ISupplierBusinessPaymentDetailsRepository SupplierBusinessPaymentDetailsRepository
+        {
+            get { return this.supplierBusinessPaymentDetailsRepository ?? new SupplierBusinessPaymentDetailsRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets SupplierBusinessMiscRepository.
+        /// </summary>
+        public ISupplierBusinessMiscRepository SupplierBusinessMiscRepository
+        {
+            get { return this.supplierBusinessMiscRepository ?? new SupplierBusinessMiscRepository(this); }
         }
 
         /// <summary>
