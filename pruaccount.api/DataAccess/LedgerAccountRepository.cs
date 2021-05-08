@@ -255,5 +255,28 @@ namespace Pruaccount.Api.DataAccess
                 throw;
             }
         }
+
+        /// <summary>
+        /// SearchByNominalCode.
+        /// </summary>
+        /// <param name="businessDetailsUniqueId">Client businessDetailsUniqueId.</param>
+        /// <param name="nominalCode">Client nominalCode.</param>
+        /// <returns>LedgerAccount.</returns>
+        public LedgerAccount SearchByNominalCode(Guid businessDetailsUniqueId, int nominalCode)
+        {
+            var para = new DynamicParameters();
+
+            if (businessDetailsUniqueId != default(Guid))
+            {
+                para.Add("@ClientBusinessDetailsUniqueId", businessDetailsUniqueId);
+            }
+
+            if (nominalCode != default(int))
+            {
+                para.Add("@NominalCode", nominalCode);
+            }
+
+            return this.Connection.Query<LedgerAccount>("[LedgerAccount_SearchByNominalCode]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
     }
 }

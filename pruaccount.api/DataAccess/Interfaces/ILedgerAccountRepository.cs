@@ -29,6 +29,14 @@ namespace Pruaccount.Api.DataAccess.Interfaces
         void Setup(Guid businessDetailsUniqueId);
 
         /// <summary>
+        /// SearchByNominalCode.
+        /// </summary>
+        /// <param name="businessDetailsUniqueId">Client businessDetailsUniqueId.</param>
+        /// <param name="nominalCode">Client nominalCode.</param>
+        /// <returns>LedgerAccount.</returns>
+        LedgerAccount SearchByNominalCode(Guid businessDetailsUniqueId, int nominalCode);
+
+        /// <summary>
         /// SearchLedgerAccounts.
         /// </summary>
         /// <param name="businessDetailsUniqueId">Client businessDetailsUniqueId.</param>

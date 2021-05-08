@@ -206,6 +206,13 @@ namespace Pruaccount.Api.Controllers
                         return this.BadRequest(BadRequestMessagesTypeEnum.MandatoryFieldsErrorsMessage);
                     }
 
+                    LedgerAccount ledgerAccountByNominalCode = this.uw.LedgerAccountRepository.SearchByNominalCode(currentTokenUserDetails.CBUniqueId, ledgeraccountModel.NominalCode);
+
+                    if (ledgerAccountByNominalCode != null && ledgerAccountByNominalCode.LedgerAccountId != ledgeraccountModel.LedgerAccountId)
+                    {
+                        return this.BadRequest($"Nominal Code has already been used for {ledgerAccountByNominalCode.DName}.");
+                    }
+
                     if (ledgeraccountModel.LedgerAccountId != default(int))
                     {
                         LedgerAccount ledgerAccount = this.uw.LedgerAccountRepository.FindByPID(currentTokenUserDetails.CBUniqueId, ledgeraccountModel.LedgerAccountId);
