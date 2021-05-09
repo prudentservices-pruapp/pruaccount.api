@@ -231,6 +231,10 @@ namespace Pruaccount.Api.Controllers
                             ledgeraccountModel.M_Reports = ledgerAccount.M_Reports;
                         }
                     }
+                    else if (ledgeraccountModel.LedgerAccountId == default(int))
+                    {
+                        ledgeraccountModel = this.SetLedgerAccountModelForNew(ledgeraccountModel);
+                    }
 
                     LedgerAccount ledgerAccountRequest = new LedgerAccount()
                     {
@@ -291,6 +295,71 @@ namespace Pruaccount.Api.Controllers
                     this.logger.LogError(ex, "LedgerAccountController->LedgerAccountSetup Exception");
                 }
             }
+        }
+
+        /// <summary>
+        /// SetLedgerAccountModelForNew.
+        /// </summary>
+        /// <param name="ledgeraccountModel">ledgeraccountModel.</param>
+        /// <returns>LedgerAccountModel.</returns>
+        private LedgerAccountModel SetLedgerAccountModelForNew(LedgerAccountModel ledgeraccountModel)
+        {
+            ledgeraccountModel.M_Journals = true;
+            ledgeraccountModel.M_Reports = true;
+
+            switch (ledgeraccountModel.CategoryGroupId)
+            {
+                case 1: // Bank
+                    ledgeraccountModel.M_Bank = true;
+                    break;
+                case 2: // Credit Card / Loan
+                    ledgeraccountModel.M_Bank = true;
+                    break;
+                case 3: // Current Assets
+                    ledgeraccountModel.M_Other_Payment = true;
+                    ledgeraccountModel.M_Other_Receipt = true;
+                    break;
+                case 4: // Current Liability
+                    ledgeraccountModel.M_Other_Payment = true;
+                    ledgeraccountModel.M_Other_Receipt = true;
+                    break;
+                case 5: // Depreciation
+                    ledgeraccountModel.M_Purchase = true;
+                    ledgeraccountModel.M_Other_Payment = true;
+                    break;
+                case 6: // Direct Expenses
+                    ledgeraccountModel.M_Purchase = true;
+                    ledgeraccountModel.M_Other_Payment = true;
+                    break;
+                case 7: // Equity
+                    ledgeraccountModel.M_Other_Payment = true;
+                    ledgeraccountModel.M_Other_Receipt = true;
+                    break;
+                case 8: // Fixed Assets
+                    ledgeraccountModel.M_Other_Payment = true;
+                    ledgeraccountModel.M_Other_Receipt = true;
+                    break;
+                case 9: // Future Assets
+                    break;
+                case 10: // Future Liability
+                    break;
+                case 11: // Other Income
+                    ledgeraccountModel.M_Sales = true;
+                    ledgeraccountModel.M_Other_Receipt = true;
+                    break;
+                case 12: // Overheads
+                    ledgeraccountModel.M_Purchase = true;
+                    ledgeraccountModel.M_Other_Payment = true;
+                    break;
+                case 13: // Sales
+                    ledgeraccountModel.M_Sales = true;
+                    ledgeraccountModel.M_Other_Receipt = true;
+                    break;
+                default:
+                    break;
+            }
+
+            return ledgeraccountModel;
         }
     }
 }
