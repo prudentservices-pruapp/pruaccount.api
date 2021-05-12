@@ -12,9 +12,9 @@ namespace Pruaccount.Api.Entities
     public class VatRate
     {
         /// <summary>
-        /// Gets or sets CategoryGroupId.
+        /// Gets or sets VatRateId.
         /// </summary>
-        public int CategoryGroupId { get; set; }
+        public int VatRateId { get; set; }
 
         /// <summary>
         /// Gets or sets Category.
@@ -48,7 +48,7 @@ namespace Pruaccount.Api.Entities
         {
             get
             {
-                return this.CategoryGroupId == default(int);
+                return this.VatRateId == default(int);
             }
         }
     }
