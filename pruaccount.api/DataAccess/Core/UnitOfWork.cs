@@ -27,6 +27,7 @@ namespace Pruaccount.Api.DataAccess.Core
         private IDbTransaction transaction;
         private bool disposed;
 
+        private IBankAccountDetailsRepository bankAccountDetailsRepository;
         private ICBFinancialSettingRepository cbFinancialSettingRepository;
         private ICustomerBusinessAddressRepository customerBusinessAddressRepository;
         private ICustomerBusinessDetailsRepository customerBusinessDetailsRepository;
@@ -90,6 +91,14 @@ namespace Pruaccount.Api.DataAccess.Core
         public IDbTransaction Transaction
         {
             get { return this.transaction; }
+        }
+
+        /// <summary>
+        /// Gets BankAccountDetailsRepository.
+        /// </summary>
+        public IBankAccountDetailsRepository BankAccountDetailsRepository
+        {
+            get { return this.bankAccountDetailsRepository ??= new BankAccountDetailsRepository(this); }
         }
 
         /// <summary>
