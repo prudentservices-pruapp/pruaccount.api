@@ -84,7 +84,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@rowsperpage", rowsperpage);
             }
 
-            return this.Connection.Query<BankAccountDetails>("[CustomerBusinessAddress_List]", para, this.Transaction, commandType: CommandType.StoredProcedure);
+            return this.Connection.Query<BankAccountDetails>("[BankAccountDetails_List]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
 
         /// <summary>
