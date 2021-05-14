@@ -29,6 +29,11 @@ namespace Pruaccount.Api.DataAccess.Core
         IBankAccountDetailsRepository BankAccountDetailsRepository { get; }
 
         /// <summary>
+        /// Gets IBAOpeningBalanceRepository.
+        /// </summary>
+        IBAOpeningBalanceRepository BAOpeningBalanceRepository { get; }
+
+        /// <summary>
         /// Gets CBFinancialSettingRepository.
         /// </summary>
         ICBFinancialSettingRepository CBFinancialSettingRepository { get; }

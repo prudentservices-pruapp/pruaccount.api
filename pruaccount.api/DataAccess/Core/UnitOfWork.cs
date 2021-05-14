@@ -28,6 +28,7 @@ namespace Pruaccount.Api.DataAccess.Core
         private bool disposed;
 
         private IBankAccountDetailsRepository bankAccountDetailsRepository;
+        private IBAOpeningBalanceRepository baOpeningbalanceRepository;
         private ICBFinancialSettingRepository cbFinancialSettingRepository;
         private ICustomerBusinessAddressRepository customerBusinessAddressRepository;
         private ICustomerBusinessDetailsRepository customerBusinessDetailsRepository;
@@ -99,6 +100,14 @@ namespace Pruaccount.Api.DataAccess.Core
         public IBankAccountDetailsRepository BankAccountDetailsRepository
         {
             get { return this.bankAccountDetailsRepository ??= new BankAccountDetailsRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets BAOpeningBalanceRepository.
+        /// </summary>
+        public IBAOpeningBalanceRepository BAOpeningBalanceRepository
+        {
+            get { return this.baOpeningbalanceRepository ??= new BAOpeningBalanceRepository(this); }
         }
 
         /// <summary>
