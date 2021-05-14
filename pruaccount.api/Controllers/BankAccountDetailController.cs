@@ -230,7 +230,7 @@ namespace Pruaccount.Api.Controllers
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "FinancialSettingController->SaveLedgerAccount Exception");
+                this.logger.LogError(ex, "BankAccountDetailController->SaveBankAccount Exception");
                 return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
             finally
