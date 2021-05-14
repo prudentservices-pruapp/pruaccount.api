@@ -90,7 +90,7 @@ namespace Pruaccount.Api.DataAccess
         /// <summary>
         /// Remove.
         /// </summary>
-        /// <param name="pid">pid</param>
+        /// <param name="pid">pid.</param>
         public void Remove(Guid pid)
         {
             throw new NotImplementedException();
@@ -140,7 +140,7 @@ namespace Pruaccount.Api.DataAccess
         /// Search.
         /// </summary>
         /// <param name="businessDetailsUniqueId">e.g. clientBusinessDetailsUniqueId.</param>
-        /// <param name="masterUniqueId">masterUniqueId not needed</param>
+        /// <param name="masterUniqueId">masterUniqueId not needed.</param>
         /// <param name="parentUniqueId">parentUniqueId not needed.</param>
         /// <param name="searchTerm">searchTerm.</param>
         /// <param name="sort">Sort.</param>
