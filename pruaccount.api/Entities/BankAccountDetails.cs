@@ -33,7 +33,7 @@ namespace Pruaccount.Api.Entities
         /// <summary>
         /// Gets or sets BankAccountTypeName.
         /// </summary>
-        public int BankAccountTypeName { get; set; }
+        public string BankAccountTypeName { get; set; }
 
         /// <summary>
         /// Gets or sets BankTransactionMethodId.
@@ -43,7 +43,7 @@ namespace Pruaccount.Api.Entities
         /// <summary>
         /// Gets or sets BankTransactionMethodName.
         /// </summary>
-        public int BankTransactionMethodName { get; set; }
+        public string BankTransactionMethodName { get; set; }
 
         /// <summary>
         /// Gets or sets LedgerAccountId.
@@ -73,7 +73,7 @@ namespace Pruaccount.Api.Entities
         /// <summary>
         /// Gets or sets Category.
         /// </summary>
-        public int Category { get; set; }
+        public string Category { get; set; }
 
         /// <summary>
         /// Gets or sets VatRateId.

@@ -56,6 +56,12 @@ namespace Pruaccount.Api.DataAccess.Core
             {
                 // Change the logic later to use it from maybe token.
                 var tokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+
+                if (tokenUserDetails == null)
+                {
+                    this.logger.LogError("UnitOfWork->UnitOfWork CurrentTokenUserDetails is null");
+                }
+
                 var productConnection = this.dbinfoconfigsettings.StorageList.Find(x => x.Product == tokenUserDetails.Products[0]);
 
                 if (productConnection != null)
