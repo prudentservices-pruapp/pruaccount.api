@@ -4,10 +4,12 @@
 
 namespace Pruaccount.Api
 {
+    using System.IO;
     using System.IO.Compression;
     using Microsoft.AspNetCore.Antiforgery;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.HttpOverrides;
     using Microsoft.AspNetCore.ResponseCompression;
     using Microsoft.Extensions.Configuration;
@@ -77,6 +79,12 @@ namespace Pruaccount.Api
             Dapper.SqlMapper.AddTypeHandler(new DapperDateTimeUTC());
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+            services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(o =>
+            {
+                // Set the limit to 12 MB
+                o.MultipartBodyLengthLimit = 12582912;
+            });
+
             services.AddControllersWithViews();
         }
 
@@ -106,6 +114,11 @@ namespace Pruaccount.Api
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            // app.UseStaticFiles(new StaticFileOptions()
+            // {
+            //    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"BankStatements")),
+            //    RequestPath = new PathString("/BankStatements"),
+            // });
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
