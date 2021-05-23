@@ -83,6 +83,11 @@ namespace Pruaccount.Api.Controllers
                             return this.BadRequest("Please upload a file less than 3MB.");
                         }
 
+                        if (formFile.FileName.Length > 220)
+                        {
+                            return this.BadRequest("Please change the file name to less than 150 characters.");
+                        }
+
                         if (formFile.Length > 0)
                         {
                             string uploadedFileName = System.Net.Http.Headers.ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim('"');
