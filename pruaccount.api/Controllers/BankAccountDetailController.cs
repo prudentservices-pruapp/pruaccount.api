@@ -207,7 +207,7 @@ namespace Pruaccount.Api.Controllers
                     {
                         BankAccountDetailsId = bankAccountDetailModel.BankAccountDetailsId,
                         UniqueId = bankAccountDetailModel.UniqueId,
-                        ClientBusinessDetailsUniqueId = bankAccountDetailModel.UniqueId,
+                        ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId,
                         BankAccountTypeId = bankAccountDetailModel.BankAccountTypeId,
                         BankAccountTypeName = bankAccountDetailModel.BankAccountTypeName,
                         BankTransactionMethodId = bankAccountDetailModel.BankTransactionMethodId,
