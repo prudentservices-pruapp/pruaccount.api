@@ -14,6 +14,7 @@ namespace Pruaccount.Api.Controllers
     using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Entities;
     using Pruaccount.Api.Enums;
+    using Pruaccount.Api.MappingConfigurations;
     using Pruaccount.Api.Models;
 
     /// <summary>
@@ -115,17 +116,21 @@ namespace Pruaccount.Api.Controllers
             try
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<BankAccountDetailModel> bankAccountDetailModels = new List<BankAccountDetailModel>();
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
                     var bankAccountDetailList = this.uw.BankAccountDetailsRepository.ListAll(currentTokenUserDetails.CBUniqueId, default, default, sort, orderBy, pageNumber, rowsPerPage);
 
-                    var rec = bankAccountDetailList.FirstOrDefault();
+                    foreach (var bankAccount in bankAccountDetailList)
+                    {
+                        bankAccountDetailModels.Add(new BankAccountDetailModel().PopulateBankAccountDetailModelFromEntity(bankAccount));
+                    }
 
                     var bankAccountDetailListAPIData = new
                     {
-                        total = (rec != null) ? rec.TotalRows : 0,
-                        bankAccountDetails = bankAccountDetailList,
+                        total = bankAccountDetailModels.Count,
+                        bankAccountDetails = bankAccountDetailModels,
                     };
 
                     return this.Ok(bankAccountDetailListAPIData);
@@ -157,17 +162,21 @@ namespace Pruaccount.Api.Controllers
             try
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<BankAccountDetailModel> bankAccountDetailModels = new List<BankAccountDetailModel>();
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
                     var bankAccountDetailList = this.uw.BankAccountDetailsRepository.Search(currentTokenUserDetails.CBUniqueId, default, default, searchTerm, sort, orderBy, pageNumber, rowsPerPage);
 
-                    var rec = bankAccountDetailList.FirstOrDefault();
+                    foreach (var bankAccount in bankAccountDetailList)
+                    {
+                        bankAccountDetailModels.Add(new BankAccountDetailModel().PopulateBankAccountDetailModelFromEntity(bankAccount));
+                    }
 
                     var bankAccountDetailListAPIData = new
                     {
-                        total = (rec != null) ? rec.TotalRows : 0,
-                        bankAccountDetails = bankAccountDetailList,
+                        total = bankAccountDetailModels.Count,
+                        bankAccountDetails = bankAccountDetailModels,
                     };
 
                     return this.Ok(bankAccountDetailListAPIData);
@@ -203,23 +212,8 @@ namespace Pruaccount.Api.Controllers
                         return this.BadRequest("Mandatory fields not entered.");
                     }
 
-                    BankAccountDetails bankAccountDetailsRequest = new BankAccountDetails()
-                    {
-                        BankAccountDetailsId = bankAccountDetailModel.BankAccountDetailsId,
-                        UniqueId = bankAccountDetailModel.UniqueId,
-                        ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId,
-                        BankAccountTypeId = bankAccountDetailModel.BankAccountTypeId,
-                        BankAccountTypeName = bankAccountDetailModel.BankAccountTypeName,
-                        BankTransactionMethodId = bankAccountDetailModel.BankTransactionMethodId,
-                        BankTransactionMethodName = bankAccountDetailModel.BankTransactionMethodName,
-                        AccountName = bankAccountDetailModel.AccountName,
-                        SortCode = bankAccountDetailModel.SortCode,
-                        AccountNumber = bankAccountDetailModel.AccountNumber,
-                        BicSwift = bankAccountDetailModel.BicSwift,
-                        IBAN = bankAccountDetailModel.IBAN,
-                        CardLast4Digits = bankAccountDetailModel.CardLast4Digits,
-                    };
-
+                    BankAccountDetails bankAccountDetailsRequest = new BankAccountDetails().PopulateBankAccountDetailsFromModel(bankAccountDetailModel);
+                    bankAccountDetailsRequest.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
                     this.uw.Begin(System.Data.IsolationLevel.Serializable);
                     this.uw.BankAccountDetailsRepository.Save(bankAccountDetailsRequest);
                 }

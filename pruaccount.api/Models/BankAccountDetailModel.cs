@@ -120,5 +120,21 @@ namespace Pruaccount.Api.Models
         /// Gets or sets CardLast4Digits.
         /// </summary>
         public string CardLast4Digits { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether CanUploadBankStatement.
+        /// </summary>
+        public bool CanUploadBankStatement
+        {
+            get
+            {
+                if (this.BankAccountTypeId <= 3)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }
