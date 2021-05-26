@@ -59,6 +59,8 @@ namespace Pruaccount.Api.Controllers
                 {
                     List<BankStatementFileImport> currentImports = this.uw.BankStatementFileImportRepository.ListAll(currentTokenUserDetails.CBUniqueId, pid, default, "BankStatementFileImportId", "desc", 1, 10).ToList();
                     BankStatementFileImportModel lastProcessStatus = new BankStatementFileImportModel();
+                    lastProcessStatus.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
+                    lastProcessStatus.BankAccountDetailsUniqueId = pid;
                     lastProcessStatus.CurrentProcessStatus = string.Empty;
 
                     if (currentImports.Count > 0)
