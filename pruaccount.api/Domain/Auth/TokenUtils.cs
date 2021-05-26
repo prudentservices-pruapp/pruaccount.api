@@ -49,6 +49,7 @@ namespace PruAuth.Api.Domain.Auth
                 "/api/bankaccountdetail/list",
                 "/api/bankaccountdetail/save",
                 "/api/bankaccountdetail/search",
+                "/api/bankstatementupload/status",
                 "/api/bankstatementupload/upload",
                 "/api/customerbusinessdetail/detail",
                 "/api/customerbusinessdetail/list",

@@ -15,7 +15,9 @@ namespace Pruaccount.Api.Controllers
     using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Entities;
     using Pruaccount.Api.Enums;
+    using Pruaccount.Api.MappingConfigurations;
     using Pruaccount.Api.Models;
+    using Pruaccount.Api.Validators.Extensions;
 
     /// <summary>
     /// BankStatementUploadController.
@@ -48,6 +50,40 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
+        /// BankStatementStatus.
+        /// </summary>
+        /// <param name="pid">pid.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("status/{pid}")]
+        public IActionResult BankStatementStatus(Guid pid)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    List<BankStatementFileImport> currentImports = this.uw.BankStatementFileImportRepository.ListAll(currentTokenUserDetails.CBUniqueId, pid, default, "BankStatementFileImportId", "desc", 1, 10).ToList();
+                    BankStatementFileImportModel lastProcessStatus = new BankStatementFileImportModel();
+                    lastProcessStatus.CurrentProcessStatus = string.Empty;
+
+                    if (currentImports.Count > 0)
+                    {
+                        lastProcessStatus.PopulatePartialBankStatementFileImportModelFromEntity(currentImports[0]);
+                    }
+
+                    return Ok(lastProcessStatus);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementUploadController->BankStatementStatus Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// UploadBankStatement.
         /// </summary>
         /// <param name="files">files uploaded.</param>
@@ -58,46 +94,81 @@ namespace Pruaccount.Api.Controllers
             try
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<string> brokenRules = new List<string>();
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    if (this.httpContextAccessor.HttpContext.Request.Form.Files.Count == 0)
-                    {
-                        return this.BadRequest("Please upload bank statement.");
-                    }
-                    else if (this.httpContextAccessor.HttpContext.Request.Form.Files.Count > 1)
-                    {
-                        return this.BadRequest("Please upload one bank statement.");
-                    }
+
+                    BankStatementFileImportModel bankStatementFileImportModel = new BankStatementFileImportModel();
+                    bankStatementFileImportModel.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
 
                     foreach (var formFile in this.httpContextAccessor.HttpContext.Request.Form.Files)
                     {
-                        string ext = Path.GetExtension(formFile.FileName).ToLowerInvariant();
-                        if (!this.allowedExtensions.Keys.Contains(ext))
-                        {
-                            return this.BadRequest("Please upload .csv bank statement.");
-                        }
-
-                        if (formFile.Length > 3000000)
-                        {
-                            return this.BadRequest("Please upload a file less than 3MB.");
-                        }
-
-                        if (formFile.FileName.Length > 220)
-                        {
-                            return this.BadRequest("Please change the file name to less than 150 characters.");
-                        }
-
                         if (formFile.Length > 0)
                         {
+                            string ext = Path.GetExtension(formFile.FileName).ToLowerInvariant();
                             string uploadedFileName = System.Net.Http.Headers.ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim('"');
-                            var timestamp = DateTime.UtcNow;
-                            var fileNameToSave = Path.GetFileNameWithoutExtension(uploadedFileName) + $"_{timestamp.Year}_{timestamp.Month}_{timestamp.Day}_{timestamp.Hour}{timestamp.Minute}{timestamp.Second}{ext}";
-                            var fullPath = Path.Combine(this.pathToSave, fileNameToSave);
+                            int uploadedFileNameStartIndex = uploadedFileName.IndexOf('_');
+                            Guid bankAccountDetailsUniqueId = Guid.Empty;
 
-                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            DateTime timestamp = DateTime.UtcNow;
+                            string fileNameToSave = Path.GetFileNameWithoutExtension(uploadedFileName) + $"_{timestamp.Year}_{timestamp.Month}_{timestamp.Day}_{timestamp.Hour}{timestamp.Minute}{timestamp.Second}{ext}";
+                            string fullPath = Path.Combine(this.pathToSave, fileNameToSave);
+
+                            if (uploadedFileNameStartIndex == -1)
                             {
-                                formFile.CopyTo(stream);
+                                uploadedFileNameStartIndex = 0;
+                            }
+                            else
+                            {
+                                Guid.TryParse(uploadedFileName.Substring(0, 36), out bankAccountDetailsUniqueId);
+                            }
+
+                            List<BankStatementFileImport> currentImports = this.uw.BankStatementFileImportRepository.ListAll(currentTokenUserDetails.CBUniqueId, bankAccountDetailsUniqueId, default, "BankStatementFileImportId", "desc", 1, 10).ToList();
+
+                            BankStatementFileImport lastImport = currentImports.OrderByDescending(x => x.BankStatementFileImportId).FirstOrDefault();
+
+                            if (lastImport != null)
+                            {
+                                if (lastImport.CurrentProcessStatus != BankStatementFileProcessStatusTypeEnum.Processed || lastImport.CurrentProcessStatus != BankStatementFileProcessStatusTypeEnum.Rejected)
+                                {
+                                    return this.BadRequest($"Please process the previous uploaded bank statement - {lastImport.UploadedFileName}.");
+                                }
+                            }
+
+                            bankStatementFileImportModel.FileExtenstion = ext;
+                            bankStatementFileImportModel.FileLengthInBytes = formFile.Length;
+                            bankStatementFileImportModel.UploadedFileName = uploadedFileName.Substring(uploadedFileNameStartIndex + 1);
+                            bankStatementFileImportModel.UploadedFilePath = this.pathToSave;
+                            bankStatementFileImportModel.SystemGeneratedFileName = fileNameToSave;
+                            bankStatementFileImportModel.BankAccountDetailsUniqueId = bankAccountDetailsUniqueId;
+                            bankStatementFileImportModel.CurrentProcessStatus = BankStatementFileProcessStatusTypeEnum.Uploaded;
+
+                            if (bankStatementFileImportModel.ValidateModel(out brokenRules))
+                            {
+                                using (var stream = new FileStream(fullPath, FileMode.Create))
+                                {
+                                    formFile.CopyTo(stream);
+                                }
+
+                                try
+                                {
+                                    this.uw.Begin(System.Data.IsolationLevel.Serializable);
+                                    this.uw.BankStatementFileImportRepository.Save(new BankStatementFileImport().PopulateBankStatementFileImportFromModel(bankStatementFileImportModel));
+                                }
+                                catch (Exception ex)
+                                {
+                                    this.logger.LogError(ex, "BankStatementUploadController->UploadBankStatement Database Exception");
+                                    return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+                                }
+                                finally
+                                {
+                                    this.uw.Complete();
+                                }
+                            }
+                            else
+                            {
+                                return this.BadRequest(string.Join(" ", brokenRules));
                             }
                         }
                         else
@@ -115,10 +186,6 @@ namespace Pruaccount.Api.Controllers
             {
                 this.logger.LogError(ex, "BankStatementUploadController->UploadBankStatement Exception");
                 return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
-            }
-            finally
-            {
-                // this.uw.Complete();
             }
 
             return this.Ok();
