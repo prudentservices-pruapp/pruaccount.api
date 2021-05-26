@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
+    <PackageReference Include="CsvHelper" Version="27.1.0" />
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
@@ -35,6 +36,12 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="BankStatements\Uploaded\.gitkeep">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
