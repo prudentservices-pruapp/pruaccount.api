@@ -29,12 +29,7 @@ namespace Pruaccount.Api.Controllers
         private readonly IUnitOfWork uw;
         private readonly ILogger<BankAccountDetailController> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly string uploadFolder = Path.Combine("BankStatements", "Uploaded");
         private readonly string pathToSave = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("BankStatements", "Uploaded"));
-        private readonly IDictionary<string, string> allowedExtensions = new Dictionary<string, string>()
-        {
-            { ".csv", "text/csv" },
-        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BankStatementUploadController"/> class.
