@@ -6,11 +6,17 @@ namespace Pruaccount.Api.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
+    using System.Dynamic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
+    using CsvHelper;
+    using CsvHelper.Configuration;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
     using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Entities;
@@ -58,12 +64,22 @@ namespace Pruaccount.Api.Controllers
                 {
                     BankStatementFileImport currentFileImport = this.uw.BankStatementFileImportRepository.FindByPID(pid);
 
-                    if (currentFileImport.ClientBusinessDetailsUniqueId != currentTokenUserDetails.CBUniqueId)
+                    if (currentFileImport == null)
                     {
+                        this.logger.LogError($"BankStatementUploadController->BankStatementStatus Exception {pid} - Could not load the request file, no records found.");
                         return this.BadRequest("Could not load the request file.");
                     }
+                    else if (currentFileImport.ClientBusinessDetailsUniqueId != currentTokenUserDetails.CBUniqueId)
+                    {
+                        this.logger.LogError($"BankStatementUploadController->BankStatementStatus Exception {pid} - Could not load the request file, due to mismatch - {currentTokenUserDetails.CBUniqueId}.");
+                        return this.BadRequest("Could not load the request file due to mismatch.");
+                    }
 
-                    return this.Ok(StatusCodes.Status200OK);
+                    string uploadedFilenameWithPath = $"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}";
+                    Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser();
+                    var bankStatementMapModel = bankStatementParser.GeRowsJson(uploadedFilenameWithPath);
+
+                    return this.Ok(bankStatementMapModel);
                 }
             }
             catch (Exception ex)
