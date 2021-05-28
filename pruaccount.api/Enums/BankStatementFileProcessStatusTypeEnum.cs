@@ -34,5 +34,10 @@ namespace Pruaccount.Api.Enums
         /// Gets Rejected.
         /// </summary>
         public static string Rejected { get; } = "Rejected";
+
+        /// <summary>
+        /// Gets FileError.
+        /// </summary>
+        public static string FileError { get; } = "FileError";
     }
 }
