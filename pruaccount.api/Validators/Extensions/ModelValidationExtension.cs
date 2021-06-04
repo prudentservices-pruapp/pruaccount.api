@@ -1,6 +1,7 @@
-﻿// <copyright file="BankStatementFileImportModelValidatorExtension.cs" company="PlaceholderCompany">
+﻿// <copyright file="ModelValidationExtension.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
+
 namespace Pruaccount.Api.Validators.Extensions
 {
     using System.Collections.Generic;
@@ -8,19 +9,21 @@ namespace Pruaccount.Api.Validators.Extensions
     using Pruaccount.Api.Validators.Interfaces;
 
     /// <summary>
-    /// BankStatementFileImportModelValidatorExtension.
+    /// ModelValidationExtension.
     /// </summary>
-    public static class BankStatementFileImportModelValidatorExtension
+    public static class ModelValidationExtension
     {
         /// <summary>
         /// ValidateModel.
         /// </summary>
-        /// <param name="model">BankStatementFileImportModel.</param>
+        /// <typeparam name="T">T is model object that implements IModelValidation.</typeparam>
+        /// <param name="model">model.</param>
         /// <param name="brokenRules">list of errors.</param>
         /// <returns>True valid and False for invalid.</returns>
-        public static bool ValidateModel(this BankStatementFileImportModel model, out List<string> brokenRules)
+        public static bool ValidateModel<T>(this T model, out List<string> brokenRules)
+            where T : IModelValidation<T>
         {
-            IModelValidator<BankStatementFileImportModel> validator = new BankStatementFileImportModelValidator();
+            IModelValidator<T> validator = ModelValidatorFactory.GetValidatorFor(model);
             brokenRules = new List<string>();
 
             return model.ValidateModel(validator, out brokenRules);
