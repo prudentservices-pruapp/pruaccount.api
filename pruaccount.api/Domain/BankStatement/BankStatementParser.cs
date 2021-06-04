@@ -20,7 +20,6 @@ namespace Pruaccount.Api.Domain.BankStatement
     /// </summary>
     public class BankStatementParser
     {
-
         /// <summary>
         /// GetNoOfRows.
         /// </summary>
