@@ -10,7 +10,7 @@ namespace Pruaccount.Api.Validators
     using Pruaccount.Api.Validators.Interfaces;
 
     /// <summary>
-    /// BankStatementFileImportModelValidator
+    /// BankStatementFileImportModelValidator.
     /// </summary>
     public class BankStatementFileImportModelValidator : IModelValidator<BankStatementFileImportModel>
     {
