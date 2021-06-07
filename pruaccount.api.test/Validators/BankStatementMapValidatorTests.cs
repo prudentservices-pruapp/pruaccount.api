@@ -21,7 +21,6 @@
         private readonly BankStatementMapDetailSaveModel bankStatementMapDetailSaveCaterAllenModel;
 
         private readonly BankStatementMapDetailSaveModel bankStatementMapDetailSaveLloydsModelWithIncorrectDebitCredit;
-        private readonly BankStatementMapDetailSaveModel bankStatementMapDetailSaveCaterAllenModelWithIncorrectDebitCredit;
 
         public BankStatementMapValidatorTests(ITestOutputHelper output)
         {
@@ -77,34 +76,50 @@
                 Column3 = 4, //CreditDebitAmount
                 Column4 = 5  //Balance
             };
-
         }
 
         [Fact]
-        public void CValidateStatmentData_For_Lloyds_Bank_Statement()
+        public void ValidateStatmentData_For_Lloyds_Bank_Statement()
         {
             List<BankStatementTransactionDetailModel> bankStatementTransactionDetailModels;
             var directory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\Data";
             var fileNameWithPath = string.Format("{0}\\{1}", directory, this.LloydsCSV);
             var bankStatmentParser = new BankStatementParser(fileNameWithPath);
+            var bankStatmentMapper = new BankStatementMapper(this.bankStatementMapDetailSaveLloydsModel);
 
-            var sut = new BankStatementMapValidator(bankStatmentParser, this.bankStatementMapDetailSaveLloydsModel);
+            var sut = new BankStatementMapValidator(bankStatmentParser, bankStatmentMapper.BankStatementMapDetailModel);
             var result = sut.ValidateStatmentData(out bankStatementTransactionDetailModels);
             Assert.Empty(result);
             Assert.Equal(10, bankStatementTransactionDetailModels.Count);
         }
 
         [Fact]
-        public void CValidateStatmentData_For_CaterAllen_Bank_Statement()
+        public void ValidateStatmentData_For_CaterAllen_Bank_Statement()
         {
             List<BankStatementTransactionDetailModel> bankStatementTransactionDetailModels;
             var directory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\Data";
             var fileNameWithPath = string.Format("{0}\\{1}", directory, this.CaterAllenCSV);
             var bankStatmentParser = new BankStatementParser(fileNameWithPath);
+            var bankStatmentMapper = new BankStatementMapper(this.bankStatementMapDetailSaveCaterAllenModel);
 
-            var sut = new BankStatementMapValidator(bankStatmentParser, this.bankStatementMapDetailSaveCaterAllenModel);
+            var sut = new BankStatementMapValidator(bankStatmentParser, bankStatmentMapper.BankStatementMapDetailModel);
             var result = sut.ValidateStatmentData(out bankStatementTransactionDetailModels);
             Assert.Empty(result);
+            Assert.Equal(10, bankStatementTransactionDetailModels.Count);
+        }
+
+        [Fact]
+        public void ValidateStatmentData_For_Lloyds_Bank_Statement_For_Errors()
+        {
+            List<BankStatementTransactionDetailModel> bankStatementTransactionDetailModels;
+            var directory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\Data";
+            var fileNameWithPath = string.Format("{0}\\{1}", directory, this.LloydsCSV);
+            var bankStatmentParser = new BankStatementParser(fileNameWithPath);
+            var bankStatmentMapper = new BankStatementMapper(this.bankStatementMapDetailSaveLloydsModelWithIncorrectDebitCredit);
+
+            var sut = new BankStatementMapValidator(bankStatmentParser, bankStatmentMapper.BankStatementMapDetailModel);
+            var result = sut.ValidateStatmentData(out bankStatementTransactionDetailModels);
+            Assert.Single(result);
             Assert.Equal(10, bankStatementTransactionDetailModels.Count);
         }
     }
