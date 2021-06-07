@@ -57,5 +57,47 @@ namespace Pruaccount.Api.Extensions
 
             return mappedIndex;
         }
+
+        /// <summary>
+        /// GetBankStatementMapColumnIndexCount.
+        /// </summary>
+        /// <param name="bankStatementMapDetailSaveModel">BankStatementMapDetailSaveModel.</param>
+        /// <param name="bankStatementMapColumnTypeEnumValue">BankStatementMapColumnTypeEnum.</param>
+        /// <returns>1 if mapped correct or 0 or more than 1 when not correct.</returns>
+        public static int GetBankStatementMapColumnIndexCount(this BankStatementMapDetailSaveModel bankStatementMapDetailSaveModel, int bankStatementMapColumnTypeEnumValue)
+        {
+            int mappedIndexCount = 0;
+
+            for (int colIndex = 0; colIndex <= 15; colIndex++)
+            {
+                try
+                {
+                    string propertyName = PropertNameStartsWith + colIndex;
+                    PropertyInfo propertyInfo = bankStatementMapDetailSaveModel.GetType().GetProperty(propertyName);
+                    int currentColumnValue = -1;
+
+                    if (propertyInfo != null)
+                    {
+                        var objectValue = propertyInfo.GetValue(bankStatementMapDetailSaveModel, null);
+
+                        if (objectValue != null)
+                        {
+                            int.TryParse(objectValue.ToString(), out currentColumnValue);
+
+                            if (currentColumnValue == bankStatementMapColumnTypeEnumValue)
+                            {
+                                mappedIndexCount++;
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    mappedIndexCount = 0;
+                }
+            }
+
+            return mappedIndexCount;
+        }
     }
 }

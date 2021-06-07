@@ -21,8 +21,6 @@ namespace Pruaccount.Api.Validators
     {
         private BankStatementParser bankStatementParser;
         private BankStatementMapModel bankStatementMapModel;
-
-        private BankStatementMapper bankStatementMapper;
         private BankStatementMapDetailModel bankStatementMapDetailModel;
 
         private BankStatementTransactionDetailMapper bankStatementTransactionDetailMapper;
@@ -33,13 +31,12 @@ namespace Pruaccount.Api.Validators
         /// Initializes a new instance of the <see cref="BankStatementMapValidator"/> class.
         /// </summary>
         /// <param name="bankStatementParser">Bank Statement Data.</param>
-        /// <param name="bankStatementMapDetailSaveModel">Bank Statement Map Details Saved.</param>
-        public BankStatementMapValidator(BankStatementParser bankStatementParser, BankStatementMapDetailSaveModel bankStatementMapDetailSaveModel)
+        /// <param name="bankStatementMapDetailModel">Bank Statement Map Detai lModel.</param>
+        public BankStatementMapValidator(BankStatementParser bankStatementParser, BankStatementMapDetailModel bankStatementMapDetailModel)
         {
             this.bankStatementParser = bankStatementParser;
             this.bankStatementMapModel = this.bankStatementParser.GeRowsJson();
-            this.bankStatementMapper = new BankStatementMapper(bankStatementMapDetailSaveModel);
-            this.bankStatementMapDetailModel = this.bankStatementMapper.BankStatementMapDetailModel;
+            this.bankStatementMapDetailModel = bankStatementMapDetailModel;
             this.bankStatementTransactionDetailMapper = new BankStatementTransactionDetailMapper();
             this.bankStatementTransactionDetailModelList = new List<BankStatementTransactionDetailModel>();
         }

@@ -19,10 +19,12 @@ namespace Pruaccount.Api.Controllers
     using Newtonsoft.Json;
     using Pruaccount.Api.DataAccess.Core;
     using Pruaccount.Api.Domain.Auth;
+    using Pruaccount.Api.Domain.BankStatement;
     using Pruaccount.Api.Entities;
     using Pruaccount.Api.Enums;
     using Pruaccount.Api.MappingConfigurations;
     using Pruaccount.Api.Models;
+    using Pruaccount.Api.Validators;
     using Pruaccount.Api.Validators.Extensions;
 
     /// <summary>
@@ -103,12 +105,26 @@ namespace Pruaccount.Api.Controllers
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
                 List<string> brokenRules = new List<string>();
+                List<BankStatementTransactionDetailModel> bankStatementTransactionDetailModels = new List<BankStatementTransactionDetailModel>(); ;
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
                     if (bankStatementMapDetailSaveModel.ValidateModel(out brokenRules))
                     {
-                       // save in DB.
+                        BankStatementFileImport currentFileImport = this.uw.BankStatementFileImportRepository.FindByPID(bankStatementMapDetailSaveModel.BankStatementFileImportUniqueId);
+                        BankStatementParser bankStatementParser = new BankStatementParser($"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}");
+                        BankStatementMapper bankStatementMapper = new BankStatementMapper(bankStatementMapDetailSaveModel);
+
+                        BankStatementMapValidator bankStatementMapValidator = new BankStatementMapValidator(bankStatementParser, bankStatementMapper.BankStatementMapDetailModel);
+
+                        brokenRules = bankStatementMapValidator.ValidateStatmentData(out bankStatementTransactionDetailModels);
+
+                        if (brokenRules.Count > 0)
+                        {
+                            return this.BadRequest(string.Join(" ", brokenRules));
+                        }
+
+                        // Now save to DB
                     }
                     else
                     {

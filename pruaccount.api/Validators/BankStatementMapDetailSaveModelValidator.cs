@@ -36,7 +36,7 @@ namespace Pruaccount.Api.Validators
                 errorsList.Add("Please select date format for mapping.");
             }
 
-            int dateMappingCount = model.GetBankStatementMapColumnIndex(BankStatementMapColumnTypeEnum.Date);
+            int dateMappingCount = model.GetBankStatementMapColumnIndexCount(BankStatementMapColumnTypeEnum.Date);
 
             if (dateMappingCount == 0 || dateMappingCount > 1)
             {
@@ -51,9 +51,9 @@ namespace Pruaccount.Api.Validators
                 }
             }
 
-            int creditAmountMappingCount = model.GetBankStatementMapColumnIndex(BankStatementMapColumnTypeEnum.CreditAmount);
-            int debitAmountMappingCount = model.GetBankStatementMapColumnIndex(BankStatementMapColumnTypeEnum.DebitAmount);
-            int creditDebitAmountMappingCount = model.GetBankStatementMapColumnIndex(BankStatementMapColumnTypeEnum.CreditDebitAmount);
+            int creditAmountMappingCount = model.GetBankStatementMapColumnIndexCount(BankStatementMapColumnTypeEnum.CreditAmount);
+            int debitAmountMappingCount = model.GetBankStatementMapColumnIndexCount(BankStatementMapColumnTypeEnum.DebitAmount);
+            int creditDebitAmountMappingCount = model.GetBankStatementMapColumnIndexCount(BankStatementMapColumnTypeEnum.CreditDebitAmount);
 
             if (((creditAmountMappingCount == 0 || creditAmountMappingCount > 1) || (debitAmountMappingCount == 0 || debitAmountMappingCount > 1)) && (creditDebitAmountMappingCount == 0 || creditDebitAmountMappingCount > 1))
             {
@@ -75,7 +75,7 @@ namespace Pruaccount.Api.Validators
                 }
             }
 
-            int balanceMappingCount = model.GetBankStatementMapColumnIndex(BankStatementMapColumnTypeEnum.Balance);
+            int balanceMappingCount = model.GetBankStatementMapColumnIndexCount(BankStatementMapColumnTypeEnum.Balance);
 
             if (balanceMappingCount == 0 || balanceMappingCount > 1)
             {
@@ -90,7 +90,7 @@ namespace Pruaccount.Api.Validators
                 }
             }
 
-            int descriptionMappingCount = model.GetBankStatementMapColumnIndex(BankStatementMapColumnTypeEnum.Balance);
+            int descriptionMappingCount = model.GetBankStatementMapColumnIndexCount(BankStatementMapColumnTypeEnum.Description);
 
             if (descriptionMappingCount > 1)
             {

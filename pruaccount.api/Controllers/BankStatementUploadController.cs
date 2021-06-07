@@ -43,6 +43,7 @@ namespace Pruaccount.Api.Controllers
             this.uw = repository;
             this.logger = logger;
             this.httpContextAccessor = httpContextAccessor;
+            this.bankStatementFileImportMapper = new BankStatementFileImportMapper();
         }
 
         /// <summary>
