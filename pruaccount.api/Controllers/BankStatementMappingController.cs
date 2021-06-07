@@ -105,7 +105,7 @@ namespace Pruaccount.Api.Controllers
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
                 List<string> brokenRules = new List<string>();
-                List<BankStatementTransactionDetailModel> bankStatementTransactionDetailModels = new List<BankStatementTransactionDetailModel>(); ;
+                List<BankStatementTransactionDetailModel> bankStatementTransactionDetailModels = new List<BankStatementTransactionDetailModel>();
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
