@@ -27,6 +27,7 @@ namespace Pruaccount.Api.Controllers
         private readonly IUnitOfWork uw;
         private readonly ILogger<BankAccountDetailController> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly BankAccountDetailMapper bankAccountDetailMapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BankAccountDetailController"/> class.
@@ -39,6 +40,7 @@ namespace Pruaccount.Api.Controllers
             this.uw = repository;
             this.logger = logger;
             this.httpContextAccessor = httpContextAccessor;
+            this.bankAccountDetailMapper = new BankAccountDetailMapper();
         }
 
         /// <summary>
@@ -124,7 +126,7 @@ namespace Pruaccount.Api.Controllers
 
                     foreach (var bankAccount in bankAccountDetailList)
                     {
-                        bankAccountDetailModels.Add(new BankAccountDetailModel().PopulateBankAccountDetailModelFromEntity(bankAccount));
+                        bankAccountDetailModels.Add(this.bankAccountDetailMapper.PopulateFromEntity(bankAccount));
                     }
 
                     var bankAccountDetailListAPIData = new
@@ -170,7 +172,7 @@ namespace Pruaccount.Api.Controllers
 
                     foreach (var bankAccount in bankAccountDetailList)
                     {
-                        bankAccountDetailModels.Add(new BankAccountDetailModel().PopulateBankAccountDetailModelFromEntity(bankAccount));
+                        bankAccountDetailModels.Add(this.bankAccountDetailMapper.PopulateFromEntity(bankAccount));
                     }
 
                     var bankAccountDetailListAPIData = new
@@ -212,7 +214,7 @@ namespace Pruaccount.Api.Controllers
                         return this.BadRequest("Mandatory fields not entered.");
                     }
 
-                    BankAccountDetails bankAccountDetailsRequest = new BankAccountDetails().PopulateBankAccountDetailsFromModel(bankAccountDetailModel);
+                    BankAccountDetails bankAccountDetailsRequest = this.bankAccountDetailMapper.PopulateFromModel(bankAccountDetailModel);
                     bankAccountDetailsRequest.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
                     this.uw.Begin(System.Data.IsolationLevel.Serializable);
                     this.uw.BankAccountDetailsRepository.Save(bankAccountDetailsRequest);

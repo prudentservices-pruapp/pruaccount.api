@@ -76,8 +76,8 @@ namespace Pruaccount.Api.Controllers
                     }
 
                     string uploadedFilenameWithPath = $"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}";
-                    Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser();
-                    var bankStatementMapModel = bankStatementParser.GeRowsJson(uploadedFilenameWithPath);
+                    Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser(uploadedFilenameWithPath);
+                    var bankStatementMapModel = bankStatementParser.GeRowsJson();
 
                     return this.Ok(bankStatementMapModel);
                 }
@@ -86,6 +86,48 @@ namespace Pruaccount.Api.Controllers
             {
                 this.logger.LogError(ex, "BankStatementUploadController->BankStatementStatus Exception");
                 return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// SaveMapping.
+        /// </summary>
+        /// <param name="bankStatementMapDetailSaveModel">BankStatementMapDetailSaveModel.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("save")]
+        public IActionResult SaveMapping([FromBody] BankStatementMapDetailSaveModel bankStatementMapDetailSaveModel)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<string> brokenRules = new List<string>();
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    if (bankStatementMapDetailSaveModel.ValidateModel(out brokenRules))
+                    {
+                       // save in DB.
+                    }
+                    else
+                    {
+                        return this.BadRequest(string.Join(" ", brokenRules));
+                    }
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementMappingController->SaveMapping Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+            finally
+            {
+                this.uw.Complete();
             }
 
             return this.Ok();

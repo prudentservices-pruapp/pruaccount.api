@@ -20,15 +20,31 @@ namespace Pruaccount.Api.Domain.BankStatement
     /// </summary>
     public class BankStatementParser
     {
+        private string fileNameWithPath = string.Empty;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BankStatementParser"/> class.
+        /// </summary>
+        /// <param name="fileNameWithPath">csv fileNameWithPath.</param>
+        public BankStatementParser(string fileNameWithPath)
+        {
+            this.fileNameWithPath = fileNameWithPath;
+
+            if (!System.IO.File.Exists(this.fileNameWithPath))
+            {
+                throw new Exception("Please check file not found.");
+            }
+        }
+
         /// <summary>
         /// GetNoOfRows.
         /// </summary>
         /// <param name="fileNameWithPath">fileNameWithPath.</param>
         /// <returns>long no of rows.</returns>
-        public long GetNoOfRows(string fileNameWithPath)
+        public long GetNoOfRows()
         {
             long count = 0;
-            using (StreamReader r = new StreamReader(fileNameWithPath))
+            using (StreamReader r = new StreamReader(this.fileNameWithPath))
             {
                 string line;
                 while ((line = r.ReadLine()) != null)
@@ -41,13 +57,42 @@ namespace Pruaccount.Api.Domain.BankStatement
         }
 
         /// <summary>
+        /// GetNoOfColumns.
+        /// </summary>
+        /// <param name="fileNameWithPath">fileNameWithPath.</param>
+        /// <returns>no of columns.</returns>
+        public int GetNoOfColumns()
+        {
+            int noOfColumns = 0;
+
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                IgnoreBlankLines = false,
+                HasHeaderRecord = false,
+            };
+
+            using (var reader = new StreamReader(this.fileNameWithPath))
+            using (var csv = new CsvReader(reader, config))
+            {
+                while (csv.Read())
+                {
+                    var record = csv.GetRecord<dynamic>();
+                    noOfColumns = this.GetNoOfColumns(record);
+                    break;
+                }
+            }
+
+            return noOfColumns;
+        }
+
+        /// <summary>
         /// CSVJson.
         /// </summary>
         /// <param name="fileNameWithPath">fileNameWithPath.</param>
         /// <param name="currentPage">currentPage.</param>
         /// <param name="rowsPerPage">rowsPerPage.</param>
         /// <returns>string Json.</returns>
-        public BankStatementMapModel GeRowsJson(string fileNameWithPath, int currentPage = 1, int rowsPerPage = 10)
+        public BankStatementMapModel GeRowsJson(int currentPage = 1, int rowsPerPage = 10)
         {
             string jsonData = string.Empty;
             var records = new List<dynamic>();
@@ -57,21 +102,16 @@ namespace Pruaccount.Api.Domain.BankStatement
             BankStatementMapModel bankStatementMapModel = new BankStatementMapModel();
             bankStatementMapModel.Json = jsonData;
 
-            if (!System.IO.File.Exists(fileNameWithPath))
-            {
-                throw new Exception("Please check file not found.");
-            }
+            bankStatementMapModel.TotalNoOfRowsInCSV = this.GetNoOfRows();
+            bankStatementMapModel.NoOfColumnsInCSV = this.GetNoOfColumns();
 
-            bankStatementMapModel.NoOfRows = this.GetNoOfRows(fileNameWithPath);
-            bankStatementMapModel.NoOfColumns = this.GetNoOfColumns(fileNameWithPath);
-
-            bool hasHeaderRow = this.CheckIfFileHasHeader(fileNameWithPath);
+            bool hasHeaderRow = this.CheckIfFileHasHeader();
             if (hasHeaderRow)
             {
-                bankStatementMapModel.NoOfRows--;
+                bankStatementMapModel.TotalNoOfRowsInCSV--;
             }
 
-            var totalPages = (int)Math.Ceiling((decimal)bankStatementMapModel.NoOfRows / (decimal)rowsPerPage);
+            var totalPages = (int)Math.Ceiling((decimal)bankStatementMapModel.TotalNoOfRowsInCSV / (decimal)rowsPerPage);
 
             if (currentPage < 1)
             {
@@ -83,7 +123,7 @@ namespace Pruaccount.Api.Domain.BankStatement
             }
 
             var startIndex = (currentPage - 1) * rowsPerPage;
-            var endIndex = Math.Min(startIndex + rowsPerPage - 1, bankStatementMapModel.NoOfRows - 1);
+            var endIndex = Math.Min(startIndex + rowsPerPage - 1, bankStatementMapModel.TotalNoOfRowsInCSV - 1);
 
             if (hasHeaderRow)
             {
@@ -97,7 +137,7 @@ namespace Pruaccount.Api.Domain.BankStatement
                 HasHeaderRecord = false,
             };
 
-            using (var reader = new StreamReader(fileNameWithPath))
+            using (var reader = new StreamReader(this.fileNameWithPath))
             using (var csv = new CsvReader(reader, config))
             {
                 while (csv.Read())
@@ -146,7 +186,7 @@ namespace Pruaccount.Api.Domain.BankStatement
         /// </summary>
         /// <param name="fileNameWithPath">fileNameWithPath.</param>
         /// <returns>True if header row or false.</returns>
-        private bool CheckIfFileHasHeader(string fileNameWithPath)
+        private bool CheckIfFileHasHeader()
         {
             bool hasHeaderRow = true;
 
@@ -156,7 +196,7 @@ namespace Pruaccount.Api.Domain.BankStatement
                 HasHeaderRecord = false,
             };
 
-            using (var reader = new StreamReader(fileNameWithPath))
+            using (var reader = new StreamReader(this.fileNameWithPath))
             using (var csv = new CsvReader(reader, config))
             {
                 while (csv.Read())
@@ -228,35 +268,6 @@ namespace Pruaccount.Api.Domain.BankStatement
             }
 
             return recordUpdated;
-        }
-
-        /// <summary>
-        /// GetNoOfColumns.
-        /// </summary>
-        /// <param name="fileNameWithPath">fileNameWithPath.</param>
-        /// <returns>no of columns.</returns>
-        private int GetNoOfColumns(string fileNameWithPath)
-        {
-            int noOfColumns = 0;
-
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                IgnoreBlankLines = false,
-                HasHeaderRecord = false,
-            };
-
-            using (var reader = new StreamReader(fileNameWithPath))
-            using (var csv = new CsvReader(reader, config))
-            {
-                while (csv.Read())
-                {
-                    var record = csv.GetRecord<dynamic>();
-                    noOfColumns = GetNoOfColumns(record);
-                    break;
-                }
-            }
-
-            return noOfColumns;
         }
 
         /// <summary>

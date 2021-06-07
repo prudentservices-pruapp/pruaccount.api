@@ -10,76 +10,72 @@ namespace Pruaccount.Api.MappingConfigurations
     /// <summary>
     /// BankStatementFileImportMapper.
     /// </summary>
-    public static class BankStatementFileImportMapper
+    public class BankStatementFileImportMapper
     {
         /// <summary>
-        /// PopulateBankStatementFileImportFromModel.
+        /// PopulateFromModel
+        /// BankStatementFileImport populated From Model.
         /// </summary>
-        /// <param name="bankStatementFileImport">bankStatementFileImport.</param>
         /// <param name="bankStatementFileImportModel">bankStatementFileImportModel.</param>
         /// <returns>BankAccountDetails.</returns>
-        public static BankStatementFileImport PopulateBankStatementFileImportFromModel(this BankStatementFileImport bankStatementFileImport, BankStatementFileImportModel bankStatementFileImportModel)
+        public BankStatementFileImport PopulateFromModel(BankStatementFileImportModel bankStatementFileImportModel)
         {
-            if (bankStatementFileImport != null)
-            {
-                bankStatementFileImport.UniqueId = bankStatementFileImportModel.UniqueId;
-                bankStatementFileImport.ClientBusinessDetailsUniqueId = bankStatementFileImportModel.ClientBusinessDetailsUniqueId;
-                bankStatementFileImport.BankAccountDetailsUniqueId = bankStatementFileImportModel.BankAccountDetailsUniqueId;
-                bankStatementFileImport.UploadedFileName = bankStatementFileImportModel.UploadedFileName;
-                bankStatementFileImport.UploadedFilePath = bankStatementFileImportModel.UploadedFilePath;
-                bankStatementFileImport.SystemGeneratedFileName = bankStatementFileImportModel.SystemGeneratedFileName;
-                bankStatementFileImport.FileExtenstion = bankStatementFileImportModel.FileExtenstion;
-                bankStatementFileImport.FileLengthInBytes = bankStatementFileImportModel.FileLengthInBytes;
-                bankStatementFileImport.CurrentProcessStatus = bankStatementFileImportModel.CurrentProcessStatus;
-                bankStatementFileImport.CurrentProcessStatusDate = bankStatementFileImportModel.CurrentProcessStatusDate;
-            }
+            BankStatementFileImport bankStatementFileImport = new BankStatementFileImport();
+
+            bankStatementFileImport.UniqueId = bankStatementFileImportModel.UniqueId;
+            bankStatementFileImport.ClientBusinessDetailsUniqueId = bankStatementFileImportModel.ClientBusinessDetailsUniqueId;
+            bankStatementFileImport.BankAccountDetailsUniqueId = bankStatementFileImportModel.BankAccountDetailsUniqueId;
+            bankStatementFileImport.UploadedFileName = bankStatementFileImportModel.UploadedFileName;
+            bankStatementFileImport.UploadedFilePath = bankStatementFileImportModel.UploadedFilePath;
+            bankStatementFileImport.SystemGeneratedFileName = bankStatementFileImportModel.SystemGeneratedFileName;
+            bankStatementFileImport.FileExtenstion = bankStatementFileImportModel.FileExtenstion;
+            bankStatementFileImport.FileLengthInBytes = bankStatementFileImportModel.FileLengthInBytes;
+            bankStatementFileImport.CurrentProcessStatus = bankStatementFileImportModel.CurrentProcessStatus;
+            bankStatementFileImport.CurrentProcessStatusDate = bankStatementFileImportModel.CurrentProcessStatusDate;
 
             return bankStatementFileImport;
         }
 
         /// <summary>
-        /// PopulateBankStatementFileImportModelFromEntity.
+        /// PopulateFromEntity
+        /// BankStatementFileImportModel populated From Entity.
         /// </summary>
-        /// <param name="bankStatementFileImportModel">bankStatementFileImportModel.</param>
         /// <param name="bankStatementFileImport">bankStatementFileImport.</param>
         /// <returns>BankStatementFileImport.</returns>
-        public static BankStatementFileImportModel PopulateBankStatementFileImportModelFromEntity(this BankStatementFileImportModel bankStatementFileImportModel, BankStatementFileImport bankStatementFileImport)
+        public BankStatementFileImportModel PopulateFromEntity(BankStatementFileImport bankStatementFileImport)
         {
-            if (bankStatementFileImportModel != null)
-            {
-                bankStatementFileImportModel.UniqueId = bankStatementFileImport.UniqueId;
-                bankStatementFileImportModel.ClientBusinessDetailsUniqueId = bankStatementFileImport.ClientBusinessDetailsUniqueId;
-                bankStatementFileImportModel.BankAccountDetailsUniqueId = bankStatementFileImport.BankAccountDetailsUniqueId;
-                bankStatementFileImportModel.UploadedFileName = bankStatementFileImport.UploadedFileName;
-                bankStatementFileImportModel.UploadedFilePath = bankStatementFileImport.UploadedFilePath;
-                bankStatementFileImportModel.SystemGeneratedFileName = bankStatementFileImport.SystemGeneratedFileName;
-                bankStatementFileImportModel.FileExtenstion = bankStatementFileImport.FileExtenstion;
-                bankStatementFileImportModel.FileLengthInBytes = bankStatementFileImport.FileLengthInBytes;
-                bankStatementFileImportModel.CurrentProcessStatus = bankStatementFileImport.CurrentProcessStatus;
-                bankStatementFileImportModel.CurrentProcessStatusDate = bankStatementFileImport.CurrentProcessStatusDate;
-            }
+            BankStatementFileImportModel bankStatementFileImportModel = new BankStatementFileImportModel();
+
+            bankStatementFileImportModel.UniqueId = bankStatementFileImport.UniqueId;
+            bankStatementFileImportModel.ClientBusinessDetailsUniqueId = bankStatementFileImport.ClientBusinessDetailsUniqueId;
+            bankStatementFileImportModel.BankAccountDetailsUniqueId = bankStatementFileImport.BankAccountDetailsUniqueId;
+            bankStatementFileImportModel.UploadedFileName = bankStatementFileImport.UploadedFileName;
+            bankStatementFileImportModel.UploadedFilePath = bankStatementFileImport.UploadedFilePath;
+            bankStatementFileImportModel.SystemGeneratedFileName = bankStatementFileImport.SystemGeneratedFileName;
+            bankStatementFileImportModel.FileExtenstion = bankStatementFileImport.FileExtenstion;
+            bankStatementFileImportModel.FileLengthInBytes = bankStatementFileImport.FileLengthInBytes;
+            bankStatementFileImportModel.CurrentProcessStatus = bankStatementFileImport.CurrentProcessStatus;
+            bankStatementFileImportModel.CurrentProcessStatusDate = bankStatementFileImport.CurrentProcessStatusDate;
 
             return bankStatementFileImportModel;
         }
 
         /// <summary>
-        /// PopulatePartialBankStatementFileImportModelFromEntity.
+        /// PopulatePartialModelFromEntity.
         /// </summary>
-        /// <param name="bankStatementFileImportModel">bankStatementFileImportModel.</param>
         /// <param name="bankStatementFileImport">bankStatementFileImport.</param>
         /// <returns>BankStatementFileImport.</returns>
-        public static BankStatementFileImportModel PopulatePartialBankStatementFileImportModelFromEntity(this BankStatementFileImportModel bankStatementFileImportModel, BankStatementFileImport bankStatementFileImport)
+        public BankStatementFileImportModel PopulatePartialModelFromEntity(BankStatementFileImport bankStatementFileImport)
         {
-            if (bankStatementFileImportModel != null)
-            {
-                bankStatementFileImportModel.UniqueId = bankStatementFileImport.UniqueId;
-                bankStatementFileImportModel.BankAccountDetailsUniqueId = bankStatementFileImport.BankAccountDetailsUniqueId;
-                bankStatementFileImportModel.UploadedFileName = bankStatementFileImport.UploadedFileName;
-                bankStatementFileImportModel.FileExtenstion = bankStatementFileImport.FileExtenstion;
-                bankStatementFileImportModel.FileLengthInBytes = bankStatementFileImport.FileLengthInBytes;
-                bankStatementFileImportModel.CurrentProcessStatus = bankStatementFileImport.CurrentProcessStatus;
-                bankStatementFileImportModel.CurrentProcessStatusDate = bankStatementFileImport.CurrentProcessStatusDate;
-            }
+            BankStatementFileImportModel bankStatementFileImportModel = new BankStatementFileImportModel();
+
+            bankStatementFileImportModel.UniqueId = bankStatementFileImport.UniqueId;
+            bankStatementFileImportModel.BankAccountDetailsUniqueId = bankStatementFileImport.BankAccountDetailsUniqueId;
+            bankStatementFileImportModel.UploadedFileName = bankStatementFileImport.UploadedFileName;
+            bankStatementFileImportModel.FileExtenstion = bankStatementFileImport.FileExtenstion;
+            bankStatementFileImportModel.FileLengthInBytes = bankStatementFileImport.FileLengthInBytes;
+            bankStatementFileImportModel.CurrentProcessStatus = bankStatementFileImport.CurrentProcessStatus;
+            bankStatementFileImportModel.CurrentProcessStatusDate = bankStatementFileImport.CurrentProcessStatusDate;
 
             return bankStatementFileImportModel;
         }

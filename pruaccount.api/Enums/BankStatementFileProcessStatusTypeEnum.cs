@@ -18,7 +18,7 @@ namespace Pruaccount.Api.Enums
         /// <summary>
         /// Gets Mapped.
         /// </summary>
-        public static string Mapped { get; } = "Mapping";
+        public static string Mapped { get; } = "Mapped";
 
         /// <summary>
         /// Gets InProcess.

@@ -10,16 +10,17 @@ namespace Pruaccount.Api.MappingConfigurations
     /// <summary>
     /// BankStatementFileImportProcessMapper.
     /// </summary>
-    public static class BankStatementFileImportProcessMapper
+    public class BankStatementFileImportProcessMapper
     {
         /// <summary>
-        /// PopulateBankStatementFileImportProcessFromModel.
+        /// PopulateFromModel.
+        /// BankStatementFileImportProcess populated From Model.
         /// </summary>
-        /// <param name="bankStatementFileImportProcess">bankStatementFileImportProcess.</param>
         /// <param name="bankStatementFileImportProcessModel">bankStatementFileImportProcessModel.</param>
         /// <returns>BankStatementFileImportProcess.</returns>
-        public static BankStatementFileImportProcess PopulateBankStatementFileImportProcessFromModel(this BankStatementFileImportProcess bankStatementFileImportProcess, BankStatementFileImportProcessModel bankStatementFileImportProcessModel)
+        public BankStatementFileImportProcess PopulateFromModel(BankStatementFileImportProcessModel bankStatementFileImportProcessModel)
         {
+            BankStatementFileImportProcess bankStatementFileImportProcess = new BankStatementFileImportProcess();
             if (bankStatementFileImportProcess != null)
             {
                 bankStatementFileImportProcess.UniqueId = bankStatementFileImportProcessModel.UniqueId;
@@ -34,13 +35,14 @@ namespace Pruaccount.Api.MappingConfigurations
         }
 
         /// <summary>
-        /// PopulateBankStatementFileImportProcessModelFromEntity.
+        /// PopulateFromEntity.
+        /// BankStatementFileImportProcessModel populated From Entity.
         /// </summary>
-        /// <param name="bankStatementFileImportProcessModel">bankStatementFileImportProcessModel.</param>
         /// <param name="bankStatementFileImportProcess">bankStatementFileImportProcess.</param>
         /// <returns>BankStatementFileImportProcessModel.</returns>
-        public static BankStatementFileImportProcessModel PopulateBankStatementFileImportProcessModelFromEntity(this BankStatementFileImportProcessModel bankStatementFileImportProcessModel, BankStatementFileImportProcess bankStatementFileImportProcess)
+        public BankStatementFileImportProcessModel PopulateFromEntity(BankStatementFileImportProcess bankStatementFileImportProcess)
         {
+            BankStatementFileImportProcessModel bankStatementFileImportProcessModel = new BankStatementFileImportProcessModel();
             if (bankStatementFileImportProcessModel != null)
             {
                 bankStatementFileImportProcessModel.UniqueId = bankStatementFileImportProcess.UniqueId;

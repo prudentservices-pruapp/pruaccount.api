@@ -29,6 +29,7 @@ namespace Pruaccount.Api.Controllers
         private readonly IUnitOfWork uw;
         private readonly ILogger<BankAccountDetailController> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly BankStatementFileImportMapper bankStatementFileImportMapper;
         private readonly string pathToSave = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("BankStatements", "Uploaded"));
 
         /// <summary>
@@ -65,10 +66,12 @@ namespace Pruaccount.Api.Controllers
 
                     if (currentImports.Count > 0)
                     {
-                        lastProcessStatus.PopulatePartialBankStatementFileImportModelFromEntity(currentImports[0]);
+                        lastProcessStatus = this.bankStatementFileImportMapper.PopulatePartialModelFromEntity(currentImports[0]);
+                        lastProcessStatus.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
+                        lastProcessStatus.BankAccountDetailsUniqueId = pid;
                     }
 
-                    return Ok(lastProcessStatus);
+                    return this.Ok(lastProcessStatus);
                 }
             }
             catch (Exception ex)
@@ -151,7 +154,7 @@ namespace Pruaccount.Api.Controllers
                                 try
                                 {
                                     this.uw.Begin(System.Data.IsolationLevel.Serializable);
-                                    this.uw.BankStatementFileImportRepository.Save(new BankStatementFileImport().PopulateBankStatementFileImportFromModel(bankStatementFileImportModel));
+                                    this.uw.BankStatementFileImportRepository.Save(this.bankStatementFileImportMapper.PopulateFromModel(bankStatementFileImportModel));
                                 }
                                 catch (Exception ex)
                                 {
