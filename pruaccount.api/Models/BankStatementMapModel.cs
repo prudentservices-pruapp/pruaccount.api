@@ -43,5 +43,10 @@ namespace Pruaccount.Api.Models
                 return new List<BankStatementCSVDataModel>();
             }
         }
+
+        /// <summary>
+        /// Gets or sets bankStatementMapDetailModel.
+        /// </summary>
+        public BankStatementMapDetailModel BankStatementMapDetailModel { get; set; }
     }
 }

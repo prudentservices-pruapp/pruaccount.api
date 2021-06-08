@@ -81,6 +81,24 @@ namespace Pruaccount.Api.Controllers
                     Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser(uploadedFilenameWithPath);
                     var bankStatementMapModel = bankStatementParser.GeRowsJson();
 
+                    BankStatementMapDetailModel bankStatementMapDetailModel = new BankStatementMapDetailModel()
+                    {
+                        MapName = "Lloyds Bank",
+                        DatePart1 = "dd",
+                        DatePart2 = "MM",
+                        DatePart3 = "yyyy",
+                        DateSeparator = "/",
+                        Dateformat = "dd/MM/yyyy",
+                        DateformatValue = "01/09/2009",
+                        DateIndex = 0,
+                        DebitAmountIndex = 5,
+                        CreditAmountIndex = 6,
+                        BalanceIndex = 7,
+                        DescriptionIndex = 4,
+                    };
+
+                    bankStatementMapModel.BankStatementMapDetailModel = bankStatementMapDetailModel;
+
                     return this.Ok(bankStatementMapModel);
                 }
             }
