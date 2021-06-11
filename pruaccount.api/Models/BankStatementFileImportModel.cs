@@ -34,6 +34,11 @@ namespace Pruaccount.Api.Models
         public Guid BankAccountDetailsUniqueId { get; set; }
 
         /// <summary>
+        /// Gets or sets BankStatementMapDetailUniqueId.
+        /// </summary>
+        public Guid BankStatementMapDetailUniqueId { get; set; }
+
+        /// <summary>
         /// Gets or sets UploadedFileName.
         /// </summary>
         public string UploadedFileName { get; set; }

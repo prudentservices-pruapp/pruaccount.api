@@ -30,13 +30,19 @@ namespace Pruaccount.Api.DataAccess.Core
         private IBankAccountDetailsRepository bankAccountDetailsRepository;
         private IBAOpeningBalanceRepository baOpeningbalanceRepository;
         private IBankStatementFileImportRepository bankStatementFileImportRepository;
+
         private IBankStatementFileImportProcessRepository bankStatementFileImportProcessRepository;
+        private IBankStatementMapDetailRepository bankStatementMapDetailRepository;
+
         private ICBFinancialSettingRepository cbFinancialSettingRepository;
+
         private ICustomerBusinessAddressRepository customerBusinessAddressRepository;
         private ICustomerBusinessDetailsRepository customerBusinessDetailsRepository;
         private ICustomerBusinessPaymentDetailsRepository customerBusinessPaymentDetailsRepository;
         private ICustomerBusinessMiscRepository customerBusinessMiscRepository;
+
         private ILedgerAccountRepository ledgerAccountRepository;
+
         private ISupplierBusinessAddressRepository supplierBusinessAddressRepository;
         private ISupplierBusinessDetailsRepository supplierBusinessDetailsRepository;
         private ISupplierBusinessPaymentDetailsRepository supplierBusinessPaymentDetailsRepository;
@@ -132,6 +138,14 @@ namespace Pruaccount.Api.DataAccess.Core
         public IBankStatementFileImportProcessRepository BankStatementFileImportProcessRepository
         {
             get { return this.bankStatementFileImportProcessRepository ??= new BankStatementFileImportProcessRepository(this); }
+        }
+
+        /// <summary>
+        /// Gets BankStatementMapDetailRepository.
+        /// </summary>
+        public IBankStatementMapDetailRepository BankStatementMapDetailRepository
+        {
+            get { return this.bankStatementMapDetailRepository ??= new BankStatementMapDetailRepository(this); }
         }
 
         /// <summary>

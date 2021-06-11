@@ -3,6 +3,7 @@
 // </copyright>
 namespace Pruaccount.Api.Models
 {
+    using System;
     using Pruaccount.Api.Enums;
 
     /// <summary>
@@ -11,6 +12,16 @@ namespace Pruaccount.Api.Models
     public class BankStatementMapDetailModel
     {
         private readonly string columnStartsWith = "Column";
+
+        /// <summary>
+        /// Gets or sets BankStatementMapDetailId.
+        /// </summary>
+        public int BankStatementMapDetailId { get; set; }
+
+        /// <summary>
+        /// Gets or sets UniqueId.
+        /// </summary>
+        public Guid UniqueId { get; set; }
 
         /// <summary>
         /// Gets or sets MapName.

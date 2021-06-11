@@ -25,6 +25,7 @@ namespace Pruaccount.Api.MappingConfigurations
             bankStatementFileImport.UniqueId = bankStatementFileImportModel.UniqueId;
             bankStatementFileImport.ClientBusinessDetailsUniqueId = bankStatementFileImportModel.ClientBusinessDetailsUniqueId;
             bankStatementFileImport.BankAccountDetailsUniqueId = bankStatementFileImportModel.BankAccountDetailsUniqueId;
+            bankStatementFileImport.BankStatementMapDetailUniqueId = bankStatementFileImportModel.BankStatementMapDetailUniqueId;
             bankStatementFileImport.UploadedFileName = bankStatementFileImportModel.UploadedFileName;
             bankStatementFileImport.UploadedFilePath = bankStatementFileImportModel.UploadedFilePath;
             bankStatementFileImport.SystemGeneratedFileName = bankStatementFileImportModel.SystemGeneratedFileName;
@@ -49,6 +50,7 @@ namespace Pruaccount.Api.MappingConfigurations
             bankStatementFileImportModel.UniqueId = bankStatementFileImport.UniqueId;
             bankStatementFileImportModel.ClientBusinessDetailsUniqueId = bankStatementFileImport.ClientBusinessDetailsUniqueId;
             bankStatementFileImportModel.BankAccountDetailsUniqueId = bankStatementFileImport.BankAccountDetailsUniqueId;
+            bankStatementFileImportModel.BankStatementMapDetailUniqueId = bankStatementFileImport.BankStatementMapDetailUniqueId;
             bankStatementFileImportModel.UploadedFileName = bankStatementFileImport.UploadedFileName;
             bankStatementFileImportModel.UploadedFilePath = bankStatementFileImport.UploadedFilePath;
             bankStatementFileImportModel.SystemGeneratedFileName = bankStatementFileImport.SystemGeneratedFileName;
@@ -71,6 +73,7 @@ namespace Pruaccount.Api.MappingConfigurations
 
             bankStatementFileImportModel.UniqueId = bankStatementFileImport.UniqueId;
             bankStatementFileImportModel.BankAccountDetailsUniqueId = bankStatementFileImport.BankAccountDetailsUniqueId;
+            bankStatementFileImportModel.BankStatementMapDetailUniqueId = bankStatementFileImport.BankStatementMapDetailUniqueId;
             bankStatementFileImportModel.UploadedFileName = bankStatementFileImport.UploadedFileName;
             bankStatementFileImportModel.FileExtenstion = bankStatementFileImport.FileExtenstion;
             bankStatementFileImportModel.FileLengthInBytes = bankStatementFileImport.FileLengthInBytes;

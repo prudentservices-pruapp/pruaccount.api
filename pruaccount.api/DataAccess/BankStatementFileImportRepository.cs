@@ -113,6 +113,7 @@ namespace Pruaccount.Api.DataAccess
             para.Add("@UniqueId", bankStatementFileImport.UniqueId);
             para.Add("@ClientBusinessDetailsUniqueId", bankStatementFileImport.ClientBusinessDetailsUniqueId);
             para.Add("@BankAccountDetailsUniqueId", bankStatementFileImport.BankAccountDetailsUniqueId);
+            para.Add("@BankStatementMapDetailUniqueId", bankStatementFileImport.BankStatementMapDetailUniqueId);
             para.Add("@UploadedFileName", bankStatementFileImport.UploadedFileName);
             para.Add("@UploadedFilePath", bankStatementFileImport.UploadedFilePath);
             para.Add("@SystemGeneratedFileName", bankStatementFileImport.SystemGeneratedFileName);
