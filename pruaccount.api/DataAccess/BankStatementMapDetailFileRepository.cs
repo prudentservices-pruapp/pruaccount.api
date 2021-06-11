@@ -13,6 +13,9 @@ namespace Pruaccount.Api.DataAccess
     using Pruaccount.Api.DataAccess.Interfaces;
     using Pruaccount.Api.Entities;
 
+    /// <summary>
+    /// BankStatementMapDetailFileRepository.
+    /// </summary>
     public class BankStatementMapDetailFileRepository : RepositoryBase, IBankStatementMapDetailFileRepository
     {
         /// <summary>
