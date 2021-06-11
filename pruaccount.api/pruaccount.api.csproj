@@ -39,6 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="BankStatements\SampleMapFile\.gitkeep">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="BankStatements\Uploaded\.gitkeep">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

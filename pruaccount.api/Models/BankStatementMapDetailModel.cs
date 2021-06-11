@@ -208,5 +208,10 @@ namespace Pruaccount.Api.Models
         /// Gets a value indicating select list BalanceIndexSelectedValue.
         /// </summary>
         public int BalanceIndexSelectedValue { get; } = BankStatementMapColumnTypeEnum.Balance;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets IsActive.
+        /// </summary>
+        public bool IsActive { get; set; }
     }
 }

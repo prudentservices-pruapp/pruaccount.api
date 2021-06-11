@@ -49,6 +49,11 @@ namespace Pruaccount.Api.DataAccess.Core
         IBankStatementMapDetailRepository BankStatementMapDetailRepository { get; }
 
         /// <summary>
+        /// Gets BankStatementMapDetailFileRepository.
+        /// </summary>
+        IBankStatementMapDetailFileRepository BankStatementMapDetailFileRepository { get; }
+
+        /// <summary>
         /// Gets CBFinancialSettingRepository.
         /// </summary>
         ICBFinancialSettingRepository CBFinancialSettingRepository { get; }

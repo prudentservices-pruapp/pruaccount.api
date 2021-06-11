@@ -83,5 +83,36 @@ namespace Pruaccount.Api.Entities
         /// Gets or sets BalanceIndex.
         /// </summary>
         public int BalanceIndex { get; set; } = -1;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets IsActive.
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets CreatedDateUTC.
+        /// </summary>
+        public DateTime CreatedDateUTC { get; set; }
+
+        /// <summary>
+        /// Gets or sets UpdatedDateUTC.
+        /// </summary>
+        public DateTime? UpdatedDateUTC { get; set; }
+
+        /// <summary>
+        /// Gets or sets TotalRows.
+        /// </summary>
+        public int TotalRows { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether gets IsNew.
+        /// </summary>
+        public bool IsNew
+        {
+            get
+            {
+                return this.BankStatementMapDetailId == default(int);
+            }
+        }
     }
 }

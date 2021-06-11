@@ -32,6 +32,7 @@ namespace Pruaccount.Api.MappingConfigurations
             bankStatementMapDetail.DebitAmountIndex = bankAccountDetailModel.DebitAmountIndex;
             bankStatementMapDetail.DescriptionIndex = bankAccountDetailModel.DescriptionIndex;
             bankStatementMapDetail.BalanceIndex = bankAccountDetailModel.BalanceIndex;
+            bankStatementMapDetail.IsActive = bankAccountDetailModel.IsActive;
 
             return bankStatementMapDetail;
         }
@@ -59,6 +60,7 @@ namespace Pruaccount.Api.MappingConfigurations
             bankStatementMapDetailModel.DebitAmountIndex = bankStatementMapDetail.DebitAmountIndex;
             bankStatementMapDetailModel.DescriptionIndex = bankStatementMapDetail.DescriptionIndex;
             bankStatementMapDetailModel.BalanceIndex = bankStatementMapDetail.BalanceIndex;
+            bankStatementMapDetailModel.IsActive = bankStatementMapDetail.IsActive;
 
             return bankStatementMapDetailModel;
         }
