@@ -130,7 +130,7 @@ namespace Pruaccount.Api.DataAccess
 
                 if (saveStatus != -1)
                 {
-                    throw new Exception($"Could not save bankAccountDetails for {bankStatementFileImport.UploadedFileName}");
+                    throw new Exception($"Could not save bankStatementFileImport for {bankStatementFileImport.UploadedFileName}");
                 }
 
                 bankStatementFileImport.UniqueId = para.Get<Guid>("@BankStatementFileImportUniqueId");
