@@ -69,7 +69,6 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-
                     BankStatementMapDetailFileModel bankStatementMapDetailFileModel = new BankStatementMapDetailFileModel();
                     bankStatementMapDetailFileModel.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
 
@@ -85,6 +84,15 @@ namespace Pruaccount.Api.Controllers
                             DateTime timestamp = DateTime.UtcNow;
                             string fileNameToSave = Path.GetFileNameWithoutExtension(uploadedFileName) + $"_{timestamp.Year}_{timestamp.Month}_{timestamp.Day}_{timestamp.Hour}{timestamp.Minute}{timestamp.Second}{ext}";
                             string fullPath = Path.Combine(this.pathToSave, fileNameToSave);
+
+                            if (uploadedFileNameStartIndex == -1)
+                            {
+                                uploadedFileNameStartIndex = 0;
+                            }
+                            else
+                            {
+                                Guid.TryParse(uploadedFileName.Substring(0, 36), out bankAccountDetailsUniqueId);
+                            }
 
                             bankStatementMapDetailFileModel.FileExtenstion = ext;
                             bankStatementMapDetailFileModel.FileLengthInBytes = formFile.Length;

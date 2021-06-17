@@ -16,38 +16,45 @@ namespace Pruaccount.Api.Models
     {
         /// <summary>
         /// Gets or sets BankAccountDetailsUniqueId.
+        /// It can UniqueId of.
+        /// BankStatementMapDetailFile Or BankStatementFileImport.
         /// </summary>
         public Guid BankAccountDetailsUniqueId { get; set; }
 
         /// <summary>
-        /// Gets or sets BankStatementFileImportUniqueId.
+        /// Gets or sets BankStatementFileUniqueId.
         /// </summary>
-        public Guid BankStatementFileImportUniqueId { get; set; }
+        public Guid BankStatementFileUniqueId { get; set; }
+
+        /// <summary>
+        /// Gets or sets BankStatementMapDetailUniqueId.
+        /// </summary>
+        public Guid BankStatementMapDetailUniqueId { get; set; }
 
         /// <summary>
         /// Gets or sets Mapname.
         /// </summary>
-        public string Mapname { get; set; }
+        public string MapName { get; set; }
 
         /// <summary>
         /// Gets or sets Datepart1.
         /// </summary>
-        public string Datepart1 { get; set; }
+        public string DatePart1 { get; set; }
 
         /// <summary>
         /// Gets or sets Datepart1.
         /// </summary>
-        public string Datepart2 { get; set; }
+        public string DatePart2 { get; set; }
 
         /// <summary>
         /// Gets or sets Datepart3.
         /// </summary>
-        public string Datepart3 { get; set; }
+        public string DatePart3 { get; set; }
 
         /// <summary>
         /// Gets or sets Dateseparator.
         /// </summary>
-        public string Dateseparator { get; set; }
+        public string DateSeparator { get; set; }
 
         /// <summary>
         /// Gets or sets Dateformat.

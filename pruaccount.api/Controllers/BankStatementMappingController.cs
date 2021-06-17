@@ -129,7 +129,7 @@ namespace Pruaccount.Api.Controllers
                 {
                     if (bankStatementMapDetailSaveModel.ValidateModel(out brokenRules))
                     {
-                        BankStatementFileImport currentFileImport = this.uw.BankStatementFileImportRepository.FindByPID(bankStatementMapDetailSaveModel.BankStatementFileImportUniqueId);
+                        BankStatementFileImport currentFileImport = this.uw.BankStatementFileImportRepository.FindByPID(bankStatementMapDetailSaveModel.BankStatementFileUniqueId);
                         BankStatementParser bankStatementParser = new BankStatementParser($"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}");
                         BankStatementMapper bankStatementMapper = new BankStatementMapper(bankStatementMapDetailSaveModel);
 

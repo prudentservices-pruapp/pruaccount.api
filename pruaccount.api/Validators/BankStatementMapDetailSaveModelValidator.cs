@@ -26,7 +26,7 @@ namespace Pruaccount.Api.Validators
         {
             List<string> errorsList = new List<string>();
 
-            if (string.IsNullOrEmpty(model.Mapname))
+            if (string.IsNullOrEmpty(model.MapName))
             {
                 errorsList.Add("Please enter mapping name e.g. (Lloyds Bank).");
             }

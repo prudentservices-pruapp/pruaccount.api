@@ -39,6 +39,15 @@ namespace Pruaccount.Api.Domain.BankStatement
         {
             BankStatementMapDetailModel bankStatementMapDetailModel = new BankStatementMapDetailModel();
 
+            bankStatementMapDetailModel.UniqueId = bankStatementMapDetailSaveModel.BankStatementMapDetailUniqueId;
+            bankStatementMapDetailModel.MapName = bankStatementMapDetailSaveModel.MapName;
+            bankStatementMapDetailModel.DatePart1 = bankStatementMapDetailSaveModel.DatePart1;
+            bankStatementMapDetailModel.DatePart2 = bankStatementMapDetailSaveModel.DatePart2;
+            bankStatementMapDetailModel.DatePart3 = bankStatementMapDetailSaveModel.DatePart3;
+            bankStatementMapDetailModel.DateSeparator = bankStatementMapDetailSaveModel.DateSeparator;
+            bankStatementMapDetailModel.Dateformat = bankStatementMapDetailSaveModel.Dateformat;
+            bankStatementMapDetailModel.DateformatValue = bankStatementMapDetailSaveModel.DateformatValue;
+
             bankStatementMapDetailModel.Dateformat = bankStatementMapDetailSaveModel.Dateformat;
             bankStatementMapDetailModel.DateIndex = this.GetFieldIndex(BankStatementMapColumnTypeEnum.Date, bankStatementMapDetailSaveModel);
             bankStatementMapDetailModel.CreditAmountIndex = this.GetFieldIndex(BankStatementMapColumnTypeEnum.CreditAmount, bankStatementMapDetailSaveModel);

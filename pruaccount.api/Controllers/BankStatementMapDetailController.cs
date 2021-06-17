@@ -31,6 +31,7 @@
     public class BankStatementMapDetailController : ControllerBase
     {
         private readonly IUnitOfWork uw;
+        private readonly BankStatementMapDetailMapper bankStatementMapDetailMapper;
         private readonly ILogger<BankStatementMapDetailController> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
 
@@ -44,7 +45,200 @@
         {
             this.uw = repository;
             this.logger = logger;
+            this.bankStatementMapDetailMapper = new BankStatementMapDetailMapper();
             this.httpContextAccessor = httpContextAccessor;
+        }
+
+        /// <summary>
+        /// BankStatementMapDetailDetail.
+        /// </summary>
+        /// <param name="pid">bankStatementMapDetailUniqueId.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("detail/{pid}")]
+        public IActionResult BankStatementMapDetailDetail(Guid pid)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    BankStatementMapDetail bankStatementMapDetail = this.uw.BankStatementMapDetailRepository.FindByPID(pid);
+
+                    if (bankStatementMapDetail != null)
+                    {
+                        BankStatementMapDetailModel bankStatementMapDetailModel = this.bankStatementMapDetailMapper.PopulateFromEntity(bankStatementMapDetail);
+
+                        return this.Ok(bankStatementMapDetailModel);
+                    }
+
+                    return this.NotFound("Could not get statement map details.");
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementMapDetailController->BankStatementMapDetailDetail Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+        }
+
+        /// <summary>
+        /// BankStatementMapDetailList.
+        /// </summary>
+        /// <param name="sort">sort.</param>
+        /// <param name="orderBy">orderBy.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <param name="rowsPerPage">rowsPerPage.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("list")]
+        public IActionResult BankStatementMapDetailList(string sort, string orderBy, int pageNumber, int rowsPerPage)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<BankStatementMapDetailModel> bankStatementMapDetailModels = new List<BankStatementMapDetailModel>();
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    var bankAccountDetailList = this.uw.BankStatementMapDetailRepository.ListAll(default, default, default, sort, orderBy, pageNumber, rowsPerPage);
+
+                    foreach (var bankAccount in bankAccountDetailList)
+                    {
+                        bankStatementMapDetailModels.Add(this.bankStatementMapDetailMapper.PopulateFromEntity(bankAccount));
+                    }
+
+                    var bankStatementMapDetailListAPIData = new
+                    {
+                        total = bankStatementMapDetailModels.Count,
+                        bankStatementMapDetails = bankStatementMapDetailModels,
+                    };
+
+                    return this.Ok(bankStatementMapDetailListAPIData);
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankAccountDetailController->BankAccountDetailList Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+        }
+
+        /// <summary>
+        /// BankStatementMapDetailSearch. ?searchTerm=${searchTerm}&sort=${sortby}&orderBy=${order}&pageNumber=${currentPage}&rowsPerPage=${pageSize}.
+        /// </summary>
+        /// <param name="searchTerm">MapName.</param>
+        /// <param name="sort">sort.</param>
+        /// <param name="orderBy">orderBy.</param>
+        /// <param name="pageNumber">pageNumber.</param>
+        /// <param name="rowsPerPage">rowsPerPage.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("search")]
+        public IActionResult BankStatementMapDetailSearch(string searchTerm, string sort, string orderBy, int pageNumber, int rowsPerPage)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<BankStatementMapDetailModel> bankStatementMapDetailModels = new List<BankStatementMapDetailModel>();
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    var bankAccountDetailList = this.uw.BankStatementMapDetailRepository.ListAll(default, default, default, sort, orderBy, pageNumber, rowsPerPage);
+
+                    foreach (var bankAccount in bankAccountDetailList)
+                    {
+                        bankStatementMapDetailModels.Add(this.bankStatementMapDetailMapper.PopulateFromEntity(bankAccount));
+                    }
+
+                    var bankStatementMapDetailListAPIData = new
+                    {
+                        total = bankStatementMapDetailModels.Count,
+                        bankStatementMapDetails = bankStatementMapDetailModels,
+                    };
+
+                    return this.Ok(bankStatementMapDetailListAPIData);
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankAccountDetailController->BankAccountDetailSearch Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+        }
+
+        /// <summary>
+        /// SaveBankStatementMapDetail.
+        /// </summary>
+        /// <param name="bankStatementMapDetailSaveModel">BankStatementMapDetailSaveModel.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("save")]
+        public IActionResult SaveBankStatementMapDetail([FromBody] BankStatementMapDetailSaveModel bankStatementMapDetailSaveModel)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<string> brokenRules = new List<string>();
+                List<BankStatementTransactionDetailModel> bankStatementTransactionDetailModels = new List<BankStatementTransactionDetailModel>();
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    if (bankStatementMapDetailSaveModel.ValidateModel(out brokenRules))
+                    {
+                        BankStatementMapDetailFile currentFileImport = this.uw.BankStatementMapDetailFileRepository.FindByPID(bankStatementMapDetailSaveModel.BankStatementFileUniqueId);
+                        BankStatementParser bankStatementParser = new BankStatementParser($"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}");
+                        BankStatementMapper bankStatementMapper = new BankStatementMapper(bankStatementMapDetailSaveModel);
+
+                        BankStatementMapValidator bankStatementMapValidator = new BankStatementMapValidator(bankStatementParser, bankStatementMapper.BankStatementMapDetailModel);
+
+                        brokenRules = bankStatementMapValidator.ValidateStatmentData(out bankStatementTransactionDetailModels);
+
+                        if (brokenRules.Count > 0)
+                        {
+                            return this.BadRequest(string.Join(" ", brokenRules));
+                        }
+
+                        // Save StatementMapDetail
+                        BankStatementMapDetail bankStatementMapDetail = this.bankStatementMapDetailMapper.PopulateFromModel(bankStatementMapper.BankStatementMapDetailModel);
+                        this.uw.Begin(System.Data.IsolationLevel.Serializable);
+                        bankStatementMapDetail = this.uw.BankStatementMapDetailRepository.Save(bankStatementMapDetail);
+
+                        // Update BankStatementMapDetailFile with Mapping process UniqueId
+                        currentFileImport.BankStatementMapDetailUniqueId = bankStatementMapDetail.UniqueId;
+                        this.uw.BankStatementMapDetailFileRepository.Save(currentFileImport);
+
+                    }
+                    else
+                    {
+                        return this.BadRequest(string.Join(" ", brokenRules));
+                    }
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementMapDetailController->SaveBankStatementMapDetail Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+            finally
+            {
+                this.uw.Complete();
+            }
+
+            return this.Ok();
         }
     }
 }

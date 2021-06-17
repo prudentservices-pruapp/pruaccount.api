@@ -27,12 +27,12 @@
             bankStatementMapDetailSaveLloydsModel = new BankStatementMapDetailSaveModel()
             {
                 BankAccountDetailsUniqueId = new Guid("AC81EE46-06B3-EB11-A007-00155E179406"),
-                BankStatementFileImportUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
-                Mapname = "Lloyds Bank",
-                Datepart1 = "dd",
-                Datepart2 = "MM",
-                Datepart3 = "yyyy",
-                Dateseparator = "/",
+                BankStatementFileUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
+                MapName = "Lloyds Bank",
+                DatePart1 = "dd",
+                DatePart2 = "MM",
+                DatePart3 = "yyyy",
+                DateSeparator = "/",
                 Dateformat = "dd/MM/yyyy",
                 DateformatValue = "01/09/2009",
                 Column0 = 1, //Date
@@ -45,12 +45,12 @@
             bankStatementMapDetailSaveLloydsModelWithIncorrectDebitCredit = new BankStatementMapDetailSaveModel()
             {
                 BankAccountDetailsUniqueId = new Guid("AC81EE46-06B3-EB11-A007-00155E179406"),
-                BankStatementFileImportUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
-                Mapname = "Lloyds Bank",
-                Datepart1 = "dd",
-                Datepart2 = "MM",
-                Datepart3 = "yyyy",
-                Dateseparator = "/",
+                BankStatementFileUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
+                MapName = "Lloyds Bank",
+                DatePart1 = "dd",
+                DatePart2 = "MM",
+                DatePart3 = "yyyy",
+                DateSeparator = "/",
                 Dateformat = "dd/MM/yyyy",
                 DateformatValue = "01/09/2009",
                 Column0 = 1, //Date
@@ -63,12 +63,12 @@
             bankStatementMapDetailSaveCaterAllenModel = new BankStatementMapDetailSaveModel()
             {
                 BankAccountDetailsUniqueId = new Guid("AC81EE46-06B3-EB11-A007-00155E179406"),
-                BankStatementFileImportUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
-                Mapname = "Cater Allen Bank",
-                Datepart1 = "dd",
-                Datepart2 = "MMM",
-                Datepart3 = "yyyy",
-                Dateseparator = "",
+                BankStatementFileUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
+                MapName = "Cater Allen Bank",
+                DatePart1 = "dd",
+                DatePart2 = "MMM",
+                DatePart3 = "yyyy",
+                DateSeparator = "",
                 Dateformat = "ddMMMyyyy",
                 DateformatValue = "01Jun2009",
                 Column0 = 1, //Date
