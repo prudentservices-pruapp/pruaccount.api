@@ -31,6 +31,8 @@ namespace Pruaccount.Api.MappingConfigurations
             bankStatementMapDetailFile.SystemGeneratedFileName = bankStatementMapDetailFileModel.SystemGeneratedFileName;
             bankStatementMapDetailFile.FileExtenstion = bankStatementMapDetailFileModel.FileExtenstion;
             bankStatementMapDetailFile.FileLengthInBytes = bankStatementMapDetailFileModel.FileLengthInBytes;
+            bankStatementMapDetailFile.CurrentProcessStatus = bankStatementMapDetailFileModel.CurrentProcessStatus;
+            bankStatementMapDetailFile.CurrentProcessStatusDate = bankStatementMapDetailFileModel.CurrentProcessStatusDate;
 
             return bankStatementMapDetailFile;
         }
@@ -54,6 +56,8 @@ namespace Pruaccount.Api.MappingConfigurations
             bankStatementMapDetailFileModel.SystemGeneratedFileName = bankStatementMapDetailFile.SystemGeneratedFileName;
             bankStatementMapDetailFileModel.FileExtenstion = bankStatementMapDetailFile.FileExtenstion;
             bankStatementMapDetailFileModel.FileLengthInBytes = bankStatementMapDetailFile.FileLengthInBytes;
+            bankStatementMapDetailFileModel.CurrentProcessStatus = bankStatementMapDetailFile.CurrentProcessStatus;
+            bankStatementMapDetailFileModel.CurrentProcessStatusDate = bankStatementMapDetailFile.CurrentProcessStatusDate;
 
             return bankStatementMapDetailFileModel;
         }
@@ -73,6 +77,8 @@ namespace Pruaccount.Api.MappingConfigurations
             bankStatementMapDetailFileModel.UploadedFileName = bankStatementMapDetailFile.UploadedFileName;
             bankStatementMapDetailFileModel.FileExtenstion = bankStatementMapDetailFile.FileExtenstion;
             bankStatementMapDetailFileModel.FileLengthInBytes = bankStatementMapDetailFile.FileLengthInBytes;
+            bankStatementMapDetailFileModel.CurrentProcessStatus = bankStatementMapDetailFile.CurrentProcessStatus;
+            bankStatementMapDetailFileModel.CurrentProcessStatusDate = bankStatementMapDetailFile.CurrentProcessStatusDate;
 
             return bankStatementMapDetailFileModel;
         }

@@ -55,6 +55,44 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
+        /// BankStatementStatus.
+        /// </summary>
+        /// <param name="pid">pid.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("status/{pid}")]
+        public IActionResult BankStatementStatus(Guid pid)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    List<BankStatementMapDetailFile> currentImports = this.uw.BankStatementMapDetailFileRepository.ListAll(currentTokenUserDetails.CBUniqueId, pid, default, "BankStatementMapDetailFileImportProcessId", "desc", 1, 10).ToList();
+                    BankStatementMapDetailFileModel lastProcessStatus = new BankStatementMapDetailFileModel();
+                    lastProcessStatus.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
+                    lastProcessStatus.BankAccountDetailsUniqueId = pid;
+                    lastProcessStatus.CurrentProcessStatus = string.Empty;
+
+                    if (currentImports.Count > 0)
+                    {
+                        lastProcessStatus = this.bankStatementMapDetailFileMapper.PopulatePartialModelFromEntity(currentImports[0]);
+                        lastProcessStatus.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
+                        lastProcessStatus.BankAccountDetailsUniqueId = pid;
+                    }
+
+                    return this.Ok(lastProcessStatus);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementMapDetailFileController->BankStatementStatus Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// UploadBankStatement.
         /// </summary>
         /// <param name="files">files uploaded.</param>
@@ -100,6 +138,7 @@ namespace Pruaccount.Api.Controllers
                             bankStatementMapDetailFileModel.UploadedFilePath = this.pathToSave;
                             bankStatementMapDetailFileModel.SystemGeneratedFileName = fileNameToSave;
                             bankStatementMapDetailFileModel.BankAccountDetailsUniqueId = bankAccountDetailsUniqueId;
+                            bankStatementMapDetailFileModel.CurrentProcessStatus = BankStatementFileProcessStatusTypeEnum.Uploaded;
 
                             if (bankStatementMapDetailFileModel.ValidateModel(out brokenRules))
                             {

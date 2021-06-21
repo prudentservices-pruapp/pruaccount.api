@@ -64,6 +64,16 @@ namespace Pruaccount.Api.Models
         public decimal FileLengthInBytes { get; set; }
 
         /// <summary>
+        /// Gets or sets CurrentProcessStatus.
+        /// </summary>
+        public string CurrentProcessStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets CurrentProcessStatusDate.
+        /// </summary>
+        public DateTime CurrentProcessStatusDate { get; set; }
+
+        /// <summary>
         /// ValidateModel.
         /// </summary>
         /// <param name="validator">BankStatementMapDetailFileModelValidator.</param>

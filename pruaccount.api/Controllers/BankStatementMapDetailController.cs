@@ -1,4 +1,8 @@
-﻿namespace Pruaccount.Api.Controllers
+﻿// <copyright file="BankStatementMapDetailController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Pruaccount.Api.Controllers
 {
     using System;
     using System.Collections.Generic;

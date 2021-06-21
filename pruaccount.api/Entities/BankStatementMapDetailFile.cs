@@ -62,6 +62,16 @@ namespace Pruaccount.Api.Entities
         public decimal FileLengthInBytes { get; set; }
 
         /// <summary>
+        /// Gets or sets CurrentProcessStatus.
+        /// </summary>
+        public string CurrentProcessStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets CurrentProcessStatusDate.
+        /// </summary>
+        public DateTime CurrentProcessStatusDate { get; set; }
+
+        /// <summary>
         /// Gets or sets CreatedDateUTC.
         /// </summary>
         public DateTime CreatedDateUTC { get; set; }
