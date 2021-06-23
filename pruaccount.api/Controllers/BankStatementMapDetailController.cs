@@ -262,9 +262,13 @@ namespace Pruaccount.Api.Controllers
                         this.uw.Begin(System.Data.IsolationLevel.Serializable);
                         bankStatementMapDetail = this.uw.BankStatementMapDetailRepository.Save(bankStatementMapDetail);
 
+                        // Update Mapping details
+                        currentFileImport.BankStatementMapDetailUniqueId = bankStatementMapDetail.UniqueId;
+                        currentFileImport = this.uw.BankStatementMapDetailFileRepository.Save(currentFileImport);
+
                         // Update BankStatementMapDetailFileImportProcess with Mapping process UniqueId
                         BankStatementMapDetailFileImportProcess bankStatementMapDetailFileImportProcess = new BankStatementMapDetailFileImportProcess();
-                        bankStatementMapDetailFileImportProcess.ClientBusinessDetailsUniqueId = currentFileImport.ClientBusinessDetailsUniqueId;
+                        bankStatementMapDetailFileImportProcess.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
                         bankStatementMapDetailFileImportProcess.BankAccountDetailsUniqueId = bankStatementMapDetailSaveModel.BankAccountDetailsUniqueId;
                         bankStatementMapDetailFileImportProcess.BankStatementMapDetailFileImportUniqueId = bankStatementMapDetailSaveModel.BankStatementFileUniqueId;
                         bankStatementMapDetailFileImportProcess.ProcessStatus = BankStatementFileProcessStatusTypeEnum.Mapped;

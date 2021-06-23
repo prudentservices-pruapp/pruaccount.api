@@ -63,6 +63,12 @@ namespace Pruaccount.Api.Validators
                 BankStatementTransactionDetailModel bankStatementTransactionDetailModel = new BankStatementTransactionDetailModel();
                 BankStatementCSVDataModel currentRow = bankStatementCSVDataModels[rowIndex];
                 bankStatementTransactionDetailModel = this.bankStatementTransactionDetailMapper.PopulateFromBankStatementCSVDataModel(currentRow, this.bankStatementMapDetailModel);
+                if (bankStatementTransactionDetailModel.TransactionDate == DateTime.MinValue)
+                {
+                    errorsList.Add("Please check mapping for Date format.");
+                    break;
+                }
+
                 bankStatementTransactionDetailModel.RowId = rowIndex;
                 bankStatementTransactionDetailModels.Add(bankStatementTransactionDetailModel);
             }
