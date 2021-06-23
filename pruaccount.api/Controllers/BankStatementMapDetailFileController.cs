@@ -67,7 +67,7 @@ namespace Pruaccount.Api.Controllers
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    List<BankStatementMapDetailFile> currentImports = this.uw.BankStatementMapDetailFileRepository.ListAll(currentTokenUserDetails.CBUniqueId, pid, default, "BankStatementMapDetailFileImportProcessId", "desc", 1, 10).ToList();
+                    List<BankStatementMapDetailFile> currentImports = this.uw.BankStatementMapDetailFileRepository.ListAll(currentTokenUserDetails.CBUniqueId, pid, default, default, "desc").ToList();
                     BankStatementMapDetailFileModel lastProcessStatus = new BankStatementMapDetailFileModel();
                     lastProcessStatus.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
                     lastProcessStatus.BankAccountDetailsUniqueId = pid;

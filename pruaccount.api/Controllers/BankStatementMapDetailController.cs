@@ -182,6 +182,51 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
+        /// BankStatementLoad.
+        /// </summary>
+        /// <param name="pid">pid.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("load/{pid}")]
+        public IActionResult BankStatementLoad(Guid pid)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    BankStatementMapDetailFile currentFileImport = this.uw.BankStatementMapDetailFileRepository.FindByPID(pid);
+                    if (currentFileImport == null)
+                    {
+                        this.logger.LogError($"BankStatementMapDetailController->BankStatementStatus Exception {pid} - Could not load the request file, no records found.");
+                        return this.BadRequest("Could not load the request file.");
+                    }
+                    else if (currentFileImport.ClientBusinessDetailsUniqueId != currentTokenUserDetails.CBUniqueId)
+                    {
+                        this.logger.LogError($"BankStatementMapDetailController->BankStatementStatus Exception {pid} - Could not load the request file, due to mismatch - {currentTokenUserDetails.CBUniqueId}.");
+                        return this.BadRequest("Could not load the request file due to mismatch.");
+                    }
+
+                    string uploadedFilenameWithPath = $"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}";
+                    Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser(uploadedFilenameWithPath);
+                    var bankStatementMapModel = bankStatementParser.GeRowsJson();
+
+                    BankStatementMapDetailModel bankStatementMapDetailModel = new BankStatementMapDetailModel();
+                    bankStatementMapDetailModel.UniqueId = currentFileImport.BankStatementMapDetailUniqueId;
+                    bankStatementMapModel.BankStatementMapDetailModel = bankStatementMapDetailModel;
+
+                    return this.Ok(bankStatementMapModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementUploadController->BankStatementStatus Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// SaveBankStatementMapDetail.
         /// </summary>
         /// <param name="bankStatementMapDetailSaveModel">BankStatementMapDetailSaveModel.</param>
@@ -217,9 +262,13 @@ namespace Pruaccount.Api.Controllers
                         this.uw.Begin(System.Data.IsolationLevel.Serializable);
                         bankStatementMapDetail = this.uw.BankStatementMapDetailRepository.Save(bankStatementMapDetail);
 
-                        // Update BankStatementMapDetailFile with Mapping process UniqueId
-                        currentFileImport.BankStatementMapDetailUniqueId = bankStatementMapDetail.UniqueId;
-                        this.uw.BankStatementMapDetailFileRepository.Save(currentFileImport);
+                        // Update BankStatementMapDetailFileImportProcess with Mapping process UniqueId
+                        BankStatementMapDetailFileImportProcess bankStatementMapDetailFileImportProcess = new BankStatementMapDetailFileImportProcess();
+                        bankStatementMapDetailFileImportProcess.ClientBusinessDetailsUniqueId = currentFileImport.ClientBusinessDetailsUniqueId;
+                        bankStatementMapDetailFileImportProcess.BankAccountDetailsUniqueId = bankStatementMapDetailSaveModel.BankAccountDetailsUniqueId;
+                        bankStatementMapDetailFileImportProcess.BankStatementMapDetailFileImportUniqueId = bankStatementMapDetailSaveModel.BankStatementFileUniqueId;
+                        bankStatementMapDetailFileImportProcess.ProcessStatus = BankStatementFileProcessStatusTypeEnum.Mapped;
+                        this.uw.BankStatementMapDetailFileImportProcessRepository.Save(bankStatementMapDetailFileImportProcess);
 
                     }
                     else

@@ -113,18 +113,18 @@ namespace Pruaccount.Api.DataAccess
             para.Add("@UniqueId", bankStatementMapDetailFileImportProcess.UniqueId);
             para.Add("@ClientBusinessDetailsUniqueId", bankStatementMapDetailFileImportProcess.ClientBusinessDetailsUniqueId);
             para.Add("@BankAccountDetailsUniqueId", bankStatementMapDetailFileImportProcess.BankAccountDetailsUniqueId);
-            para.Add("@BankStatementFileImportUniqueId", bankStatementMapDetailFileImportProcess.BankStatementMapDetailFileImportUniqueId);
+            para.Add("@BankStatementMapDetailFileImportUniqueId", bankStatementMapDetailFileImportProcess.BankStatementMapDetailFileImportUniqueId);
             para.Add("@ProcessStatus", bankStatementMapDetailFileImportProcess.ProcessStatus);
 
             int saveStatus = 0;
 
             try
             {
-                saveStatus = this.Connection.Execute("[BankStatementFileImportProcess_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+                saveStatus = this.Connection.Execute("[BankStatementMapDetailFileImportProcess_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
 
                 if (saveStatus != -1)
                 {
-                    throw new Exception($"Could not save bankStatementFileImportProcess for {bankStatementMapDetailFileImportProcess.BankStatementMapDetailFileImportUniqueId} - ProcessStatus {bankStatementMapDetailFileImportProcess.ProcessStatus}");
+                    throw new Exception($"Could not save bankStatementMapDetailFileImportProcess for {bankStatementMapDetailFileImportProcess.BankStatementMapDetailFileImportUniqueId} - ProcessStatus {bankStatementMapDetailFileImportProcess.ProcessStatus}");
                 }
             }
             catch (Exception)

@@ -52,7 +52,7 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
-        /// BankStatementStatus.
+        /// BankStatementLoad.
         /// </summary>
         /// <param name="pid">pid.</param>
         /// <returns>IActionResult.</returns>
