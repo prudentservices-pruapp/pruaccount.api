@@ -14,5 +14,11 @@ namespace Pruaccount.Api.DataAccess.Interfaces
     /// </summary>
     public interface IBankStatementMapDetailFileRepository : IRepositoryBase<BankStatementMapDetailFile>
     {
+        /// <summary>
+        /// FindByMapDetailUniqueId.
+        /// </summary>
+        /// <param name="mapDetailUniqueId">Bank Statement Map Detail UniqueId.</param>
+        /// <returns>BankStatementMapDetailFile.</returns>
+        BankStatementMapDetailFile FindByMapDetailUniqueId(Guid mapDetailUniqueId);
     }
 }

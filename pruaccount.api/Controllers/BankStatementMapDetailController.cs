@@ -130,7 +130,7 @@ namespace Pruaccount.Api.Controllers
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "BankAccountDetailController->BankAccountDetailList Exception");
+                this.logger.LogError(ex, "BankStatementMapDetailController->BankStatementMapDetailList Exception");
                 return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
@@ -154,7 +154,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    var bankAccountDetailList = this.uw.BankStatementMapDetailRepository.ListAll(default, default, default, sort, orderBy, pageNumber, rowsPerPage);
+                    var bankAccountDetailList = this.uw.BankStatementMapDetailRepository.Search(currentTokenUserDetails.CBUniqueId, default, default, searchTerm, sort, orderBy, pageNumber, rowsPerPage);
 
                     foreach (var bankAccount in bankAccountDetailList)
                     {
@@ -176,7 +176,54 @@ namespace Pruaccount.Api.Controllers
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "BankAccountDetailController->BankAccountDetailSearch Exception");
+                this.logger.LogError(ex, "BankStatementMapDetailController->BankStatementMapDetailSearch Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+        }
+
+        /// <summary>
+        /// BankStatementMappingView.
+        /// </summary>
+        /// <param name="pid">pid.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("viewstatementmapping/{pid}")]
+        public IActionResult BankStatementMappingView(Guid pid)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    BankStatementMapDetail bankStatementMapDetail = this.uw.BankStatementMapDetailRepository.FindByPID(pid);
+                    if (bankStatementMapDetail != null)
+                    {
+                        BankStatementMapDetailModel bankStatementMapDetailModel = this.bankStatementMapDetailMapper.PopulateFromEntity(bankStatementMapDetail);
+
+                        BankStatementMapModel bankStatementMapModel = new BankStatementMapModel();
+                        BankStatementMapDetailFile currentFileImport = this.uw.BankStatementMapDetailFileRepository.FindByMapDetailUniqueId(bankStatementMapDetail.UniqueId);
+
+                        if (currentFileImport != null)
+                        {
+                            string uploadedFilenameWithPath = $"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}";
+                            Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser(uploadedFilenameWithPath);
+                            bankStatementMapModel = bankStatementParser.GeRowsJson();
+                        }
+
+                        bankStatementMapModel.BankStatementMapDetailModel = bankStatementMapDetailModel;
+
+                        return this.Ok(bankStatementMapModel);
+                    }
+
+                    return this.NotFound("Could not get statement map details.");
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementMapDetailController->BankStatementMappingView Exception");
                 return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
         }
@@ -186,7 +233,7 @@ namespace Pruaccount.Api.Controllers
         /// </summary>
         /// <param name="pid">pid.</param>
         /// <returns>IActionResult.</returns>
-        [HttpGet("load/{pid}")]
+        [HttpGet("loadstatement/{pid}")]
         public IActionResult BankStatementLoad(Guid pid)
         {
             try
@@ -208,22 +255,35 @@ namespace Pruaccount.Api.Controllers
 
                     string uploadedFilenameWithPath = $"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}";
                     Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser(uploadedFilenameWithPath);
-                    var bankStatementMapModel = bankStatementParser.GeRowsJson();
+                    BankStatementMapModel bankStatementMapModel = bankStatementParser.GeRowsJson();
 
                     BankStatementMapDetailModel bankStatementMapDetailModel = new BankStatementMapDetailModel();
                     bankStatementMapDetailModel.UniqueId = currentFileImport.BankStatementMapDetailUniqueId;
+
+                    if (currentFileImport.BankStatementMapDetailUniqueId != default)
+                    {
+                        BankStatementMapDetail bankStatementMapDetail = this.uw.BankStatementMapDetailRepository.FindByPID(currentFileImport.BankStatementMapDetailUniqueId);
+
+                        if (bankStatementMapDetail != null)
+                        {
+                            bankStatementMapDetailModel = this.bankStatementMapDetailMapper.PopulateFromEntity(bankStatementMapDetail);
+                        }
+                    }
+
                     bankStatementMapModel.BankStatementMapDetailModel = bankStatementMapDetailModel;
 
                     return this.Ok(bankStatementMapModel);
                 }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "BankStatementUploadController->BankStatementStatus Exception");
+                this.logger.LogError(ex, "BankStatementMapDetailController->BankStatementLoad Exception");
                 return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
-
-            return this.Ok();
         }
 
         /// <summary>
