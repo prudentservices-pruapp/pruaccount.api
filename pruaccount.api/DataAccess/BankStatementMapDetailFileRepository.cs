@@ -28,6 +28,23 @@ namespace Pruaccount.Api.DataAccess
         }
 
         /// <summary>
+        /// FindByMapDetailUniqueId.
+        /// </summary>
+        /// <param name="mapDetailUniqueId">mapDetailUniqueId.</param>
+        /// <returns>BankStatementMapDetailFile.</returns>
+        public BankStatementMapDetailFile FindByMapDetailUniqueId(Guid mapDetailUniqueId)
+        {
+            var para = new DynamicParameters();
+
+            if (mapDetailUniqueId != default(Guid))
+            {
+                para.Add("@BankStatementMapDetailUniqueId", mapDetailUniqueId);
+            }
+
+            return this.Connection.Query<BankStatementMapDetailFile>("[BankStatementMapDetailFile_DetailByMapDetailUniqueId]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
+        /// <summary>
         /// FindByPID.
         /// </summary>
         /// <param name="pid">pid.</param>
