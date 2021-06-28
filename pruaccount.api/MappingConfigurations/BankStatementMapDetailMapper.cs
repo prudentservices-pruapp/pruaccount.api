@@ -20,6 +20,8 @@ namespace Pruaccount.Api.MappingConfigurations
         {
             BankStatementMapDetail bankStatementMapDetail = new BankStatementMapDetail();
             bankStatementMapDetail.UniqueId = bankAccountDetailModel.UniqueId;
+            bankStatementMapDetail.BankAccountTypeId = bankAccountDetailModel.BankAccountTypeId;
+            bankStatementMapDetail.BankAccountTypeName = bankAccountDetailModel.BankAccountTypeName;
             bankStatementMapDetail.MapName = bankAccountDetailModel.MapName;
             bankStatementMapDetail.DatePart1 = bankAccountDetailModel.DatePart1;
             bankStatementMapDetail.DatePart2 = bankAccountDetailModel.DatePart2;
@@ -48,6 +50,8 @@ namespace Pruaccount.Api.MappingConfigurations
             BankStatementMapDetailModel bankStatementMapDetailModel = new BankStatementMapDetailModel();
 
             bankStatementMapDetailModel.UniqueId = bankStatementMapDetail.UniqueId;
+            bankStatementMapDetailModel.BankAccountTypeId = bankStatementMapDetail.BankAccountTypeId;
+            bankStatementMapDetailModel.BankAccountTypeName = bankStatementMapDetail.BankAccountTypeName;
             bankStatementMapDetailModel.MapName = bankStatementMapDetail.MapName;
             bankStatementMapDetailModel.DatePart1 = bankStatementMapDetail.DatePart1;
             bankStatementMapDetailModel.DatePart2 = bankStatementMapDetail.DatePart2;

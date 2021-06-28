@@ -25,6 +25,16 @@ namespace Pruaccount.Api.Entities
         public Guid UniqueId { get; set; }
 
         /// <summary>
+        /// Gets or sets BankAccountTypeId.
+        /// </summary>
+        public int BankAccountTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets BankAccountTypeName.
+        /// </summary>
+        public string BankAccountTypeName { get; set; }
+
+        /// <summary>
         /// Gets or sets MapName.
         /// </summary>
         public string MapName { get; set; }

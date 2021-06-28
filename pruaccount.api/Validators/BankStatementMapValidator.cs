@@ -10,6 +10,7 @@ namespace Pruaccount.Api.Validators
     using System.Linq;
     using Newtonsoft.Json;
     using Pruaccount.Api.Domain.BankStatement;
+    using Pruaccount.Api.Enums;
     using Pruaccount.Api.Extensions;
     using Pruaccount.Api.MappingConfigurations;
     using Pruaccount.Api.Models;
@@ -73,7 +74,8 @@ namespace Pruaccount.Api.Validators
                 bankStatementTransactionDetailModels.Add(bankStatementTransactionDetailModel);
             }
 
-            if (bankStatementCSVDataModels.Count == bankStatementTransactionDetailModels.Count)
+            if (bankStatementCSVDataModels.Count == bankStatementTransactionDetailModels.Count
+                    && (this.bankStatementMapDetailModel.BankAccountTypeId == BankAccountTypeEnum.Current || this.bankStatementMapDetailModel.BankAccountTypeId == BankAccountTypeEnum.Savings))
             {
                 bankStatementTransactionDetailModels = bankStatementTransactionDetailModels.OrderByDescending(x => x.RowId).ToList();
 

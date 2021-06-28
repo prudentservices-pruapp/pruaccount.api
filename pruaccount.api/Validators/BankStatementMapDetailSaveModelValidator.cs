@@ -77,16 +77,19 @@ namespace Pruaccount.Api.Validators
 
             int balanceMappingCount = model.GetBankStatementMapColumnIndexCount(BankStatementMapColumnTypeEnum.Balance);
 
-            if (balanceMappingCount == 0 || balanceMappingCount > 1)
+            if (model.BankAccountTypeId == BankAccountTypeEnum.Current || model.BankAccountTypeId == BankAccountTypeEnum.Savings)
             {
-                if (balanceMappingCount == 0)
+                if (balanceMappingCount == 0 || balanceMappingCount > 1)
                 {
-                    errorsList.Add("Please select mapping for Balance.");
-                }
+                    if (balanceMappingCount == 0)
+                    {
+                        errorsList.Add("Please select mapping for Balance.");
+                    }
 
-                if (balanceMappingCount > 1)
-                {
-                    errorsList.Add("Please check mapping for Balance, more than one column mapped.");
+                    if (balanceMappingCount > 1)
+                    {
+                        errorsList.Add("Please check mapping for Balance, more than one column mapped.");
+                    }
                 }
             }
 

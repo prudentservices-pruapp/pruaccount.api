@@ -101,6 +101,7 @@ namespace Pruaccount.Api.DataAccess
             var para = new DynamicParameters();
             para.Add("@BankStatementMapDetailId", bankStatementMapDetail.BankStatementMapDetailId);
             para.Add("@UniqueId", bankStatementMapDetail.UniqueId);
+            para.Add("@BankAccountTypeId", bankStatementMapDetail.BankAccountTypeId);
             para.Add("@MapName", bankStatementMapDetail.MapName);
             para.Add("@DatePart1", bankStatementMapDetail.DatePart1);
             para.Add("@DatePart2", bankStatementMapDetail.DatePart2);

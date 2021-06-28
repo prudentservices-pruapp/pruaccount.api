@@ -105,6 +105,48 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
+        /// BankAccountDetailSelectList.
+        /// </summary>
+        /// <param name="ltype">list type.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("selectlist/{ltype}")]
+        public IActionResult BankAccountDetailSelectList(string ltype)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<SelectModel> bankAccountDetailSelectList = new List<SelectModel>();
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    var bankAccountDetailList = this.uw.BankAccountDetailsRepository.ListAll(currentTokenUserDetails.CBUniqueId, default, default);
+
+                    foreach (var bankAccount in bankAccountDetailList)
+                    {
+                        BankAccountDetailModel bankAccountModel = this.bankAccountDetailMapper.PopulateFromEntity(bankAccount);
+                        if (ltype == "stuploadonly" && !bankAccountModel.CanUploadBankStatement)
+                        {
+                            continue;
+                        }
+
+                        bankAccountDetailSelectList.Add(new SelectModel() { UniqueItemValue = bankAccount.UniqueId, ItemText = bankAccount.AccountName });
+                    }
+
+                    return this.Ok(bankAccountDetailSelectList);
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankAccountDetailController->BankAccountDetailList Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+        }
+
+        /// <summary>
         /// BankAccountDetailList.
         /// </summary>
         /// <param name="sort">sort.</param>

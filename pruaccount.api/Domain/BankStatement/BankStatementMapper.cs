@@ -40,6 +40,7 @@ namespace Pruaccount.Api.Domain.BankStatement
             BankStatementMapDetailModel bankStatementMapDetailModel = new BankStatementMapDetailModel();
 
             bankStatementMapDetailModel.UniqueId = bankStatementMapDetailSaveModel.BankStatementMapDetailUniqueId;
+            bankStatementMapDetailModel.BankAccountTypeId = bankStatementMapDetailSaveModel.BankAccountTypeId;
             bankStatementMapDetailModel.MapName = bankStatementMapDetailSaveModel.MapName;
             bankStatementMapDetailModel.DatePart1 = bankStatementMapDetailSaveModel.DatePart1;
             bankStatementMapDetailModel.DatePart2 = bankStatementMapDetailSaveModel.DatePart2;
