@@ -93,6 +93,68 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
+        /// RemoveBankStatement.
+        /// </summary>
+        /// <param name="pid">mapdetailfile uniqueId.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("remove/{pid}")]
+        public IActionResult RemoveBankStatement(Guid pid)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<string> brokenRules = new List<string>();
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    BankStatementMapDetailFile currentFileImport = this.uw.BankStatementMapDetailFileRepository.FindByPID(pid);
+                    if (currentFileImport != null)
+                    {
+                        var currentFile = $"{currentFileImport.UploadedFilePath}/{currentFileImport.SystemGeneratedFileName}";
+                        try
+                        {
+                            this.uw.Begin(System.Data.IsolationLevel.Serializable);
+                            this.uw.BankStatementMapDetailFileRepository.Remove(pid);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.logger.LogError(ex, "BankStatementMapDetailFileController->RemoveBankStatement Database Exception");
+                            return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+                        }
+                        finally
+                        {
+                            this.uw.Complete();
+                        }
+
+                        try
+                        {
+                            System.IO.File.Delete(currentFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.logger.LogError(ex, $"BankStatementMapDetailFileController->RemoveBankStatement File deletion error - {currentFile}");
+                        }
+                    }
+                    else
+                    {
+                        return this.NotFound("Could not get statement map details.");
+                    }
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementMapDetailFileController->UploadBankStatement Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
         /// UploadBankStatement.
         /// </summary>
         /// <param name="files">files uploaded.</param>

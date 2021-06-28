@@ -56,6 +56,7 @@ namespace PruAuth.Api.Domain.Auth
                 "/api/bankstatementmapdetail/loadstatement",
                 "/api/bankstatementmapdetail/save",
                 "/api/bankstatementmapdetail/viewstatementmapping",
+                "/api/bankstatementmapdetailfile/remove",
                 "/api/bankstatementmapdetailfile/status",
                 "/api/bankstatementmapdetailfile/upload",
                 "/api/bankstatementmapping/load",

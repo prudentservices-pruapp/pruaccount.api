@@ -115,7 +115,24 @@ namespace Pruaccount.Api.DataAccess
         /// <param name="pid">pid.</param>
         public void Remove(Guid pid)
         {
-            throw new NotImplementedException();
+            var para = new DynamicParameters();
+            para.Add("@UniqueId", pid);
+
+            int saveStatus = 0;
+
+            try
+            {
+                saveStatus = this.Connection.Execute("[BankStatementMapDetailFile_Remove]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+
+                if (saveStatus != -1)
+                {
+                    throw new Exception($"Could not delete bankStatementMapDetailFile for {pid}");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
