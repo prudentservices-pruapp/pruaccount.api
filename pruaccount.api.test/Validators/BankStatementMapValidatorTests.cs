@@ -1,6 +1,7 @@
 ﻿namespace pruaccount.api.test.Validators
 {
     using Pruaccount.Api.Domain.BankStatement;
+    using Pruaccount.Api.Enums;
     using Pruaccount.Api.Models;
     using Pruaccount.Api.Validators;
     using System;
@@ -28,6 +29,7 @@
             {
                 BankAccountDetailsUniqueId = new Guid("AC81EE46-06B3-EB11-A007-00155E179406"),
                 BankStatementFileUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
+                BankAccountTypeId = BankAccountTypeEnum.Current,
                 MapName = "Lloyds Bank",
                 DatePart1 = "dd",
                 DatePart2 = "MM",
@@ -46,6 +48,7 @@
             {
                 BankAccountDetailsUniqueId = new Guid("AC81EE46-06B3-EB11-A007-00155E179406"),
                 BankStatementFileUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
+                BankAccountTypeId = BankAccountTypeEnum.Current,
                 MapName = "Lloyds Bank",
                 DatePart1 = "dd",
                 DatePart2 = "MM",
@@ -64,6 +67,7 @@
             {
                 BankAccountDetailsUniqueId = new Guid("AC81EE46-06B3-EB11-A007-00155E179406"),
                 BankStatementFileUniqueId = new Guid("D077065A-D9C5-EB11-A007-00155E179406"),
+                BankAccountTypeId = BankAccountTypeEnum.Current,
                 MapName = "Cater Allen Bank",
                 DatePart1 = "dd",
                 DatePart2 = "MMM",
