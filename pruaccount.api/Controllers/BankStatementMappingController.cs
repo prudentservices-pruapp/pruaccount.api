@@ -52,66 +52,6 @@ namespace Pruaccount.Api.Controllers
         }
 
         /// <summary>
-        /// BankStatementLoad.
-        /// </summary>
-        /// <param name="pid">pid.</param>
-        /// <returns>IActionResult.</returns>
-        [HttpGet("load/{pid}")]
-        public IActionResult BankStatementLoad(Guid pid)
-        {
-            try
-            {
-                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
-                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
-                {
-                    BankStatementFileImport currentFileImport = this.uw.BankStatementFileImportRepository.FindByPID(pid);
-
-                    if (currentFileImport == null)
-                    {
-                        this.logger.LogError($"BankStatementUploadController->BankStatementStatus Exception {pid} - Could not load the request file, no records found.");
-                        return this.BadRequest("Could not load the request file.");
-                    }
-                    else if (currentFileImport.ClientBusinessDetailsUniqueId != currentTokenUserDetails.CBUniqueId)
-                    {
-                        this.logger.LogError($"BankStatementUploadController->BankStatementStatus Exception {pid} - Could not load the request file, due to mismatch - {currentTokenUserDetails.CBUniqueId}.");
-                        return this.BadRequest("Could not load the request file due to mismatch.");
-                    }
-
-                    string uploadedFilenameWithPath = $"{currentFileImport.UploadedFilePath}\\{currentFileImport.SystemGeneratedFileName}";
-                    Domain.BankStatement.BankStatementParser bankStatementParser = new Domain.BankStatement.BankStatementParser(uploadedFilenameWithPath);
-                    var bankStatementMapModel = bankStatementParser.GeRowsJson();
-
-                    BankStatementMapDetailModel bankStatementMapDetailModel = new BankStatementMapDetailModel()
-                    {
-                        MapName = "Lloyds Bank",
-                        DatePart1 = "dd",
-                        DatePart2 = "MM",
-                        DatePart3 = "yyyy",
-                        DateSeparator = "/",
-                        Dateformat = "dd/MM/yyyy",
-                        DateformatValue = "01/09/2009",
-                        DateIndex = 0,
-                        DebitAmountIndex = 5,
-                        CreditAmountIndex = 6,
-                        BalanceIndex = 7,
-                        DescriptionIndex = 4,
-                    };
-
-                    bankStatementMapModel.BankStatementMapDetailModel = bankStatementMapDetailModel;
-
-                    return this.Ok(bankStatementMapModel);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex, "BankStatementUploadController->BankStatementStatus Exception");
-                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
-            }
-
-            return this.Ok();
-        }
-
-        /// <summary>
         /// SaveMapping.
         /// </summary>
         /// <param name="bankStatementMapDetailSaveModel">BankStatementMapDetailSaveModel.</param>
@@ -165,6 +105,63 @@ namespace Pruaccount.Api.Controllers
             }
 
             return this.Ok();
+        }
+
+        /// <summary>
+        /// GetMappedBankAccounts.
+        /// </summary>
+        /// <param name="pid">bankStatementMapDetailUniqueId.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("mappedbankaccounts/{pid}")]
+        public IActionResult GetMappedBankAccounts(Guid pid)
+        {
+            try
+            {
+                BankAccountsMappedModel bankAccountsMappedModel = new BankAccountsMappedModel();
+
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    var bankAccountMappingLinkList = this.uw.BankAccountMappingLinkRepository.ListAll(currentTokenUserDetails.CBUniqueId, pid).ToList();
+
+                    if (bankAccountMappingLinkList.Count > 0)
+                    {
+                        foreach (var bankAccountMappingLink in bankAccountMappingLinkList)
+                        {
+                            if (bankAccountMappingLink.IsActive)
+                            {
+                                bankAccountsMappedModel.BankAccountDetailsUniqueIds.Add(bankAccountMappingLink.BankAccountDetailsUniqueId);
+                                bankAccountsMappedModel.BankAccountTypeId = bankAccountMappingLink.BankAccountTypeId;
+                                bankAccountsMappedModel.BankAccountTypeName = bankAccountMappingLink.BankAccountTypeName;
+                                bankAccountsMappedModel.BankStatementMapDetailUniqueId = bankAccountMappingLink.BankStatementMapDetailUniqueId;
+                                bankAccountsMappedModel.MapName = bankAccountMappingLink.MapName;
+                            }
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(bankAccountsMappedModel.MapName))
+                    {
+                        BankStatementMapDetail bankStatementMapDetail = this.uw.BankStatementMapDetailRepository.FindByPID(pid);
+
+                        if (bankStatementMapDetail == null)
+                        {
+                            return this.NotFound("Could not get statement map details.");
+                        }
+
+                        bankAccountsMappedModel.BankAccountTypeId = bankStatementMapDetail.BankAccountTypeId;
+                        bankAccountsMappedModel.BankAccountTypeName = bankStatementMapDetail.BankAccountTypeName;
+                        bankAccountsMappedModel.BankStatementMapDetailUniqueId = bankStatementMapDetail.UniqueId;
+                        bankAccountsMappedModel.MapName = bankStatementMapDetail.MapName;
+                    }
+                }
+
+                return this.Ok(bankAccountsMappedModel);
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankStatementUploadController->GetMappedBankAccounts Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
         }
     }
 }

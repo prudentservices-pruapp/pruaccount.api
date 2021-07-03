@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pruaccount.api", "pruaccount.api\pruaccount.api.csproj", "{02A34C41-992C-43AC-B8B5-4C01F186C6AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pruaccount.api.test", "pruaccount.api.test\pruaccount.api.test.csproj", "{2B32D710-35F9-4AA4-9502-9BC7D712CF70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "pruaccount.api.test", "pruaccount.api.test\pruaccount.api.test.csproj", "{2B32D710-35F9-4AA4-9502-9BC7D712CF70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

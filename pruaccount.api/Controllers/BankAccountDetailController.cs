@@ -110,12 +110,12 @@ namespace Pruaccount.Api.Controllers
         /// <param name="ltype">list type.</param>
         /// <returns>IActionResult.</returns>
         [HttpGet("selectlist/{ltype}")]
-        public IActionResult BankAccountDetailSelectList(string ltype)
+        public IActionResult BankAccountDetailSelectList(int ltype)
         {
             try
             {
                 TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
-                List<SelectModel> bankAccountDetailSelectList = new List<SelectModel>();
+                List<SelectItemModel> bankAccountDetailSelectList = new List<SelectItemModel>();
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
@@ -124,12 +124,12 @@ namespace Pruaccount.Api.Controllers
                     foreach (var bankAccount in bankAccountDetailList)
                     {
                         BankAccountDetailModel bankAccountModel = this.bankAccountDetailMapper.PopulateFromEntity(bankAccount);
-                        if (ltype == "stuploadonly" && !bankAccountModel.CanUploadBankStatement)
+                        if (bankAccountModel.BankAccountTypeId != ltype)
                         {
                             continue;
                         }
 
-                        bankAccountDetailSelectList.Add(new SelectModel() { UniqueItemValue = bankAccount.UniqueId, ItemText = bankAccount.AccountName });
+                        bankAccountDetailSelectList.Add(new SelectItemModel() { _id = bankAccount.UniqueId.ToString(), name = bankAccount.AccountName });
                     }
 
                     return this.Ok(bankAccountDetailSelectList);
@@ -269,6 +269,137 @@ namespace Pruaccount.Api.Controllers
             catch (Exception ex)
             {
                 this.logger.LogError(ex, "BankAccountDetailController->SaveBankAccount Exception");
+                return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
+            }
+            finally
+            {
+                this.uw.Complete();
+            }
+
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// SaveBankAccountMappingLink.
+        /// </summary>
+        /// <param name="bankAccountMappingLinkSaveModel">BankAccountMappingLinkSaveModel.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost("savemaplink")]
+        public IActionResult SaveBankAccountMappingLink([FromBody] BankAccountMappingLinkSaveModel bankAccountMappingLinkSaveModel)
+        {
+            try
+            {
+                TokenUserDetails currentTokenUserDetails = this.httpContextAccessor.HttpContext.Items["CurrentTokenUserDetails"] as TokenUserDetails;
+                List<string> brokenRules = new List<string>();
+
+                if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
+                {
+                    var currentMappingLinkList = this.uw.BankAccountMappingLinkRepository.ListAll(currentTokenUserDetails.CBUniqueId, bankAccountMappingLinkSaveModel.BankStatementMapDetailUniqueId).ToList();
+                    List<BankAccountMappingLink> bankAccountMappingLinkRequests = new List<BankAccountMappingLink>();
+
+                    if (currentMappingLinkList.Count > 0)
+                    {
+                        foreach (var currentMappingLink in currentMappingLinkList)
+                        {
+                            if (!bankAccountMappingLinkSaveModel.BankAccountDetailsUniqueIds.Contains(currentMappingLink.BankAccountDetailsUniqueId))
+                            {
+                                bankAccountMappingLinkRequests.Add(new BankAccountMappingLink()
+                                {
+                                    UniqueId = currentMappingLink.UniqueId,
+                                    ClientBusinessDetailsUniqueId = currentMappingLink.ClientBusinessDetailsUniqueId,
+                                    BankAccountDetailsUniqueId = currentMappingLink.BankAccountDetailsUniqueId,
+                                    BankStatementMapDetailUniqueId = currentMappingLink.BankStatementMapDetailUniqueId,
+                                    IsActive = false,
+                                });
+                            }
+                        }
+                    }
+
+                    if (bankAccountMappingLinkSaveModel.BankAccountDetailsUniqueIds.Length > 0)
+                    {
+                        foreach (var bankAccountDetailsUniqueId in bankAccountMappingLinkSaveModel.BankAccountDetailsUniqueIds)
+                        {
+                            var currentMappingLink = currentMappingLinkList.Find(x => x.BankAccountDetailsUniqueId == bankAccountDetailsUniqueId);
+                            var currentBankAccountMappingLinkList = this.uw.BankAccountMappingLinkRepository.ListAll(currentTokenUserDetails.CBUniqueId, default, bankAccountDetailsUniqueId).ToList();
+                            bool isCurrentBankAccountAlreadyMapped = false;
+                            string isCurrentBankAccountAlreadyMappedName = string.Empty;
+
+                            if (currentBankAccountMappingLinkList.Count > 0)
+                            {
+                                var currentBankAccountActiveMappingLinkList = currentBankAccountMappingLinkList.Where(x => x.IsActive && x.BankStatementMapDetailUniqueId != bankAccountMappingLinkSaveModel.BankStatementMapDetailUniqueId).ToList();
+
+                                if (currentBankAccountActiveMappingLinkList.Count >= 1)
+                                {
+                                    isCurrentBankAccountAlreadyMapped = true;
+                                    isCurrentBankAccountAlreadyMappedName = currentBankAccountActiveMappingLinkList[0].MapName;
+                                }
+                            }
+
+                            if (!isCurrentBankAccountAlreadyMapped)
+                            {
+                                if (currentMappingLink != null)
+                                {
+                                    bankAccountMappingLinkRequests.Add(new BankAccountMappingLink()
+                                    {
+                                        UniqueId = currentMappingLink.UniqueId,
+                                        ClientBusinessDetailsUniqueId = currentMappingLink.ClientBusinessDetailsUniqueId,
+                                        BankAccountDetailsUniqueId = currentMappingLink.BankAccountDetailsUniqueId,
+                                        BankStatementMapDetailUniqueId = currentMappingLink.BankStatementMapDetailUniqueId,
+                                        IsActive = true,
+                                    });
+                                }
+                                else
+                                {
+                                    bankAccountMappingLinkRequests.Add(new BankAccountMappingLink()
+                                    {
+                                        ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId,
+                                        BankAccountDetailsUniqueId = bankAccountDetailsUniqueId,
+                                        BankStatementMapDetailUniqueId = bankAccountMappingLinkSaveModel.BankStatementMapDetailUniqueId,
+                                        IsActive = true,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                var bankaccountDetails = this.uw.BankAccountDetailsRepository.FindByPID(bankAccountDetailsUniqueId);
+                                if (bankaccountDetails != null)
+                                {
+                                    brokenRules.Add($"Please check mappings, could not map bank account {bankaccountDetails.AccountName} as its already mapped to {isCurrentBankAccountAlreadyMappedName}.");
+                                }
+                                else
+                                {
+                                    brokenRules.Add($"Please check mappings, could not map bank account. to {isCurrentBankAccountAlreadyMappedName}");
+                                }
+                            }
+                        }
+                    }
+
+                    if (bankAccountMappingLinkRequests.Count > 0)
+                    {
+                        this.uw.Begin(System.Data.IsolationLevel.Serializable);
+                        foreach (var bankAccountMappingLinkRequest in bankAccountMappingLinkRequests)
+                        {
+                            this.uw.BankAccountMappingLinkRepository.Save(bankAccountMappingLinkRequest);
+                        }
+                    }
+                    else
+                    {
+                        brokenRules.Add($"Please check mappings, did not save any details.");
+                    }
+
+                    if (brokenRules.Count > 0)
+                    {
+                        return this.BadRequest(string.Join(" ", brokenRules));
+                    }
+                }
+                else
+                {
+                    return this.NotFound(BadRequestMessagesTypeEnum.NotFoundTokenErrorsMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "BankAccountDetailController->SaveBankAccountMappingLink Exception");
                 return this.BadRequest(BadRequestMessagesTypeEnum.InternalServerErrorsMessage);
             }
             finally
