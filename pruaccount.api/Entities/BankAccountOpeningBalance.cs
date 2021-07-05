@@ -1,4 +1,4 @@
-﻿// <copyright file="BAOpeningBalance.cs" company="PlaceholderCompany">
+﻿// <copyright file="BankAccountOpeningBalance.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -9,12 +9,12 @@ namespace Pruaccount.Api.Entities
     /// <summary>
     /// BAOpeningBalance.
     /// </summary>
-    public class BAOpeningBalance
+    public class BankAccountOpeningBalance
     {
         /// <summary>
-        /// Gets or sets BAOpeningBalanceId.
+        /// Gets or sets BankAccountOpeningBalanceId.
         /// </summary>
-        public int BAOpeningBalanceId { get; set; }
+        public int BankAccountOpeningBalanceId { get; set; }
 
         /// <summary>
         /// Gets or sets UniqueId.
@@ -57,14 +57,14 @@ namespace Pruaccount.Api.Entities
         public DateTime BalanceDate { get; set; }
 
         /// <summary>
-        /// Gets or sets BAOpeningBalanceTypeId.
+        /// Gets or sets BalanceTypeId.
         /// </summary>
-        public int BAOpeningBalanceTypeId { get; set; }
+        public int BalanceTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets BAOpeningBalanceTypeName.
+        /// Gets or sets BalanceTypeName.
         /// </summary>
-        public string BAOpeningBalanceTypeName { get; set; }
+        public string BalanceTypeName { get; set; }
 
         /// <summary>
         /// Gets or sets BalanceAmount.
@@ -93,7 +93,7 @@ namespace Pruaccount.Api.Entities
         {
             get
             {
-                return this.BAOpeningBalanceId == default(int);
+                return this.BankAccountOpeningBalanceId == default(int);
             }
         }
     }

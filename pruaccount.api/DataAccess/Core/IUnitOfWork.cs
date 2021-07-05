@@ -34,9 +34,9 @@ namespace Pruaccount.Api.DataAccess.Core
         IBankAccountMappingLinkRepository BankAccountMappingLinkRepository { get; }
 
         /// <summary>
-        /// Gets IBAOpeningBalanceRepository.
+        /// Gets IBankAccountOpeningBalanceRepository.
         /// </summary>
-        IBAOpeningBalanceRepository BAOpeningBalanceRepository { get; }
+        IBankAccountOpeningBalanceRepository BankAccountOpeningBalanceRepository { get; }
 
         /// <summary>
         /// Gets IBankStatementFileImportRepository.

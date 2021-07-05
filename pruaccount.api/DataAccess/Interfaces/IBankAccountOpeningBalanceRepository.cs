@@ -1,4 +1,4 @@
-﻿// <copyright file="IBAOpeningBalanceRepository.cs" company="PlaceholderCompany">
+﻿// <copyright file="IBankAccountOpeningBalanceRepository.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -12,7 +12,7 @@ namespace Pruaccount.Api.DataAccess.Interfaces
     /// <summary>
     /// IBAOpeningBalanceRepository.
     /// </summary>
-    public interface IBAOpeningBalanceRepository : IRepositoryBase<BAOpeningBalance>
+    public interface IBankAccountOpeningBalanceRepository : IRepositoryBase<BankAccountOpeningBalance>
     {
     }
 }

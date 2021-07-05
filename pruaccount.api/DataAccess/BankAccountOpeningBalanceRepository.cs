@@ -1,4 +1,4 @@
-﻿// <copyright file="BAOpeningBalanceRepository.cs" company="PlaceholderCompany">
+﻿// <copyright file="BankAccountOpeningBalanceRepository.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -16,13 +16,13 @@ namespace Pruaccount.Api.DataAccess
     /// <summary>
     /// BAOpeningBalanceRepository.
     /// </summary>
-    public class BAOpeningBalanceRepository : RepositoryBase, IBAOpeningBalanceRepository
+    public class BankAccountOpeningBalanceRepository : RepositoryBase, IBankAccountOpeningBalanceRepository
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BAOpeningBalanceRepository"/> class.
+        /// Initializes a new instance of the <see cref="BankAccountOpeningBalanceRepository"/> class.
         /// </summary>
         /// <param name="uw">IUnitOfWork.</param>
-        public BAOpeningBalanceRepository(IUnitOfWork uw)
+        public BankAccountOpeningBalanceRepository(IUnitOfWork uw)
             : base(uw)
         {
         }
@@ -32,7 +32,7 @@ namespace Pruaccount.Api.DataAccess
         /// </summary>
         /// <param name="pid">pid.</param>
         /// <returns>BAOpeningBalance.</returns>
-        public BAOpeningBalance FindByPID(Guid pid)
+        public BankAccountOpeningBalance FindByPID(Guid pid)
         {
             var para = new DynamicParameters();
 
@@ -41,7 +41,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@UniqueId", pid);
             }
 
-            return this.Connection.Query<BAOpeningBalance>("[BAOpeningBalance_Detail]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return this.Connection.Query<BankAccountOpeningBalance>("[BankAccountOpeningBalance_Detail]", para, this.Transaction, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Pruaccount.Api.DataAccess
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
         /// <returns>IEnumerable BAOpeningBalance.</returns>
-        public IEnumerable<BAOpeningBalance> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId = default, string sort = "Unknown", string orderby = "asc", int pagenumber = 1, int rowsperpage = 10)
+        public IEnumerable<BankAccountOpeningBalance> ListAll(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId = default, string sort = "Unknown", string orderby = "asc", int pagenumber = 1, int rowsperpage = 10)
         {
             var para = new DynamicParameters();
 
@@ -84,7 +84,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@rowsperpage", rowsperpage);
             }
 
-            return this.Connection.Query<BAOpeningBalance>("[BAOpeningBalance_List]", para, this.Transaction, commandType: CommandType.StoredProcedure);
+            return this.Connection.Query<BankAccountOpeningBalance>("[BankAccountOpeningBalance_List]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
 
         /// <summary>
@@ -101,10 +101,10 @@ namespace Pruaccount.Api.DataAccess
         /// </summary>
         /// <param name="baOpeningBalance">BAOpeningBalance.</param>
         /// <returns>Bank OpeningBalance.</returns>
-        public BAOpeningBalance Save(BAOpeningBalance baOpeningBalance)
+        public BankAccountOpeningBalance Save(BankAccountOpeningBalance baOpeningBalance)
         {
             var para = new DynamicParameters();
-            para.Add("@BankAccountDetailsId", baOpeningBalance.BAOpeningBalanceId);
+            para.Add("@BankAccountDetailsId", baOpeningBalance.BankAccountOpeningBalanceId);
             para.Add("@UniqueId", baOpeningBalance.UniqueId);
             para.Add("@ClientBusinessDetailsUniqueId", baOpeningBalance.ClientBusinessDetailsUniqueId);
             para.Add("@BankAccountDetailsUniqueId", baOpeningBalance.BankAccountDetailsUniqueId);
@@ -115,14 +115,14 @@ namespace Pruaccount.Api.DataAccess
             }
 
             para.Add("@BalanceDate", baOpeningBalance.BalanceDate);
-            para.Add("@BAOpeningBalanceTypeId", baOpeningBalance.BAOpeningBalanceTypeId);
+            para.Add("@BalanceTypeId", baOpeningBalance.BalanceTypeId);
             para.Add("@BalanceAmount", baOpeningBalance.BalanceAmount);
 
             int saveStatus = 0;
 
             try
             {
-                saveStatus = this.Connection.Execute("[BAOpeningBalance_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
+                saveStatus = this.Connection.Execute("[BankAccountOpeningBalance_Save]", para, transaction: this.Transaction, commandType: CommandType.StoredProcedure);
 
                 if (saveStatus != -1)
                 {
@@ -149,7 +149,7 @@ namespace Pruaccount.Api.DataAccess
         /// <param name="pagenumber">PageNumber.</param>
         /// <param name="rowsperpage">RowsPerPage.</param>
         /// <returns>IEnumerable BAOpeningBalance.</returns>
-        public IEnumerable<BAOpeningBalance> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
+        public IEnumerable<BankAccountOpeningBalance> Search(Guid businessDetailsUniqueId, Guid masterUniqueId, Guid parentUniqueId, string searchTerm, string sort, string orderby, int pagenumber, int rowsperpage)
         {
             var para = new DynamicParameters();
 
@@ -183,7 +183,7 @@ namespace Pruaccount.Api.DataAccess
                 para.Add("@rowsperpage", rowsperpage);
             }
 
-            return this.Connection.Query<BAOpeningBalance>("[BAOpeningBalance_Search]", para, this.Transaction, commandType: CommandType.StoredProcedure);
+            return this.Connection.Query<BankAccountOpeningBalance>("[BankAccountOpeningBalance_Search]", para, this.Transaction, commandType: CommandType.StoredProcedure);
         }
     }
 }

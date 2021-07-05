@@ -30,7 +30,7 @@ namespace Pruaccount.Api.DataAccess.Core
         private IBankAccountDetailsRepository bankAccountDetailsRepository;
         private IBankAccountMappingLinkRepository bankAccountMappingLinkRepository;
 
-        private IBAOpeningBalanceRepository baOpeningbalanceRepository;
+        private IBankAccountOpeningBalanceRepository bankAccountOpeningbalanceRepository;
 
         private IBankStatementFileImportRepository bankStatementFileImportRepository;
         private IBankStatementFileImportProcessRepository bankStatementFileImportProcessRepository;
@@ -132,9 +132,9 @@ namespace Pruaccount.Api.DataAccess.Core
         /// <summary>
         /// Gets BAOpeningBalanceRepository.
         /// </summary>
-        public IBAOpeningBalanceRepository BAOpeningBalanceRepository
+        public IBankAccountOpeningBalanceRepository BankAccountOpeningBalanceRepository
         {
-            get { return this.baOpeningbalanceRepository ??= new BAOpeningBalanceRepository(this); }
+            get { return this.bankAccountOpeningbalanceRepository ??= new BankAccountOpeningBalanceRepository(this); }
         }
 
         /// <summary>

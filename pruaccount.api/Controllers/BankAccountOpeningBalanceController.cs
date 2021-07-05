@@ -1,4 +1,4 @@
-﻿// <copyright file="BAOpeningBalanceController.cs" company="PlaceholderCompany">
+﻿// <copyright file="BankAccountOpeningBalanceController .cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -21,19 +21,19 @@ namespace Pruaccount.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class BAOpeningBalanceController : ControllerBase
+    public class BankAccountOpeningBalanceController : ControllerBase
     {
         private readonly IUnitOfWork uw;
-        private readonly ILogger<BAOpeningBalanceController> logger;
+        private readonly ILogger<BankAccountOpeningBalanceController> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BAOpeningBalanceController"/> class.
+        /// Initializes a new instance of the <see cref="BankAccountOpeningBalanceController"/> class.
         /// </summary>
         /// <param name="repository">IUnitOfWork.</param>
         /// <param name="logger">ILogger.</param>
         /// <param name="httpContextAccessor">IHttpContextAccessor.</param>
-        public BAOpeningBalanceController(IUnitOfWork repository, ILogger<BAOpeningBalanceController> logger, IHttpContextAccessor httpContextAccessor)
+        public BankAccountOpeningBalanceController(IUnitOfWork repository, ILogger<BankAccountOpeningBalanceController> logger, IHttpContextAccessor httpContextAccessor)
         {
             this.uw = repository;
             this.logger = logger;
@@ -54,13 +54,13 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    BAOpeningBalance baOpeningBalance = this.uw.BAOpeningBalanceRepository.FindByPID(pid);
+                    BankAccountOpeningBalance baOpeningBalance = this.uw.BankAccountOpeningBalanceRepository.FindByPID(pid);
 
                     if (baOpeningBalance != null && baOpeningBalance.ClientBusinessDetailsUniqueId == currentTokenUserDetails.CBUniqueId)
                     {
-                        BAOpeningBalanceModel model = new BAOpeningBalanceModel()
+                        BankAccountOpeningBalanceModel model = new BankAccountOpeningBalanceModel()
                         {
-                            BAOpeningBalanceId = baOpeningBalance.BAOpeningBalanceId,
+                            BankAccountOpeningBalanceId = baOpeningBalance.BankAccountOpeningBalanceId,
                             UniqueId = baOpeningBalance.UniqueId,
                             ClientBusinessDetailsUniqueId = baOpeningBalance.UniqueId,
                             BankAccountDetailsUniqueId = baOpeningBalance.BankAccountDetailsUniqueId,
@@ -69,8 +69,8 @@ namespace Pruaccount.Api.Controllers
                             AccountNumber = baOpeningBalance.AccountNumber,
                             SortCode = baOpeningBalance.SortCode,
                             BalanceDate = baOpeningBalance.BalanceDate,
-                            BAOpeningBalanceTypeId = baOpeningBalance.BAOpeningBalanceTypeId,
-                            BAOpeningBalanceTypeName = baOpeningBalance.BAOpeningBalanceTypeName,
+                            BalanceTypeId = baOpeningBalance.BalanceTypeId,
+                            BalanceTypeName = baOpeningBalance.BalanceTypeName,
                             BalanceAmount = baOpeningBalance.BalanceAmount,
                         };
 
@@ -108,7 +108,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    var bapOpeningBalanceList = this.uw.BAOpeningBalanceRepository.ListAll(currentTokenUserDetails.CBUniqueId, default, default, sort, orderBy, pageNumber, rowsPerPage);
+                    var bapOpeningBalanceList = this.uw.BankAccountOpeningBalanceRepository.ListAll(currentTokenUserDetails.CBUniqueId, default, default, sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = bapOpeningBalanceList.FirstOrDefault();
 
@@ -150,7 +150,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    var bapOpeningBalanceList = this.uw.BAOpeningBalanceRepository.Search(currentTokenUserDetails.CBUniqueId, default, default, searchTerm, sort, orderBy, pageNumber, rowsPerPage);
+                    var bapOpeningBalanceList = this.uw.BankAccountOpeningBalanceRepository.Search(currentTokenUserDetails.CBUniqueId, default, default, searchTerm, sort, orderBy, pageNumber, rowsPerPage);
 
                     var rec = bapOpeningBalanceList.FirstOrDefault();
 
@@ -180,7 +180,7 @@ namespace Pruaccount.Api.Controllers
         /// <param name="baOpeningBalanceModel">BAOpeningBalanceModel.</param>
         /// <returns>IActionResult.</returns>
         [HttpPost("save")]
-        public IActionResult SaveBAOpeningBalance([FromBody] BAOpeningBalanceModel baOpeningBalanceModel)
+        public IActionResult SaveBAOpeningBalance([FromBody] BankAccountOpeningBalanceModel baOpeningBalanceModel)
         {
             try
             {
@@ -188,7 +188,7 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null && currentTokenUserDetails.CBUniqueId != default)
                 {
-                    if (baOpeningBalanceModel.BankAccountDetailsUniqueId == default && baOpeningBalanceModel.BAOpeningBalanceTypeId <= 0 && baOpeningBalanceModel.BalanceDate != default)
+                    if (baOpeningBalanceModel.BankAccountDetailsUniqueId == default && baOpeningBalanceModel.BalanceTypeId <= 0 && baOpeningBalanceModel.BalanceDate != default)
                     {
                         return this.BadRequest("Mandatory fields not entered.");
                     }
@@ -201,33 +201,33 @@ namespace Pruaccount.Api.Controllers
 
                         if (baOpeningBalanceModel.BalanceDate == default)
                         {
-                            return this.BadRequest("Accounts Start date is not set.");
+                            return this.BadRequest("Please set accounts start date.");
                         }
 
                         if (baOpeningBalanceModel.BalanceDate >= clientFinancialSetting.YearStartDate)
                         {
-                            return this.BadRequest("Bank Opening Balance Date should be less than Accounts Start Date.");
+                            return this.BadRequest("Please change bank opening balance date. It should be less than accounts start date.");
                         }
                     }
                     else
                     {
-                        return this.BadRequest("Accounts Start date is not set.");
+                        return this.BadRequest("Please set accounts start date.");
                     }
 
-                    BAOpeningBalance bankAccountDetailsRequest = new BAOpeningBalance()
+                    BankAccountOpeningBalance bankAccountDetailsRequest = new BankAccountOpeningBalance()
                     {
-                        BAOpeningBalanceId = baOpeningBalanceModel.BAOpeningBalanceId,
+                        BankAccountOpeningBalanceId = baOpeningBalanceModel.BankAccountOpeningBalanceId,
                         UniqueId = baOpeningBalanceModel.UniqueId,
                         ClientBusinessDetailsUniqueId = baOpeningBalanceModel.ClientBusinessDetailsUniqueId,
                         BankAccountDetailsUniqueId = baOpeningBalanceModel.BankAccountDetailsUniqueId,
                         LedgerAccountId = baOpeningBalanceModel.LedgerAccountId,
                         BalanceDate = baOpeningBalanceModel.BalanceDate,
-                        BAOpeningBalanceTypeId = baOpeningBalanceModel.BAOpeningBalanceTypeId,
+                        BalanceTypeId = baOpeningBalanceModel.BalanceTypeId,
                         BalanceAmount = baOpeningBalanceModel.BalanceAmount,
                     };
 
                     this.uw.Begin(System.Data.IsolationLevel.Serializable);
-                    this.uw.BAOpeningBalanceRepository.Save(bankAccountDetailsRequest);
+                    this.uw.BankAccountOpeningBalanceRepository.Save(bankAccountDetailsRequest);
                 }
                 else
                 {
