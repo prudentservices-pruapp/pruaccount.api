@@ -92,16 +92,14 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null)
                 {
-                    if (financialSettingModel.AccountStartDate != default(DateTime) && financialSettingModel.YearEndDate != default(DateTime))
+                    if (financialSettingModel.AccountStartDate == default(DateTime))
                     {
-                        if (financialSettingModel.AccountStartDate > financialSettingModel.YearEndDate)
-                        {
-                            return this.BadRequest("Financial Account Start and End dates are not correct.");
-                        }
+                        return this.BadRequest("Financial account start dates must be set.");
                     }
 
                     CBFinancialSetting cbFinancialSettingRequest = new CBFinancialSetting();
                     cbFinancialSettingRequest = this.financialSettingMapper.PopulateFromModel(financialSettingModel);
+                    cbFinancialSettingRequest.ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId;
                     this.uw.Begin(System.Data.IsolationLevel.Serializable);
                     this.uw.CBFinancialSettingRepository.Save(cbFinancialSettingRequest);
                 }
