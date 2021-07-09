@@ -13,6 +13,7 @@ namespace Pruaccount.Api.Controllers
     using Pruaccount.Api.Domain.Auth;
     using Pruaccount.Api.Entities;
     using Pruaccount.Api.Enums;
+    using Pruaccount.Api.MappingConfigurations;
     using Pruaccount.Api.Models;
 
     /// <summary>
@@ -25,6 +26,7 @@ namespace Pruaccount.Api.Controllers
         private readonly IUnitOfWork uw;
         private readonly ILogger<FinancialSettingController> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly FinancialSettingMapper financialSettingMapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinancialSettingController"/> class.
@@ -37,6 +39,7 @@ namespace Pruaccount.Api.Controllers
             this.uw = repository;
             this.logger = logger;
             this.httpContextAccessor = httpContextAccessor;
+            this.financialSettingMapper = new FinancialSettingMapper();
         }
 
         /// <summary>
@@ -58,22 +61,7 @@ namespace Pruaccount.Api.Controllers
                     if (clientFinancialSettings != null && clientFinancialSettings.Count > 0)
                     {
                         CBFinancialSetting clientFinancialSetting = clientFinancialSettings[0];
-
-                        financialSettingModel = new FinancialSettingModel()
-                        {
-                            UniqueId = clientFinancialSetting.UniqueId,
-                            ClientBusinessDetailsUniqueId = clientFinancialSetting.ClientBusinessDetailsUniqueId,
-                            HMRCUserId = clientFinancialSetting.HMRCUserId,
-                            RetentionPeriod = clientFinancialSetting.RetentionPeriod,
-                            VatFlatRate = clientFinancialSetting.VatFlatRate,
-                            VatNumber = clientFinancialSetting.VatNumber,
-                            VatScheme = clientFinancialSetting.VatScheme,
-                            VatSubmissionRequency = clientFinancialSetting.VatSubmissionRequency,
-                            YearEndDate = clientFinancialSetting.YearEndDate,
-                            YearEndLockdownDate = clientFinancialSetting.YearEndLockdownDate,
-                            YearEndTaxMonth = clientFinancialSetting.YearEndTaxMonth,
-                            YearStartDate = clientFinancialSetting.YearStartDate,
-                        };
+                        financialSettingModel = this.financialSettingMapper.PopulateFromEntity(clientFinancialSetting);
                     }
 
                     return this.Ok(financialSettingModel);
@@ -104,32 +92,17 @@ namespace Pruaccount.Api.Controllers
 
                 if (currentTokenUserDetails != null)
                 {
-                    if (financialSettingModel.YearStartDate != default(DateTime) && financialSettingModel.YearEndDate != default(DateTime))
+                    if (financialSettingModel.AccountStartDate != default(DateTime) && financialSettingModel.YearEndDate != default(DateTime))
                     {
-                        if (financialSettingModel.YearStartDate > financialSettingModel.YearEndDate)
+                        if (financialSettingModel.AccountStartDate > financialSettingModel.YearEndDate)
                         {
-                            return this.BadRequest("Financial Start and End dates are not correct.");
+                            return this.BadRequest("Financial Account Start and End dates are not correct.");
                         }
                     }
 
-                    CBFinancialSetting cbFinancialSettingRequest = new CBFinancialSetting()
-                    {
-                        UniqueId = financialSettingModel.UniqueId,
-                        ClientBusinessDetailsUniqueId = currentTokenUserDetails.CBUniqueId,
-                        HMRCUserId = financialSettingModel.HMRCUserId,
-                        RetentionPeriod = financialSettingModel.RetentionPeriod,
-                        VatFlatRate = financialSettingModel.VatFlatRate,
-                        VatNumber = financialSettingModel.VatNumber,
-                        VatScheme = financialSettingModel.VatScheme,
-                        VatSubmissionRequency = financialSettingModel.VatSubmissionRequency,
-                        YearEndDate = financialSettingModel.YearEndDate,
-                        YearEndLockdownDate = financialSettingModel.YearEndLockdownDate,
-                        YearEndTaxMonth = financialSettingModel.YearEndTaxMonth,
-                        YearStartDate = financialSettingModel.YearStartDate,
-                    };
-
+                    CBFinancialSetting cbFinancialSettingRequest = new CBFinancialSetting();
+                    cbFinancialSettingRequest = this.financialSettingMapper.PopulateFromModel(financialSettingModel);
                     this.uw.Begin(System.Data.IsolationLevel.Serializable);
-
                     this.uw.CBFinancialSettingRepository.Save(cbFinancialSettingRequest);
                 }
                 else

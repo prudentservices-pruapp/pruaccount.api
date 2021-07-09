@@ -21,6 +21,11 @@ namespace Pruaccount.Api.Models
         public Guid ClientBusinessDetailsUniqueId { get; set; }
 
         /// <summary>
+        /// Gets or sets AccountStartDate.
+        /// </summary>
+        public DateTime AccountStartDate { get; set; }
+
+        /// <summary>
         /// Gets or sets YearStartDate.
         /// </summary>
         public DateTime YearStartDate { get; set; }

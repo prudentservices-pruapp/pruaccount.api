@@ -81,6 +81,11 @@ namespace Pruaccount.Api.DataAccess
             para.Add("@UniqueId", cbFinancialSetting.UniqueId);
             para.Add("@ClientBusinessDetailsUniqueId", cbFinancialSetting.ClientBusinessDetailsUniqueId);
 
+            if (cbFinancialSetting.AccountStartDate != default(DateTime))
+            {
+                para.Add("@AccountStartDate", cbFinancialSetting.AccountStartDate);
+            }
+
             if (cbFinancialSetting.YearStartDate != default(DateTime))
             {
                 para.Add("@YearStartDate", cbFinancialSetting.YearStartDate);
